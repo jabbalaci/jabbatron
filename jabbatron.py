@@ -152,10 +152,16 @@ def step_06():
         with open(BASHRC, 'a') as f:
             print >>f, ALIASES
     else: print 'no'
+    #
+    install(['fortune-mod', 'cowsay'])
 
 
 def step_07():
     install(['build-essential'])
+
+
+def step_08():
+    install(['wajig'])
     
 
 def menu():
@@ -171,9 +177,15 @@ def menu():
 (04) mc, konsole (mc from official repo [old])
 (05) vim
 (06) aliases (in .bashrc)
-(07) development (build-essential, etc.)"""
+(07) development (build-essential, etc.)
+(08) apt-get et al. (wajig)"""
     while True:
-        choice = raw_input('>>> ').strip()
+        try:
+            choice = raw_input('>>> ').strip()
+        except EOFError:
+            print
+            print 'bye.'
+            sys.exit(0)
         if choice == 'q':
             print 'bye.'
             sys.exit(0)
@@ -203,6 +215,10 @@ def menu():
             break
         elif choice == '07':
             step_07()
+            wait()
+            break
+        elif choice == '08':
+            step_08()
             wait()
             break
         elif len(choice) > 0:
