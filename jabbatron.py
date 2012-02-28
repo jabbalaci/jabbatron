@@ -1,5 +1,16 @@
 #!/usr/bin/env python
 
+"""
+Interactive installer script for Ubuntu.
+
+I take no responsibility for any possible 
+loss of data on your computer. Use this
+script at your own risk.
+
+Jabba Laci
+jabba.laci@gmail.com
+"""
+
 import os
 import sys
 
@@ -17,6 +28,42 @@ sudo dpkg --configure -a\\
 && sudo apt-get clean\\
 && sudo apt-get autoremove'''
 
+ALIASES = """# jabbatron
+alias md='mkdir'
+alias rm='rm -i'
+alias cp='cp -i'
+alias mv='mv -i'
+alias d='ls -al'
+#alias mc='. /usr/share/mc/bin/mc-wrapper.sh'
+alias mc='. /usr/local/libexec/mc/mc-wrapper.sh'
+alias run='chmod u+x'
+alias cpc='CWD_LAC="`pwd`"'
+alias cdc='cd "$CWD_LAC"'
+alias rid='chmod 644'
+alias ridd='chmod 755'
+alias tailf='tail -f'
+alias cls='clear'
+alias nh='nautilus . 2>/dev/null'
+alias p='ipython'
+alias kill9='kill -9'
+
+# /usr/games/fortune | /usr/games/cowthink
+"""
+
+VIMRC_URL = 'https://raw.github.com/jabbalaci/jabbatron/master/vimrc.txt'
+
+BASHRC = HOME_DIR + '/.bashrc'
+
+EDITOR = """# jabbatron
+EDITOR=/usr/bin/vim
+export EDITOR
+"""
+
+PATH_BIN = """# jabbatron
+PATH=$PATH:$HOME/bin
+export PATH
+"""
+
 
 def create_dir(item, in_home_dir=True):
     if in_home_dir:
@@ -33,9 +80,19 @@ def wait():
     main()
 
 
+def bin_to_path_in_bashrc():
+    reply = raw_input('Add ~/bin to PATH [y/n]? ')
+    if reply == 'y':
+        with open(BASHRC, 'a') as f:
+            print >>f, PATH_BIN
+    else: print 'no'
+
+
 def step_01():
     for d in ['bin', 'tmp']:
         create_dir(d)
+    #
+    bin_to_path_in_bashrc()
 
 
 def step_02():
@@ -56,6 +113,8 @@ def step_02():
         if os.path.exists(path2):
             print '{} created'.format(path2)
             os.system('chmod u+x {p2}'.format(p2=path2))
+    #
+    bin_to_path_in_bashrc()
 
 
 def step_03():
@@ -77,7 +136,27 @@ def step_04():
 
 def step_05():
     install(['vim-gnome'])
+    if not os.path.exists(HOME_DIR + '/.vimrc'):
+        os.system("cd; wget {} -O .vimrc".format(VIMRC_URL))
+    create_dir('tmp/vim')
+    reply = raw_input('Set vim in .bashrc as your default editor [y/n]? ')
+    if reply == 'y':
+        with open(BASHRC, 'a') as f:
+            print >>f, EDITOR
+    else: print 'no'
 
+
+def step_06():
+    reply = raw_input('Add aliases to .bashrc [y/n]? ')
+    if reply == 'y':
+        with open(BASHRC, 'a') as f:
+            print >>f, ALIASES
+    else: print 'no'
+
+
+def step_07():
+    install(['build-essential'])
+    
 
 def menu():
     os.system('clear')
@@ -90,7 +169,9 @@ def menu():
 (02) good_shape.sh (create updater script in ~/bin)
 (03) dropbox, acroread, skype
 (04) mc, konsole (mc from official repo [old])
-(05) vim"""
+(05) vim
+(06) aliases (in .bashrc)
+(07) development (build-essential, etc.)"""
     while True:
         choice = raw_input('>>> ').strip()
         if choice == 'q':
@@ -114,6 +195,14 @@ def menu():
             break
         elif choice == '05':
             step_05()
+            wait()
+            break
+        elif choice == '06':
+            step_06()
+            wait()
+            break
+        elif choice == '07':
+            step_07()
             wait()
             break
         elif len(choice) > 0:
