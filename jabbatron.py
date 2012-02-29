@@ -66,6 +66,24 @@ GITCONFIG = """# jabbatron
     dt = difftool
 """
 
+MSDOS = """#jabbatron
+function msdos_pwd
+{
+    local dir="`pwd`"
+    dir=${dir/$HOME/'~'}
+
+    echo $dir | tr '/' '\\\\'
+}
+
+export PS1='C:`msdos_pwd`> '
+
+echo Starting MS-DOS...
+echo
+echo
+echo HIMEM is testing extended memory...done.
+echo
+"""
+
 VIMRC_URL = 'https://raw.github.com/jabbalaci/jabbatron/master/vimrc.txt'
 
 BASHRC = HOME_DIR + '/.bashrc'
@@ -81,6 +99,10 @@ PATH=$PATH:$HOME/bin
 export PATH
 """
 
+
+#############
+## helpers ##
+#############
 
 def create_dir(item, in_home_dir=True):
     if in_home_dir:
@@ -105,40 +127,11 @@ def bin_to_path_in_bashrc():
     else: print 'no'
 
 
-def step_01():
-    for d in ['bin', 'tmp']:
-        create_dir(d)
-    #
-    bin_to_path_in_bashrc()
-
-
-def step_02():
-    path = HOME_DIR + '/bin/good_shape.sh'
-    path2 = HOME_DIR + '/bin/good_shape_safe.sh'
-    if os.path.exists(path):
-        print '{} exists'.format(path)
-        return
-    # else
-    create_dir('bin')
-    with open(path, 'w') as f:
-        print >>f, GOOD_SHAPE
-    if os.path.exists(path):
-        print '{} created'.format(path)
-        os.system('chmod u+x {p}'.format(p=path))
-    if not os.path.exists(path2) and os.path.exists(path):
-        os.system('grep -v clean {p} >{p2}'.format(p=path, p2=path2))
-        if os.path.exists(path2):
-            print '{} created'.format(path2)
-            os.system('chmod u+x {p2}'.format(p2=path2))
-    #
-    bin_to_path_in_bashrc()
-
-
-def step_03():
-    print """Open Ubuntu Software Center and install these:
-  * Dropbox
-  * Adobe Reader (first enable "Canonical Partners" in "Software Sources" and "sudo apt-get update")
-  * Skype"""
+def call_good_shape():
+    reply = raw_input('Execute ~/bin/good_shape.sh [y/n]? ')
+    if reply == 'y':
+        os.system(HOME_DIR + '/bin/good_shape.sh')
+    else: print 'no'
 
 
 def install(packages):
@@ -153,11 +146,105 @@ def pip(packages):
     os.system(cmd)
 
 
+def add_repo(repo):
+    cmd = 'sudo add-apt-repository ppa:{repo}'.format(repo=repo)
+    print '#', cmd
+    os.system(cmd)
+    cmd = 'sudo apt-get update'
+    print '#', cmd
+    os.system(cmd)
+
+
+def mongodb():
+    reply = raw_input('Do you want to install MongoDB [y/n]? ')
+    if reply != 'y':
+        print 'no'
+    else:
+        cmd = 'sudo apt-key adv --keyserver keyserver.ubuntu.com --recv 7F0CEB10'
+        print '#', cmd
+        os.system(cmd)
+        #
+        cmd = "sudo sh -c 'echo \#jabbatron >> /etc/apt/sources.list'"
+        print '#', cmd
+        os.system(cmd)
+        cmd = "sudo sh -c 'echo deb http://downloads-distro.mongodb.org/repo/ubuntu-upstart dist 10gen >> /etc/apt/sources.list'"
+        print '#', cmd
+        os.system(cmd)
+        #
+        os.system('sudo apt-get update')
+        install('mongodb-10gen')
+        #
+        pip('pymongo')
+
+
+###########
+## steps ##
+###########
+
+def step_01():
+    """
+    prepare HOME directory (create ~/bin, ~/tmp)
+    """
+    for d in ['bin', 'tmp']:
+        create_dir(d)
+    #
+    bin_to_path_in_bashrc()
+
+
+def step_02():
+    """
+    good_shape.sh (create updater script in ~/bin)
+    if exists: call it
+    """
+    path = HOME_DIR + '/bin/good_shape.sh'
+    path2 = HOME_DIR + '/bin/good_shape_safe.sh'
+    if os.path.exists(path):
+        print '{} exists'.format(path)
+        call_good_shape()
+    else:
+        create_dir('bin')
+        with open(path, 'w') as f:
+            print >>f, GOOD_SHAPE
+        if os.path.exists(path):
+            print '{} created'.format(path)
+            os.system('chmod u+x {p}'.format(p=path))
+        if not os.path.exists(path2) and os.path.exists(path):
+            os.system('grep -v clean {p} >{p2}'.format(p=path, p2=path2))
+            if os.path.exists(path2):
+                print '{} created'.format(path2)
+                os.system('chmod u+x {p2}'.format(p2=path2))
+        #
+        bin_to_path_in_bashrc()
+
+
+def step_03():
+    """
+    dropbox, acroread, skype
+    """
+    print """Open Ubuntu Software Center and install these:
+  * Dropbox
+  * Adobe Reader (first enable "Canonical Partners" in "Software Sources" and "sudo apt-get update")
+  * Skype"""
+
+
 def step_04():
+    """
+    mc, konsole (mc from official repo [old])
+    """
     install(['mc', 'konsole', 'okular'])
+    if not os.path.exists(HOME_DIR + '/.mc'):
+        create_dir('.mc')
+    bfile = HOME_DIR + '/.mc/bindings'
+    if not os.path.exists(bfile):
+        os.system("cd; cd .mc; cp /etc/mc/mc.ext . && ln -s mc.ext bindings")
+        if os.path.exists(bfile):
+            print '# {} was created'.format(bfile)
 
 
 def step_05():
+    """
+    vim + .vimrc
+    """
     install(['vim-gnome'])
     if not os.path.exists(HOME_DIR + '/.vimrc'):
         os.system("cd; wget {} -O .vimrc".format(VIMRC_URL))
@@ -170,6 +257,9 @@ def step_05():
 
 
 def step_06():
+    """
+    aliases (in .bashrc)
+    """
     reply = raw_input('Add aliases to .bashrc [y/n]? ')
     if reply == 'y':
         with open(BASHRC, 'a') as f:
@@ -179,26 +269,52 @@ def step_06():
     install(['fortune-mod', 'cowsay'])
 
 
+def step_06a():
+    """
+    MS-DOS prompt emulation (in .bashrc)
+    """
+    reply = raw_input('Add MS-DOS prompt emulation to .bashrc [y/n]? ')
+    if reply == 'y':
+        with open(BASHRC, 'a') as f:
+            print >>f, MSDOS
+    else: print 'no'
+
+
 def step_07():
+    """
+    development (build-essential, git, subversion)
+    """
     install(['build-essential', 'git', 'subversion'])
 
 
 def step_08():
+    """
+    apt-get et al. (wajig, synaptic, etc.)
+    """
     install(['wajig', 'apt-file', 'synaptic'])
 
 
 def step_09():
+    """
+    latex
+    """
     install(['texlive-base', 'texlive', 'texlive-latex-extra', 
              'texlive-metapost', 'texlive-science', 'texlive-fonts-extra'])
 
 
 def step_10():
+    """
+    github setup (how to create ssh public key)
+    """
     url = 'http://help.github.com/mac-set-up-git/'
     print '#', url
     webbrowser.open(url)
 
 
-def step_10b():
+def step_10a():
+    """
+    .gitconfig (add some aliases)
+    """
     reply = raw_input('Add aliases to .gitconfig [y/n]? ')
     if reply == 'y':
         with open(GITCONFIGRC, 'a') as f:
@@ -207,16 +323,90 @@ def step_10b():
 
 
 def step_11():
-    install(['xsel', 'kdiff3'])
+    """
+    tools (xsel, kdiff3, etc.)
+    """
+    install(['xsel', 'kdiff3', 'pdftk', 'imagemagick', 'unrar', 'comix'])
 
 
 def step_12():
+    """
+    python-pip (via apt-get [old], run just once)
+    """
     install(['python-pip'])
 
 
 def step_12a():
-    pip(['pip', 'ipython'])
+    """
+    python stuff ([new] pip, ipython, etc.)
+    """
+    pip(['pip', 'ipython', 'pymongo'])
 
+
+def step_13():
+    """
+    multimedia (mplayer2, vlc, clementine, etc.)
+    """
+    install(['mplayer2'])
+    add_repo('n-muench/vlc')
+    install(['vlc'])
+    #
+    add_repo('me-davidsansome/clementine')
+    install(['clementine'])
+
+
+def step_14():
+    """
+    LAMP (set up a LAMP environment)
+    """
+    url = 'https://ubuntuincident.wordpress.com/2010/11/18/installing-a-lamp-server/'
+    print '#', url
+    webbrowser.open(url)
+
+
+def step_15():
+    """
+    gimp
+    """
+    install(['gimp'])
+
+
+def step_16():
+    """
+    tweaks (disable knotify4, install ubuntu-tweak, etc.)
+    """
+    oldpath = '/usr/bin/knotify4'
+    newpath = '/usr/bin/knotify4.bak'
+    if os.path.exists(oldpath):
+        cmd = 'sudo mv {old} {new}'.format(old=oldpath, new=newpath)
+        print '#', cmd
+        os.system(cmd)
+    else:
+        print '# already disabled'
+    #
+    install(['ubuntu-tweak'])
+
+
+def step_17():
+    """
+    databases (sqlite3, mongodb)
+    """
+    install(['sqlite3'])
+    mongodb()
+    install(['mysql-server', 'mysql-client', 'python-mysqldb'])
+
+
+def step_18():
+    """
+    Create Launcher is back. In newer Ubuntus, it's not available 
+    upon right click on the Desktop.
+    """
+    os.system('gnome-desktop-item-edit ~/Desktop/ --create-new')
+
+
+##########
+## menu ##
+##########
 
 def menu():
     os.system('clear')
@@ -226,19 +416,26 @@ def menu():
 #       q - quit        #
 #########################"""
     print """(01)  prepare HOME directory (create ~/bin, ~/tmp, etc.)
-(02)  good_shape.sh (create updater script in ~/bin)
+(02)  good_shape.sh (create in ~/bin or call it if exists)
 (03)  dropbox, acroread, skype
 (04)  mc, konsole (mc from official repo [old])
-(05)  vim
+(05)  vim (with .vimrc)
 (06)  aliases (in .bashrc)
+(06a) MS-DOS prompt emulation (in .bashrc)
 (07)  development (build-essential, etc.)
 (08)  apt-get et al. (wajig, synaptic, etc.)
 (09)  latex
 (10)  github setup
-(10b) .gitconfig (add some aliases)
+(10a) .gitconfig (add some aliases)
 (11)  tools (xsel, kdiff3, etc.)
-(12)  python-pip (via apt-get, run just once)
-(12a) python stuff ([new] pip, ipython, etc.)"""
+(12)  python-pip (via apt-get [old], run just once)
+(12a) python stuff ([new] pip, ipython, etc.)
+(13)  multimedia (mplayer2, vlc, clementine, etc.)
+(14)  LAMP (set up a LAMP environment)
+(15)  gimp
+(16)  tweaks (disable knotify4, install ubuntu-tweak, etc.)
+(17)  databases (sqlite3, mongodb, mysql)
+(18)  create launcher (if not available upon right click on the Desktop)"""
     while True:
         try:
             choice = raw_input('>>> ').strip()
@@ -276,3 +473,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
