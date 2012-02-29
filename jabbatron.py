@@ -52,9 +52,24 @@ alias kill9='kill -9'
 # /usr/games/fortune | /usr/games/cowthink
 """
 
+GITCONFIG = """# jabbatron
+[merge]
+	tool = kdiff3
+[alias]
+    mylog = log --pretty=format:'%h - %an, %ar : %s'
+
+    st = status
+    br = branch
+    ci = commit
+    co = checkout
+    df = diff
+    dt = difftool
+"""
+
 VIMRC_URL = 'https://raw.github.com/jabbalaci/jabbatron/master/vimrc.txt'
 
 BASHRC = HOME_DIR + '/.bashrc'
+GITCONFIGRC = HOME_DIR + '/.gitconfig'
 
 EDITOR = """# jabbatron
 EDITOR=/usr/bin/vim
@@ -132,6 +147,12 @@ def install(packages):
     os.system(cmd)
 
 
+def pip(packages):
+    cmd = 'sudo pip install ' + ' '.join(packages) + ' -U'
+    print '#', cmd
+    os.system(cmd)
+
+
 def step_04():
     install(['mc', 'konsole', 'okular'])
 
@@ -177,12 +198,25 @@ def step_10():
     webbrowser.open(url)
 
 
+def step_10b():
+    reply = raw_input('Add aliases to .gitconfig [y/n]? ')
+    if reply == 'y':
+        with open(GITCONFIGRC, 'a') as f:
+            print >>f, GITCONFIG
+    else: print 'no'
+
+
 def step_11():
     install(['xsel', 'kdiff3'])
 
 
 def step_12():
-    install(['ipython'])
+    install(['python-pip'])
+    pip(['pip'])
+
+
+def step_12a():
+    pip(['ipython'])
 
 
 def menu():
@@ -192,18 +226,20 @@ def menu():
 #  for virgin systems   #
 #       q - quit        #
 #########################"""
-    print """(01) prepare HOME directory (create ~/bin, ~/tmp, etc.)
-(02) good_shape.sh (create updater script in ~/bin)
-(03) dropbox, acroread, skype
-(04) mc, konsole (mc from official repo [old])
-(05) vim
-(06) aliases (in .bashrc)
-(07) development (build-essential, etc.)
-(08) apt-get et al. (wajig, synaptic, etc.)
-(09) latex
-(10) github setup
-(11) tools (xsel, kdiff3, etc.)
-(12) python stuff (ipython, etc.)"""
+    print """(01)  prepare HOME directory (create ~/bin, ~/tmp, etc.)
+(02)  good_shape.sh (create updater script in ~/bin)
+(03)  dropbox, acroread, skype
+(04)  mc, konsole (mc from official repo [old])
+(05)  vim
+(06)  aliases (in .bashrc)
+(07)  development (build-essential, etc.)
+(08)  apt-get et al. (wajig, synaptic, etc.)
+(09)  latex
+(10)  github setup
+(10b) .gitconfig (add some aliases)
+(11)  tools (xsel, kdiff3, etc.)
+(12)  install and update python pip (run once)
+(12a) python stuff (ipython, etc.)"""
     while True:
         try:
             choice = raw_input('>>> ').strip()
