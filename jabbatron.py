@@ -11,6 +11,7 @@ Jabba Laci
 jabba.laci@gmail.com
 """
 
+import re
 import os
 import sys
 import webbrowser
@@ -217,54 +218,19 @@ def menu():
             # TODO: add CTRL+L (^L) support
             main()
             break
-        elif choice == '01':
-            step_01()
-            wait()
-            break
-        elif choice == '02':
-            step_02()
-            wait()
-            break
-        elif choice == '03':
-            step_03()
-            wait()
-            break
-        elif choice == '04':
-            step_04()
-            wait()
-            break
-        elif choice == '05':
-            step_05()
-            wait()
-            break
-        elif choice == '06':
-            step_06()
-            wait()
-            break
-        elif choice == '07':
-            step_07()
-            wait()
-            break
-        elif choice == '08':
-            step_08()
-            wait()
-            break
-        elif choice == '09':
-            step_09()
-            wait()
-            break
-        elif choice == '10':
-            step_10()
-            wait()
-            break
-        elif choice == '11':
-            step_11()
-            wait()
-            break
-        elif choice == '12':
-            step_12()
-            wait()
-            break
+        elif re.search('\d+', choice):
+            try:
+                methodToCall = globals()['step_' + choice]
+            except:
+                methodToCall = None
+            #
+            if methodToCall: 
+                methodToCall()
+                wait()
+                break
+            else: 
+                print 'Hm?'
+        #
         elif len(choice) > 0:
             print 'Wat?'
 
