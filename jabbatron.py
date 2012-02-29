@@ -13,6 +13,7 @@ jabba.laci@gmail.com
 
 import os
 import sys
+import webbrowser
 
 HOME_DIR = os.path.expanduser('~')
 
@@ -120,7 +121,7 @@ def step_02():
 def step_03():
     print """Open Ubuntu Software Center and install these:
   * Dropbox
-  * Adobe Reader
+  * Adobe Reader (first enable "Canonical Partners" in "Software Sources" and "sudo apt-get update")
   * Skype"""
 
 
@@ -131,7 +132,7 @@ def install(packages):
 
 
 def step_04():
-    install(['mc', 'konsole'])
+    install(['mc', 'konsole', 'okular'])
 
 
 def step_05():
@@ -157,12 +158,27 @@ def step_06():
 
 
 def step_07():
-    install(['build-essential'])
+    install(['build-essential', 'git', 'subversion'])
 
 
 def step_08():
-    install(['wajig'])
-    
+    install(['wajig', 'apt-file', 'synaptic'])
+
+
+def step_09():
+    install(['texlive-base', 'texlive', 'texlive-latex-extra', 
+             'texlive-metapost', 'texlive-science', 'texlive-fonts-extra'])
+
+
+def step_10():
+    url = 'http://help.github.com/mac-set-up-git/'
+    print '#', url
+    webbrowser.open(url)
+
+
+def step_11():
+    install(['xsel', 'kdiff3'])
+
 
 def menu():
     os.system('clear')
@@ -178,7 +194,10 @@ def menu():
 (05) vim
 (06) aliases (in .bashrc)
 (07) development (build-essential, etc.)
-(08) apt-get et al. (wajig)"""
+(08) apt-get et al. (wajig, synaptic, etc.)
+(09) latex
+(10) github setup
+(11) tools (xsel, kdiff3, etc.)"""
     while True:
         try:
             choice = raw_input('>>> ').strip()
@@ -189,6 +208,10 @@ def menu():
         if choice == 'q':
             print 'bye.'
             sys.exit(0)
+        elif choice == 'c':
+            # TODO: add CTRL+L (^L) support
+            main()
+            break
         elif choice == '01':
             step_01()
             wait()
@@ -219,6 +242,18 @@ def menu():
             break
         elif choice == '08':
             step_08()
+            wait()
+            break
+        elif choice == '09':
+            step_09()
+            wait()
+            break
+        elif choice == '10':
+            step_10()
+            wait()
+            break
+        elif choice == '11':
+            step_11()
             wait()
             break
         elif len(choice) > 0:
