@@ -3,12 +3,13 @@
 """
 Interactive installer script for Ubuntu.
 
-I take no responsibility for any possible 
-loss of data on your computer. Use this
-script at your own risk.
+* Author:  Laszlo Szathmary, 2012 (<jabba.laci@gmail.com>)
+* Website: <http://ubuntuincident.wordpress.com/2012/02/29/jabbatron/>
+* GitHub:  <https://github.com/jabbalaci/jabbatron>
 
-Jabba Laci
-jabba.laci@gmail.com
+I take no responsibility for any possible 
+loss of data on your computer. 
+Use this script at your own risk.
 """
 
 import re
