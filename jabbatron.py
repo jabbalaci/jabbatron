@@ -66,7 +66,7 @@ GITCONFIG = """# jabbatron
     dt = difftool
 """
 
-MSDOS = """#jabbatron
+MSDOS = """# jabbatron
 function msdos_pwd
 {
     local dir="`pwd`"
@@ -164,7 +164,7 @@ def mongodb():
         print '#', cmd
         os.system(cmd)
         #
-        cmd = "sudo sh -c 'echo \#jabbatron >> /etc/apt/sources.list'"
+        cmd = "sudo sh -c 'echo \# jabbatron >> /etc/apt/sources.list'"
         print '#', cmd
         os.system(cmd)
         cmd = "sudo sh -c 'echo deb http://downloads-distro.mongodb.org/repo/ubuntu-upstart dist 10gen >> /etc/apt/sources.list'"
@@ -340,7 +340,7 @@ def step_12a():
     """
     python stuff ([new] pip, ipython, etc.)
     """
-    pip(['pip', 'ipython', 'pymongo'])
+    pip(['pip', 'ipython', 'pymongo', 'beautifulsoup'])
 
 
 def step_13():
