@@ -180,6 +180,10 @@ def step_11():
     install(['xsel', 'kdiff3'])
 
 
+def step_12():
+    install(['ipython'])
+
+
 def menu():
     os.system('clear')
     print """##### Jabbatron 0.1 #####
@@ -197,7 +201,8 @@ def menu():
 (08) apt-get et al. (wajig, synaptic, etc.)
 (09) latex
 (10) github setup
-(11) tools (xsel, kdiff3, etc.)"""
+(11) tools (xsel, kdiff3, etc.)
+(12) python stuff (ipython, etc.)"""
     while True:
         try:
             choice = raw_input('>>> ').strip()
@@ -254,6 +259,10 @@ def menu():
             break
         elif choice == '11':
             step_11()
+            wait()
+            break
+        elif choice == '12':
+            step_12()
             wait()
             break
         elif len(choice) > 0:

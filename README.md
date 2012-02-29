@@ -20,4 +20,9 @@ Screenshot:
     (05) vim
     (06) aliases (in .bashrc)
     (07) development (build-essential, etc.)
+    (08) apt-get et al. (wajig, synaptic, etc.)
+    (09) latex
+    (10) github setup
+    (11) tools (xsel, kdiff3, etc.)
+    (12) python stuff (ipython, etc.)
     >>>
