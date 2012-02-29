@@ -212,11 +212,10 @@ def step_11():
 
 def step_12():
     install(['python-pip'])
-    pip(['pip'])
 
 
 def step_12a():
-    pip(['ipython'])
+    pip(['pip', 'ipython'])
 
 
 def menu():
@@ -238,8 +237,8 @@ def menu():
 (10)  github setup
 (10b) .gitconfig (add some aliases)
 (11)  tools (xsel, kdiff3, etc.)
-(12)  install and update python pip (run once)
-(12a) python stuff (ipython, etc.)"""
+(12)  python-pip (via apt-get, run just once)
+(12a) python stuff ([new] pip, ipython, etc.)"""
     while True:
         try:
             choice = raw_input('>>> ').strip()
@@ -251,7 +250,6 @@ def menu():
             print 'bye.'
             sys.exit(0)
         elif choice == 'c':
-            # TODO: add CTRL+L (^L) support
             main()
             break
         elif re.search('\d+', choice):
