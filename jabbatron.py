@@ -327,7 +327,7 @@ def step_11():
     """
     tools (xsel, kdiff3, etc.)
     """
-    install(['xsel', 'kdiff3', 'pdftk', 'imagemagick', 'unrar', 'comix'])
+    install(['xsel', 'kdiff3', 'pdftk', 'imagemagick', 'unrar', 'comix', 'chmsee'])
     add_repo('alexx2000/doublecmd')
     install(['doublecmd-gtk'])
 
