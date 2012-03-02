@@ -18,8 +18,8 @@ Screenshot:
     ##### Jabbatron 0.1 #####
     #   installer script    #
     #  for virgin systems   #
-    #       q - quit        #
     #########################
+    (00)  The Ubuntu Incident (open blog)
     (01)  prepare HOME directory (create ~/bin, ~/tmp, etc.)
     (02)  good_shape.sh (create in ~/bin or call it if exists)
     (03)  dropbox, acroread, skype
@@ -41,4 +41,7 @@ Screenshot:
     (16)  tweaks (disable knotify4, install ubuntu-tweak, etc.)
     (17)  databases (sqlite3, mongodb, mysql)
     (18)  create launcher (if not available upon right click on the Desktop)
-    >>> 
+    (19)  essential Firefox add-ons
+    (20)  chromium
+    (q)   quit
+    >>>

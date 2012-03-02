@@ -182,6 +182,13 @@ def mongodb():
 ## steps ##
 ###########
 
+def step_00():
+    """
+    open the Ubuntu Incident blog
+    """
+    webbrowser.open('https://ubuntuincident.wordpress.com/')
+
+
 def step_01():
     """
     prepare HOME directory (create ~/bin, ~/tmp)
@@ -407,6 +414,20 @@ def step_18():
     os.system('gnome-desktop-item-edit ~/Desktop/ --create-new')
 
 
+def step_19():
+    """
+    list of essential Firefox add-ons
+    """
+    webbrowser.open('https://ubuntuincident.wordpress.com/2011/03/14/essential-firefox-add-ons/')
+
+
+def step_20():
+    """
+    chromium
+    """
+    install(['chromium-browser'])
+
+
 ##########
 ## menu ##
 ##########
@@ -416,9 +437,9 @@ def menu():
     print """##### Jabbatron 0.1 #####
 #   installer script    #
 #  for virgin systems   #
-#       q - quit        #
 #########################"""
-    print """(01)  prepare HOME directory (create ~/bin, ~/tmp, etc.)
+    print """(00)  The Ubuntu Incident (open blog)
+(01)  prepare HOME directory (create ~/bin, ~/tmp, etc.)
 (02)  good_shape.sh (create in ~/bin or call it if exists)
 (03)  dropbox, acroread, skype
 (04)  mc, konsole (mc from official repo [old])
@@ -438,7 +459,10 @@ def menu():
 (15)  gimp
 (16)  tweaks (disable knotify4, install ubuntu-tweak, etc.)
 (17)  databases (sqlite3, mongodb, mysql)
-(18)  create launcher (if not available upon right click on the Desktop)"""
+(18)  create launcher (if not available upon right click on the Desktop)
+(19)  essential Firefox add-ons
+(20)  chromium
+(q)   quit"""
     while True:
         try:
             choice = raw_input('>>> ').strip()
