@@ -292,7 +292,7 @@ def step_07():
     """
     development (build-essential, git, subversion)
     """
-    install(['build-essential', 'git', 'subversion'])
+    install(['build-essential', 'git', 'subversion', 'clang'])
 
 
 def step_08():
@@ -350,7 +350,7 @@ def step_12a():
     """
     python stuff ([new] pip, ipython, etc.)
     """
-    pip(['pip', 'ipython', 'pymongo', 'beautifulsoup'])
+    pip(['pip', 'ipython', 'pymongo', 'beautifulsoup', 'pygments'])
 
 
 def step_13():
