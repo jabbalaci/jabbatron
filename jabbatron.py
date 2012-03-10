@@ -173,7 +173,7 @@ def mongodb():
         os.system(cmd)
         #
         os.system('sudo apt-get update')
-        install('mongodb-10gen')
+        install(['mongodb-10gen'])
         #
         pip('pymongo')
 
@@ -292,7 +292,7 @@ def step_07():
     """
     development (build-essential, git, subversion)
     """
-    install(['build-essential', 'git', 'subversion', 'clang'])
+    install(['build-essential', 'git', 'subversion', 'clang', 'gdc'])
 
 
 def step_08():
