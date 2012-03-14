@@ -428,6 +428,14 @@ def step_20():
     install(['chromium-browser'])
 
 
+def step_21():
+    """
+    firefox from PPA (beta channel)
+    """
+    add_repo('mozillateam/firefox-next')
+    install(['firefox'])
+
+
 ##########
 ## menu ##
 ##########
@@ -462,6 +470,7 @@ def menu():
 (18)  create launcher (if not available upon right click on the Desktop)
 (19)  essential Firefox add-ons
 (20)  chromium
+(21)  firefox from PPA
 (q)   quit"""
     while True:
         try:
