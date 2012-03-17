@@ -346,6 +346,22 @@ def step_12():
     install(['python-pip'])
 
 
+def step_12b():
+    """
+    pyp from http://code.google.com/p/pyp/
+    """
+    if os.path.isdir(HOME_DIR + '/bin'):
+        url = 'http://pyp.googlecode.com/files/pyp'
+        out = HOME_DIR + '/bin/pyp'
+        try:
+            os.unlink(out)
+        except:
+            pass
+        os.system('wget {url} -O {out}'.format(url=url, out=out))
+        os.system('chmod 700 {out}'.format(out=out))
+        print '# pyp fetched'
+
+
 def step_12a():
     """
     python stuff ([new] pip, ipython, etc.)
@@ -462,6 +478,7 @@ def menu():
 (11)  tools (xsel, kdiff3, etc.)
 (12)  python-pip (via apt-get [old], run just once)
 (12a) python stuff ([new] pip, ipython, etc.)
+(12b) pyp (The Pyed Piper)
 (13)  multimedia (mplayer2, vlc, clementine, etc.)
 (14)  LAMP (set up a LAMP environment)
 (15)  gimp
@@ -470,7 +487,7 @@ def menu():
 (18)  create launcher (if not available upon right click on the Desktop)
 (19)  essential Firefox add-ons
 (20)  chromium
-(21)  firefox from PPA
+(21)  firefox from PPA (beta channel)
 (q)   quit"""
     while True:
         try:
