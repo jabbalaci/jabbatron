@@ -334,7 +334,7 @@ def step_11():
     """
     tools (xsel, kdiff3, etc.)
     """
-    install(['xsel', 'kdiff3', 'pdftk', 'imagemagick', 'unrar', 'comix', 'chmsee'])
+    install(['xsel', 'kdiff3', 'pdftk', 'imagemagick', 'unrar', 'comix', 'chmsee', 'gqview'])
     add_repo('alexx2000/doublecmd')
     install(['doublecmd-gtk'])
 
@@ -452,6 +452,13 @@ def step_21():
     install(['firefox'])
 
 
+def step_22():
+    """
+    games (crack-attack, tents, etc.)
+    """
+    install(['crack-attack', 'sgt-puzzles'])
+
+
 ##########
 ## menu ##
 ##########
@@ -488,6 +495,7 @@ def menu():
 (19)  essential Firefox add-ons
 (20)  chromium
 (21)  firefox from PPA (beta channel)
+(22)  games (crack-attack, etc.)
 (q)   quit"""
     while True:
         try:

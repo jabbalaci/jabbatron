@@ -35,6 +35,7 @@ Screenshot:
     (11)  tools (xsel, kdiff3, etc.)
     (12)  python-pip (via apt-get [old], run just once)
     (12a) python stuff ([new] pip, ipython, etc.)
+    (12b) pyp (The Pyed Piper)
     (13)  multimedia (mplayer2, vlc, clementine, etc.)
     (14)  LAMP (set up a LAMP environment)
     (15)  gimp
@@ -43,5 +44,7 @@ Screenshot:
     (18)  create launcher (if not available upon right click on the Desktop)
     (19)  essential Firefox add-ons
     (20)  chromium
+    (21)  firefox from PPA (beta channel)
+    (22)  games (crack-attack, etc.)
     (q)   quit
-    >>>
+    >>> 
