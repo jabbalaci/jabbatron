@@ -136,13 +136,27 @@ def call_good_shape():
 
 
 def install(packages):
-    cmd = 'sudo apt-get install ' + ' '.join(packages)
+    if type(packages) == str:
+        cmd = 'sudo apt-get install ' + packages
+    elif type(packages) == list:
+        cmd = 'sudo apt-get install ' + ' '.join(packages)
+    else:
+        print >>sys.stderr, 'Error: strange argument for install().'
+        sys.exit(1)
+    # if everything was OK
     print '#', cmd
     os.system(cmd)
 
 
 def pip(packages):
-    cmd = 'sudo pip install ' + ' '.join(packages) + ' -U'
+    if type(packages) == str:
+        cmd = 'sudo pip install ' + packages + ' -U'
+    elif type(packages) == list:
+        cmd = 'sudo pip install ' + ' '.join(packages) + ' -U'
+    else:
+        print >>sys.stderr, 'Error: strange argument for pip().'
+        sys.exit(1)
+    # if everything was OK
     print '#', cmd
     os.system(cmd)
 
@@ -173,7 +187,7 @@ def mongodb():
         os.system(cmd)
         #
         os.system('sudo apt-get update')
-        install(['mongodb-10gen'])
+        install('mongodb-10gen')
         #
         pip('pymongo')
 
@@ -253,7 +267,7 @@ def step_05():
     """
     vim + .vimrc
     """
-    install(['vim-gnome'])
+    install('vim-gnome')
     if not os.path.exists(HOME_DIR + '/.vimrc'):
         os.system("cd; wget {} -O .vimrc".format(VIMRC_URL))
     create_dir('tmp/vim')
@@ -336,14 +350,26 @@ def step_11():
     """
     install(['xsel', 'kdiff3', 'pdftk', 'imagemagick', 'unrar', 'comix', 'chmsee', 'gqview'])
     add_repo('alexx2000/doublecmd')
-    install(['doublecmd-gtk'])
+    install('doublecmd-gtk')
 
 
 def step_12():
     """
     python-pip (via apt-get [old], run just once)
     """
-    install(['python-pip'])
+    install('python-pip')
+
+
+def step_12a():
+    """
+    python stuff ([new] pip, ipython, etc.)
+    """
+    install(['libxml2-dev', 'libxslt1-dev', 'python2.7-dev'])
+    pip(['pip', 'ipython', 'pymongo', 'beautifulsoup', 'pygments', 'lxml'])
+    # numpy, scipy, matplotlib, pandas
+    pip('numpy')
+    install(['libatlas-base-dev', 'gfortran'])
+    pip(['scipy', 'matplotlib', 'pandas'])
 
 
 def step_12b():
@@ -362,23 +388,16 @@ def step_12b():
         print '# pyp fetched'
 
 
-def step_12a():
-    """
-    python stuff ([new] pip, ipython, etc.)
-    """
-    pip(['pip', 'ipython', 'pymongo', 'beautifulsoup', 'pygments'])
-
-
 def step_13():
     """
     multimedia (mplayer2, vlc, clementine, etc.)
     """
-    install(['mplayer2'])
+    install('mplayer2')
     add_repo('n-muench/vlc')
-    install(['vlc'])
+    install('vlc')
     #
     add_repo('me-davidsansome/clementine')
-    install(['clementine'])
+    install('clementine')
 
 
 def step_14():
@@ -394,7 +413,7 @@ def step_15():
     """
     gimp
     """
-    install(['gimp'])
+    install('gimp')
 
 
 def step_16():
@@ -410,14 +429,14 @@ def step_16():
     else:
         print '# already disabled'
     #
-    install(['ubuntu-tweak'])
+    install('ubuntu-tweak')
 
 
 def step_17():
     """
     databases (sqlite3, mongodb)
     """
-    install(['sqlite3'])
+    install('sqlite3')
     mongodb()
     install(['mysql-server', 'mysql-client', 'python-mysqldb'])
 
@@ -441,7 +460,7 @@ def step_20():
     """
     chromium
     """
-    install(['chromium-browser'])
+    install('chromium-browser')
 
 
 def step_21():
@@ -449,7 +468,7 @@ def step_21():
     firefox from PPA (beta channel)
     """
     add_repo('mozillateam/firefox-next')
-    install(['firefox'])
+    install('firefox')
 
 
 def step_22():
