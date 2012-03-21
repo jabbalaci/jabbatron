@@ -200,7 +200,9 @@ def step_00():
     """
     open the Ubuntu Incident blog
     """
-    webbrowser.open('https://ubuntuincident.wordpress.com/')
+    url = 'https://ubuntuincident.wordpress.com/'
+    print '#', url
+    webbrowser.open(url)
 
 
 def step_01():
@@ -306,7 +308,16 @@ def step_07():
     """
     development (build-essential, git, subversion)
     """
-    install(['build-essential', 'git', 'subversion', 'clang', 'gdc'])
+    install(['build-essential', 'git', 'subversion', 'clang', 'gdc', 'codeblocks'])
+
+
+def step_07b():
+    """
+    D language
+    """
+    url = 'http://www.digitalmars.com/d/download.html'
+    print '#', url
+    webbrowser.open(url)
 
 
 def step_08():
@@ -453,7 +464,9 @@ def step_19():
     """
     list of essential Firefox add-ons
     """
-    webbrowser.open('https://ubuntuincident.wordpress.com/2011/03/14/essential-firefox-add-ons/')
+    url = 'https://ubuntuincident.wordpress.com/2011/03/14/essential-firefox-add-ons/'
+    print '#', url
+    webbrowser.open(url)
 
 
 def step_20():
@@ -478,6 +491,15 @@ def step_22():
     install(['crack-attack', 'sgt-puzzles'])
 
 
+def step_23():
+    """
+    virtualbox
+    """
+    url = 'https://www.virtualbox.org/wiki/Linux_Downloads'
+    print '#', url
+    webbrowser.open(url)
+
+
 ##########
 ## menu ##
 ##########
@@ -497,6 +519,7 @@ def menu():
 (06)  aliases (in .bashrc)
 (06a) MS-DOS prompt emulation (in .bashrc)
 (07)  development (build-essential, etc.)
+(07b) D language (dmd, rdmd)
 (08)  apt-get et al. (wajig, synaptic, etc.)
 (09)  latex
 (10)  github setup
@@ -515,6 +538,7 @@ def menu():
 (20)  chromium
 (21)  firefox from PPA (beta channel)
 (22)  games (crack-attack, etc.)
+(23)  virtualbox
 (q)   quit"""
     while True:
         try:

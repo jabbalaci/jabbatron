@@ -28,6 +28,7 @@ Screenshot:
     (06)  aliases (in .bashrc)
     (06a) MS-DOS prompt emulation (in .bashrc)
     (07)  development (build-essential, etc.)
+    (07b) D language (dmd, rdmd)
     (08)  apt-get et al. (wajig, synaptic, etc.)
     (09)  latex
     (10)  github setup
@@ -46,5 +47,6 @@ Screenshot:
     (20)  chromium
     (21)  firefox from PPA (beta channel)
     (22)  games (crack-attack, etc.)
+    (23)  virtualbox
     (q)   quit
-    >>> 
+    >>>
