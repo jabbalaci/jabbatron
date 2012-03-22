@@ -28,7 +28,7 @@ Screenshot:
     (06)  aliases (in .bashrc)
     (06a) MS-DOS prompt emulation (in .bashrc)
     (07)  development (build-essential, etc.)
-    (07b) D language (dmd, rdmd)
+    (07a) D language (dmd, rdmd)
     (08)  apt-get et al. (wajig, synaptic, etc.)
     (09)  latex
     (10)  github setup
@@ -41,6 +41,7 @@ Screenshot:
     (14)  LAMP (set up a LAMP environment)
     (15)  gimp
     (16)  tweaks (disable knotify4, install ubuntu-tweak, etc.)
+    (16a) remove global menu
     (17)  databases (sqlite3, mongodb, mysql)
     (18)  create launcher (if not available upon right click on the Desktop)
     (19)  essential Firefox add-ons
@@ -50,3 +51,4 @@ Screenshot:
     (23)  virtualbox
     (q)   quit
     >>>
+

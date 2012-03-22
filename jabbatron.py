@@ -19,6 +19,9 @@ import webbrowser
 
 HOME_DIR = os.path.expanduser('~')
 
+REMOVE = 'remove'
+INSTALL = 'install'
+
 GOOD_SHAPE = '''#!/bin/bash
 
 sudo dpkg --configure -a\\
@@ -135,17 +138,25 @@ def call_good_shape():
     else: print 'no'
 
 
-def install(packages):
+def install_remove(packages, what=INSTALL):
     if type(packages) == str:
-        cmd = 'sudo apt-get install ' + packages
+        cmd = 'sudo apt-get {what} '.format(what=what) + packages
     elif type(packages) == list:
-        cmd = 'sudo apt-get install ' + ' '.join(packages)
+        cmd = 'sudo apt-get {what} '.format(what=what) + ' '.join(packages)
     else:
-        print >>sys.stderr, 'Error: strange argument for install().'
+        print >>sys.stderr, 'Error: strange argument for {what}().'.format(what=what)
         sys.exit(1)
     # if everything was OK
     print '#', cmd
     os.system(cmd)
+
+
+def install(packages):
+    install_remove(packages, INSTALL)
+
+
+def remove(packages):
+    install_remove(packages, REMOVE)
 
 
 def pip(packages):
@@ -311,7 +322,7 @@ def step_07():
     install(['build-essential', 'git', 'subversion', 'clang', 'gdc', 'codeblocks'])
 
 
-def step_07b():
+def step_07a():
     """
     D language
     """
@@ -360,8 +371,8 @@ def step_11():
     tools (xsel, kdiff3, etc.)
     """
     install(['xsel', 'kdiff3', 'pdftk', 'imagemagick', 'unrar', 'comix', 'chmsee', 'gqview'])
-    add_repo('alexx2000/doublecmd')
-    install('doublecmd-gtk')
+#    add_repo('alexx2000/doublecmd')
+#    install('doublecmd-gtk')
 
 
 def step_12():
@@ -379,7 +390,7 @@ def step_12a():
     pip(['pip', 'ipython', 'pymongo', 'beautifulsoup', 'pygments', 'lxml'])
     # numpy, scipy, matplotlib, pandas
     pip('numpy')
-    install(['libatlas-base-dev', 'gfortran'])
+    install(['libatlas-base-dev', 'gfortran', 'libfreetype6-dev', 'libpng-dev'])
     pip(['scipy', 'matplotlib', 'pandas'])
 
 
@@ -441,6 +452,13 @@ def step_16():
         print '# already disabled'
     #
     install('ubuntu-tweak')
+
+
+def step_16a():
+    """
+    remove global menu
+    """
+    remove(['appmenu-gtk3', 'appmenu-gtk', 'appmenu-qt', 'firefox-globalmenu'])
 
 
 def step_17():
@@ -519,7 +537,7 @@ def menu():
 (06)  aliases (in .bashrc)
 (06a) MS-DOS prompt emulation (in .bashrc)
 (07)  development (build-essential, etc.)
-(07b) D language (dmd, rdmd)
+(07a) D language (dmd, rdmd)
 (08)  apt-get et al. (wajig, synaptic, etc.)
 (09)  latex
 (10)  github setup
@@ -532,6 +550,7 @@ def menu():
 (14)  LAMP (set up a LAMP environment)
 (15)  gimp
 (16)  tweaks (disable knotify4, install ubuntu-tweak, etc.)
+(16a) remove global menu
 (17)  databases (sqlite3, mongodb, mysql)
 (18)  create launcher (if not available upon right click on the Desktop)
 (19)  essential Firefox add-ons
