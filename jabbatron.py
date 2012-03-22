@@ -7,8 +7,8 @@ Interactive installer script for Ubuntu.
 * Website: <http://ubuntuincident.wordpress.com/2012/02/29/jabbatron/>
 * GitHub:  <https://github.com/jabbalaci/jabbatron>
 
-I take no responsibility for any possible 
-loss of data on your computer. 
+I take no responsibility for any possible
+loss of data on your computer.
 Use this script at your own risk.
 """
 
@@ -58,7 +58,7 @@ alias kill9='kill -9'
 
 GITCONFIG = """# jabbatron
 [merge]
-	tool = kdiff3
+    tool = kdiff3
 [alias]
     mylog = log --pretty=format:'%h - %an, %ar : %s'
 
@@ -111,10 +111,12 @@ export PATH
 def create_dir(item, in_home_dir=True):
     if in_home_dir:
         item = HOME_DIR + '/' + item
-    if os.path.exists(item): print '{} exists'.format(item)
+    if os.path.exists(item):
+        print '{} exists'.format(item)
     else:
         os.mkdir(item)
-        if os.path.exists(item): print '{} created'.format(item)
+        if os.path.exists(item):
+            print '{} created'.format(item)
 
 
 def wait():
@@ -128,14 +130,16 @@ def bin_to_path_in_bashrc():
     if reply == 'y':
         with open(BASHRC, 'a') as f:
             print >>f, PATH_BIN
-    else: print 'no'
+    else:
+        print 'no'
 
 
 def call_good_shape():
     reply = raw_input('Execute ~/bin/good_shape.sh [y/n]? ')
     if reply == 'y':
         os.system(HOME_DIR + '/bin/good_shape.sh')
-    else: print 'no'
+    else:
+        print 'no'
 
 
 def install_remove(packages, what=INSTALL):
@@ -144,7 +148,8 @@ def install_remove(packages, what=INSTALL):
     elif type(packages) == list:
         cmd = 'sudo apt-get {what} '.format(what=what) + ' '.join(packages)
     else:
-        print >>sys.stderr, 'Error: strange argument for {what}().'.format(what=what)
+        print >>sys.stderr, \
+            'Error: strange argument for {what}().'.format(what=what)
         sys.exit(1)
     # if everything was OK
     print '#', cmd
@@ -288,7 +293,8 @@ def step_05():
     if reply == 'y':
         with open(BASHRC, 'a') as f:
             print >>f, EDITOR
-    else: print 'no'
+    else:
+        print 'no'
 
 
 def step_06():
@@ -299,7 +305,8 @@ def step_06():
     if reply == 'y':
         with open(BASHRC, 'a') as f:
             print >>f, ALIASES
-    else: print 'no'
+    else:
+        print 'no'
     #
     install(['fortune-mod', 'cowsay'])
 
@@ -312,7 +319,8 @@ def step_06a():
     if reply == 'y':
         with open(BASHRC, 'a') as f:
             print >>f, MSDOS
-    else: print 'no'
+    else:
+        print 'no'
 
 
 def step_07():
@@ -342,7 +350,7 @@ def step_09():
     """
     latex
     """
-    install(['texlive-base', 'texlive', 'texlive-latex-extra', 
+    install(['texlive-base', 'texlive', 'texlive-latex-extra',
              'texlive-metapost', 'texlive-science', 'texlive-fonts-extra'])
 
 
@@ -363,7 +371,8 @@ def step_10a():
     if reply == 'y':
         with open(GITCONFIGRC, 'a') as f:
             print >>f, GITCONFIG
-    else: print 'no'
+    else:
+        print 'no'
 
 
 def step_11():
@@ -387,7 +396,7 @@ def step_12a():
     python stuff ([new] pip, ipython, etc.)
     """
     install(['libxml2-dev', 'libxslt1-dev', 'python2.7-dev'])
-    pip(['pip', 'ipython', 'pymongo', 'beautifulsoup', 'pygments', 'lxml'])
+    pip(['pip', 'pep8', 'ipython', 'pymongo', 'beautifulsoup', 'pygments', 'lxml'])
     # numpy, scipy, matplotlib, pandas
     pip('numpy')
     install(['libatlas-base-dev', 'gfortran', 'libfreetype6-dev', 'libpng-dev'])
@@ -423,7 +432,6 @@ def step_13():
     install('clementine')
     #
     install('minitube')
-
 
 
 def step_14():
@@ -476,7 +484,7 @@ def step_17():
 
 def step_18():
     """
-    Create Launcher is back. In newer Ubuntus, it's not available 
+    Create Launcher is back. In newer Ubuntus, it's not available
     upon right click on the Desktop.
     """
     os.system('gnome-desktop-item-edit ~/Desktop/ --create-new')
@@ -582,11 +590,11 @@ def menu():
             except:
                 methodToCall = None
             #
-            if methodToCall: 
+            if methodToCall:
                 methodToCall()
                 wait()
                 break
-            else: 
+            else:
                 print 'Hm?'
         #
         elif len(choice) > 0:
@@ -600,4 +608,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
