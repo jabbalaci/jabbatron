@@ -266,7 +266,7 @@ def step_04():
     """
     mc, konsole (mc from official repo [old])
     """
-    install(['mc', 'konsole', 'okular'])
+    install(['mc', 'konsole', 'okular', 'nautilus-open-terminal'])
     if not os.path.exists(HOME_DIR + '/.mc'):
         create_dir('.mc')
     bfile = HOME_DIR + '/.mc/bindings'
@@ -415,11 +415,15 @@ def step_13():
     multimedia (mplayer2, vlc, clementine, etc.)
     """
     install('mplayer2')
+    #
     add_repo('n-muench/vlc')
     install('vlc')
     #
     add_repo('me-davidsansome/clementine')
     install('clementine')
+    #
+    install('minitube')
+
 
 
 def step_14():
