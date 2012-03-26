@@ -398,6 +398,12 @@ def step_12a():
     pip('numpy')
     install(['libatlas-base-dev', 'gfortran', 'libfreetype6-dev', 'libpng-dev'])
     pip(['scipy', 'matplotlib', 'pandas'])
+    #
+    pip(['pil', 'pyscreenshot'])
+    #
+    install('libxtst-dev')
+    pip('autopy')
+
 
 
 def step_12b():
