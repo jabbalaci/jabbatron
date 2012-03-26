@@ -135,11 +135,8 @@ def bin_to_path_in_bashrc():
 
 
 def call_good_shape():
-    reply = raw_input('Execute ~/bin/good_shape.sh [y/n]? ')
-    if reply == 'y':
-        os.system(HOME_DIR + '/bin/good_shape.sh')
-    else:
-        print 'no'
+    print '# executing ~/bin/good_shape.sh'
+    os.system(HOME_DIR + '/bin/good_shape.sh')
 
 
 def install_remove(packages, what=INSTALL):
