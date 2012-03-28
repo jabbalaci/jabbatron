@@ -12,8 +12,17 @@ you can easily update it with this script.
 
 I've tested it with Python 2.7 under Ubuntu Linux.
 
-Screenshot:
------------
+Installation
+------------
+
+jabbatron is now available via pypi:
+
+    sudo pip install jabbatron
+
+Or, simply download `jabbatron.py` and launch it.
+
+Screenshot
+----------
 
     ##### Jabbatron 0.1 #####
     #   installer script    #
