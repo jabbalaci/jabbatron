@@ -13,7 +13,7 @@ Use this script at your own risk.
 """
 
 __author__ = "Laszlo Szathmary (jabba.laci@gmail.com)"
-__version__ = "0.1.0"
+__version__ = "0.1.1"
 __date__ = "20120328"
 __copyright__ = "Copyright (c) 2012 Laszlo Szathmary"
 __license__ = "GPL"
@@ -94,6 +94,10 @@ echo HIMEM is testing extended memory...done.
 echo
 """
 
+WGETRC = """# custom .wgetrc file
+
+# user_agent = Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:11.0) Gecko/20100101 Firefox/11.0"""
+
 VIMRC_URL = 'https://raw.github.com/jabbalaci/jabbatron/master/vimrc.txt'
 
 BASHRC = HOME_DIR + '/.bashrc'
@@ -138,6 +142,18 @@ def bin_to_path_in_bashrc():
             print >>f, PATH_BIN
     else:
         print 'no'
+
+
+def add_wgetrc():
+    fname = HOME_DIR + '/.wgetrc'
+    if os.path.exists(fname):
+        print '{} exists'.format(fname)
+    else:
+        with open(fname, 'w') as f:
+            print >>f, WGETRC
+        if os.path.exists(fname):
+            print '{} created'.format(fname)
+            os.system('chmod 600 {f}'.format(f=fname))
 
 
 def call_good_shape():
@@ -232,6 +248,7 @@ def step_01():
         create_dir(d)
     #
     bin_to_path_in_bashrc()
+    add_wgetrc()
 
 
 def step_02():
@@ -411,7 +428,6 @@ def step_12a():
     pip('autopy')
 
 
-
 def step_12b():
     """
     pyp from http://code.google.com/p/pyp/
@@ -545,10 +561,10 @@ def step_23():
 
 def menu():
     os.system('clear')
-    print """##### Jabbatron 0.1 #####
-#   installer script    #
-#  for virgin systems   #
-#########################"""
+    print """##### Jabbatron {ver} #####
+#    installer  script    #
+#   for  virgin systems   #
+###########################""".format(ver=__version__)
     print """(00)  The Ubuntu Incident (open blog)
 (01)  prepare HOME directory (create ~/bin, ~/tmp, etc.)
 (02)  good_shape.sh (create in ~/bin or call it if exists)
