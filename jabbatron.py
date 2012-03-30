@@ -13,8 +13,8 @@ Use this script at your own risk.
 """
 
 __author__ = "Laszlo Szathmary (jabba.laci@gmail.com)"
-__version__ = "0.1.1"
-__date__ = "20120328"
+__version__ = "0.1.2"
+__date__ = "20120330"
 __copyright__ = "Copyright (c) 2012 Laszlo Szathmary"
 __license__ = "GPL"
 
@@ -416,7 +416,7 @@ def step_12a():
     python stuff ([new] pip, ipython, etc.)
     """
     install(['libxml2-dev', 'libxslt1-dev', 'python2.7-dev'])
-    pip(['pip', 'pep8', 'ipython', 'pymongo', 'beautifulsoup', 'pygments', 'lxml'])
+    pip(['pip', 'pep8', 'ipython', 'pymongo', 'beautifulsoup', 'pygments', 'lxml', 'scrapy'])
     # numpy, scipy, matplotlib, pandas
     pip('numpy')
     install(['libatlas-base-dev', 'gfortran', 'libfreetype6-dev', 'libpng-dev'])
