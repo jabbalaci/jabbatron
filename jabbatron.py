@@ -291,7 +291,7 @@ def step_04():
     """
     mc, konsole (mc from official repo [old])
     """
-    install(['mc', 'konsole', 'okular', 'nautilus-open-terminal'])
+    install(['mc', 'konsole', 'okular', 'nautilus-open-terminal', 'gconf-editor', 'htop'])
     if not os.path.exists(HOME_DIR + '/.mc'):
         create_dir('.mc')
     bfile = HOME_DIR + '/.mc/bindings'
