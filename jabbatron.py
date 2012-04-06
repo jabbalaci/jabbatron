@@ -13,8 +13,8 @@ Use this script at your own risk.
 """
 
 __author__ = "Laszlo Szathmary (jabba.laci@gmail.com)"
-__version__ = "0.1.3"
-__date__ = "20120330"
+__version__ = "0.1.4"
+__date__ = "20120406"
 __copyright__ = "Copyright (c) 2012 Laszlo Szathmary"
 __license__ = "GPL"
 
