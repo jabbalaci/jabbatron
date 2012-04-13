@@ -426,6 +426,8 @@ def step_12a():
     #
     install('libxtst-dev')
     pip('autopy')
+    #
+    install('python-sympy')
 
 
 def step_12b():
