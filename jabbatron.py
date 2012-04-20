@@ -118,13 +118,18 @@ export PATH
 ## helpers ##
 #############
 
-def create_dir(item, in_home_dir=True):
+def create_dir(item, in_home_dir=True, sudo=False):
     if in_home_dir:
         item = HOME_DIR + '/' + item
     if os.path.exists(item):
         print '{} exists'.format(item)
     else:
-        os.mkdir(item)
+        if not sudo:
+            os.mkdir(item)
+        else:    # sudo
+            cmd = "sudo mkdir '{d}'".format(d=item)
+            print '#', cmd
+            os.system(cmd)
         if os.path.exists(item):
             print '{} created'.format(item)
 
@@ -291,7 +296,7 @@ def step_04():
     """
     mc, konsole (mc from official repo [old])
     """
-    install(['mc', 'konsole', 'okular', 'nautilus-open-terminal', 'gconf-editor', 'htop'])
+    install(['mc', 'konsole', 'okular', 'nautilus-open-terminal', 'gconf-editor', 'htop', 'nautilus-open-terminal'])
     if not os.path.exists(HOME_DIR + '/.mc'):
         create_dir('.mc')
     bfile = HOME_DIR + '/.mc/bindings'
@@ -428,6 +433,8 @@ def step_12a():
     pip('autopy')
     #
     install('python-sympy')
+    #
+    pip(['sphinx', 'spyder'])
 
 
 def step_12b():
@@ -557,6 +564,41 @@ def step_23():
     webbrowser.open(url)
 
 
+def step_24():
+    """
+    Java
+    """
+    url = 'http://www.oracle.com/technetwork/java/javase/downloads/index.html'
+    print '#', url
+    webbrowser.open(url)
+
+
+def step_25():
+    """
+    Java API 7
+    """
+    url = 'http://docs.oracle.com/javase/7/docs/api/'
+    print '#', url
+    webbrowser.open(url)
+
+
+def step_26():
+    """
+    Flash videos are blue. Correct it.
+    https://ubuntuincident.wordpress.com/2012/04/01/flash-videos-are-blue/
+    """
+    if not os.path.exists('/etc/adobe'):
+        create_dir('/etc/adobe', sudo=True)
+        os.system('sudo chmod 755 /etc/adobe')
+    cmd = "sudo sh -c 'echo EnableLinuxHWVideoDecode=1 > /etc/adobe/mms.cfg'"
+    print '#', cmd
+    os.system(cmd)
+    cmd = "sudo sh -c 'echo OverrideGPUValidation=true >> /etc/adobe/mms.cfg'"
+    print '#', cmd
+    os.system(cmd)
+    os.system('sudo chmod 644 /etc/adobe/mms.cfg')
+
+
 ##########
 ## menu ##
 ##########
@@ -597,6 +639,9 @@ def menu():
 (21)  firefox from PPA (beta channel)
 (22)  games (crack-attack, etc.)
 (23)  virtualbox
+(24)  Java SDK update
+(25)  Java 7 API
+(26)  blue Flash (correct it)
 (q)   quit"""
     while True:
         try:
