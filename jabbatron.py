@@ -376,7 +376,7 @@ def step_09():
     latex
     """
     install(['texlive-base', 'texlive', 'texlive-latex-extra',
-             'texlive-metapost', 'texlive-science', 'texlive-fonts-extra'])
+             'texlive-metapost', 'texlive-science', 'texlive-fonts-extra', 'dvipng'])
 
 
 def step_10():
