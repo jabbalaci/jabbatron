@@ -497,7 +497,13 @@ def step_16():
     else:
         print '# already disabled'
     #
+    add_repo('tualatrix/ppa')
     install('ubuntu-tweak')
+    #
+    add_repo('diesch/testing')
+    install('unsettings')
+    #
+    install('myunity')
 
 
 def step_16a():
