@@ -548,10 +548,41 @@ def step_20():
 
 def step_21():
     """
-    firefox from PPA (beta channel)
+    tesseract 3
+    http://code.google.com/p/tesseract-ocr/wiki/ReadMe
     """
-    add_repo('mozillateam/firefox-next')
-    install('firefox')
+    install(['autoconf automake libtool', 'libpng12-dev', 'libjpeg62-dev', 'libtiff4-dev', 'zlib1g-dev'])
+    #
+    if False:
+        os.chdir('/tmp')
+        if not os.path.exists('leptonica-1.68.tar.gz'):
+            os.system('wget http://www.leptonica.org/source/leptonica-1.68.tar.gz')
+        os.system('tar xvzf leptonica-1.68.tar.gz')
+        os.chdir('/tmp/leptonica-1.68')
+        os.system('./autobuild')
+        os.system('./configure')
+        os.system('make')
+        os.system('sudo make install')
+        os.system('sudo ldconfig')
+    #
+    if False:
+        os.chdir('/tmp')
+        if not os.path.exists('tesseract-3.01.tar.gz'):
+            os.system('wget http://tesseract-ocr.googlecode.com/files/tesseract-3.01.tar.gz')
+        os.system('tar xvzf tesseract-3.01.tar.gz')
+        os.chdir('/tmp/tesseract-3.01')
+        os.system('./autogen.sh')
+        os.system('./configure')
+        os.system('make')
+        os.system('sudo make install')
+        os.system('sudo ldconfig')
+    #
+    os.chdir('/tmp')
+    if not os.path.exists('tesseract-ocr-3.01.eng.tar.gz'):
+        os.system('wget http://tesseract-ocr.googlecode.com/files/tesseract-ocr-3.01.eng.tar.gz')
+    os.system('tar xvzf tesseract-ocr-3.01.eng.tar.gz')
+    os.system('sudo mv tesseract-ocr /usr/share')
+    
 
 
 def step_22():
@@ -605,6 +636,14 @@ def step_26():
     os.system('sudo chmod 644 /etc/adobe/mms.cfg')
 
 
+def step_27():
+    """
+    Java
+    """
+    url = 'http://www.oxygenxml.com/download_oxygenxml_editor.html'
+    print '#', url
+    webbrowser.open(url)
+
 ##########
 ## menu ##
 ##########
@@ -642,12 +681,13 @@ def menu():
 (18)  create launcher (if not available upon right click on the Desktop)
 (19)  essential Firefox add-ons
 (20)  chromium
-(21)  firefox from PPA (beta channel)
+(21)  tesseract 3
 (22)  games (crack-attack, etc.)
 (23)  virtualbox
 (24)  Java SDK update
 (25)  Java 7 API
 (26)  blue Flash (correct it)
+(27)  oXygen XML Editor
 (q)   quit"""
     while True:
         try:
