@@ -25,6 +25,8 @@ import webbrowser
 
 HOME_DIR = os.path.expanduser('~')
 
+autoflush_on = False
+
 REMOVE = 'remove'
 INSTALL = 'install'
 
@@ -239,6 +241,36 @@ def mongodb():
         #
         pip('pymongo')
 
+
+def which(program):
+    """
+    Equivalent of the which command in Python.
+    
+    source: http://stackoverflow.com/questions/377017/test-if-executable-exists-in-python
+    """
+    def is_exe(fpath):
+        return os.path.exists(fpath) and os.access(fpath, os.X_OK)
+
+    fpath = os.path.split(program)[0]
+    if fpath:
+        if is_exe(program):
+            return program
+    else:
+        for path in os.environ["PATH"].split(os.pathsep):
+            exe_file = os.path.join(path, program)
+            if is_exe(exe_file):
+                return exe_file
+
+    return None
+
+def unbuffered():
+    """Switch autoflush on."""
+    global autoflush_on
+    # reopen stdout file descriptor with write mode
+    # and 0 as the buffer size (unbuffered)
+    if not autoflush_on:
+        sys.stdout = os.fdopen(sys.stdout.fileno(), 'w', 0)
+        autoflush_on = True
 
 ###########
 ## steps ##
@@ -612,7 +644,7 @@ def step_21():
     """
     install(['autoconf automake libtool', 'libpng12-dev', 'libjpeg62-dev', 'libtiff4-dev', 'zlib1g-dev'])
     #
-    if False:
+    if True:
         os.chdir('/tmp')
         if not os.path.exists('leptonica-1.68.tar.gz'):
             os.system('wget http://www.leptonica.org/source/leptonica-1.68.tar.gz')
@@ -624,7 +656,7 @@ def step_21():
         os.system('sudo make install')
         os.system('sudo ldconfig')
     #
-    if False:
+    if True:
         os.chdir('/tmp')
         if not os.path.exists('tesseract-3.01.tar.gz'):
             os.system('wget http://tesseract-ocr.googlecode.com/files/tesseract-3.01.tar.gz')
@@ -702,6 +734,42 @@ def step_27():
     url = 'http://www.oxygenxml.com/download_oxygenxml_editor.html'
     print '#', url
     webbrowser.open(url)
+
+
+def step_28():
+    """
+    Midnight Commander from source
+    """
+    install(['libslang2-dev', 'libglib2.0-dev'])
+    #
+    mc = which('mc')
+    if mc:
+        print 'Current version: ',
+        os.system('mc -V | head -1')
+    url = 'http://www.midnight-commander.org/downloads'
+    print '#', url
+    webbrowser.open(url)
+    print 'Paste in the URL of the latest stable release:'
+    url = raw_input('mc-X.X.X.X.tar.bz2: ').strip()
+    if not re.search('http://.*/mc-\d+\.\d+\.\d+\.\d+\.tar\.bz2$', url):
+        print 'Error: not a valid URL.'
+        wait()
+        return
+    fname_tar_bz2 = url.split('/')[-1]
+    print '#', fname_tar_bz2
+    fname = re.sub('.tar.bz2', '', fname_tar_bz2)
+    print '#', fname
+    os.chdir('/tmp')
+    if not os.path.exists(fname_tar_bz2):
+        os.system('wget {url}'.format(url=url))
+    os.system('tar xvjf {0}'.format(fname_tar_bz2))
+    os.chdir('/tmp/{0}'.format(fname))
+    os.system('./configure')
+    os.system('make')
+    if os.path.isfile('src/mc'):
+        remove('mc')
+        os.system('sudo make install')
+
 
 ##############
 ## submenus ##
@@ -801,7 +869,8 @@ def browser_160():
 
 
 def source_170():
-    text = """(21)  tesseract 3"""
+    text = """(21)  tesseract 3
+(28)  mc"""
     submenu('source', text)
 
 
@@ -893,10 +962,37 @@ def menu():
             print 'Wat?'
 
 
-def main():
-    menu()
+def new_item():
+    steps = []
+    for f in sorted(globals()):
+        if f.startswith('step_'):
+            steps.append(re.search('step_(.*)', f).group(1))
+    print "Steps taken:"
+    print "------------"
+    print steps
+    new_step = raw_input('Check availability: ').strip()
+    if new_step not in steps:
+        print 'Available! :)'
+    else:
+        print 'Taken :('
+
+        
+def main(args):
+    if len(args) == 0:
+        menu()
+    else:
+        arg = args[0]
+        if arg == '-new':
+            new_item()
+        else:
+            print "Error: unknown parameter."
+            sys.exit(1)
 
 #############################################################################
 
 if __name__ == "__main__":
-    main()
+    unbuffered()
+    if len(sys.argv) > 1:
+        main(sys.argv[1:])
+    else:
+        main([])
