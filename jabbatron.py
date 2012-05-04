@@ -13,8 +13,8 @@ Use this script at your own risk.
 """
 
 __author__ = "Laszlo Szathmary (jabba.laci@gmail.com)"
-__version__ = "0.1.4"
-__date__ = "20120406"
+__version__ = "0.2.1"
+__date__ = "20120504"
 __copyright__ = "Copyright (c) 2012 Laszlo Szathmary"
 __license__ = "GPL"
 
@@ -24,6 +24,8 @@ import sys
 import webbrowser
 
 HOME_DIR = os.path.expanduser('~')
+
+autoflush_on = False
 
 REMOVE = 'remove'
 INSTALL = 'install'
@@ -137,7 +139,15 @@ def create_dir(item, in_home_dir=True, sudo=False):
 def wait():
     print
     raw_input('Press ENTER to continue...')
-    main()
+
+
+def info():
+    print """
+h  - this help
+q  - quit from submenu (back)
+qq - quit from program
+c  - clear screen"""
+    wait()
 
 
 def bin_to_path_in_bashrc():
@@ -232,6 +242,38 @@ def mongodb():
         pip('pymongo')
 
 
+def which(program):
+    """
+    Equivalent of the which command in Python.
+    
+    source: http://stackoverflow.com/questions/377017/test-if-executable-exists-in-python
+    """
+    def is_exe(fpath):
+        return os.path.exists(fpath) and os.access(fpath, os.X_OK)
+
+    fpath = os.path.split(program)[0]
+    if fpath:
+        if is_exe(program):
+            return program
+    else:
+        for path in os.environ["PATH"].split(os.pathsep):
+            exe_file = os.path.join(path, program)
+            if is_exe(exe_file):
+                return exe_file
+
+    return None
+
+
+def unbuffered():
+    """Switch autoflush on."""
+    global autoflush_on
+    # reopen stdout file descriptor with write mode
+    # and 0 as the buffer size (unbuffered)
+    if not autoflush_on:
+        sys.stdout = os.fdopen(sys.stdout.fileno(), 'w', 0)
+        autoflush_on = True
+
+
 ###########
 ## steps ##
 ###########
@@ -241,6 +283,15 @@ def step_00():
     open the Ubuntu Incident blog
     """
     url = 'https://ubuntuincident.wordpress.com/'
+    print '#', url
+    webbrowser.open(url)
+
+
+def step_00b():
+    """
+    open the Python Adventures blog
+    """
+    url = 'https://pythonadventures.wordpress.com/'
     print '#', url
     webbrowser.open(url)
 
@@ -400,6 +451,31 @@ def step_10a():
         print 'no'
 
 
+def step_10b():
+    """
+    Git help
+    """
+    url = 'http://help.github.com/git-cheat-sheets/'
+    print '#', url
+    webbrowser.open(url)
+    #
+    url = 'http://progit.org/'
+    print '#', url
+    webbrowser.open(url)
+    #
+    url = 'http://git-scm.com/'
+    print '#', url
+    webbrowser.open(url)
+    #
+    url = 'http://schacon.github.com/git/user-manual.html'
+    print '#', url
+    webbrowser.open(url)
+    #
+    url = 'http://gitready.com/'
+    print '#', url
+    webbrowser.open(url)
+
+
 def step_11():
     """
     tools (xsel, kdiff3, etc.)
@@ -462,8 +538,10 @@ def step_13():
     add_repo('n-muench/vlc')
     install('vlc')
     #
-    add_repo('me-davidsansome/clementine')
-    install('clementine')
+# TODO
+# didn't work with Ubuntu 12.04 last time I checked
+#    add_repo('me-davidsansome/clementine')
+#    install('clementine')
     #
     install('minitube')
 
@@ -507,19 +585,33 @@ def step_16():
     install('myunity')
 
 
-def step_16a():
-    """
-    remove global menu
-    """
-    remove(['appmenu-gtk3', 'appmenu-gtk', 'appmenu-qt', 'firefox-globalmenu'])
+#
+# deprecated
+# use "unsettings" instead under the tweaks
+#
+#def step_16a():
+#    """
+#    remove global menu
+#    """
+#    remove(['appmenu-gtk3', 'appmenu-gtk', 'appmenu-qt', 'firefox-globalmenu'])
 
 
-def step_17():
+def step_17a():
     """
-    databases (sqlite3, mongodb)
+    databases (sqlite3)
     """
     install('sqlite3')
+
+def step_17b():
+    """
+    databases (mongodb)
+    """
     mongodb()
+
+def step_17c():
+    """
+    databases (mysql)
+    """
     install(['mysql-server', 'mysql-client', 'python-mysqldb'])
 
 
@@ -554,7 +646,7 @@ def step_21():
     """
     install(['autoconf automake libtool', 'libpng12-dev', 'libjpeg62-dev', 'libtiff4-dev', 'zlib1g-dev'])
     #
-    if False:
+    if True:
         os.chdir('/tmp')
         if not os.path.exists('leptonica-1.68.tar.gz'):
             os.system('wget http://www.leptonica.org/source/leptonica-1.68.tar.gz')
@@ -566,7 +658,7 @@ def step_21():
         os.system('sudo make install')
         os.system('sudo ldconfig')
     #
-    if False:
+    if True:
         os.chdir('/tmp')
         if not os.path.exists('tesseract-3.01.tar.gz'):
             os.system('wget http://tesseract-ocr.googlecode.com/files/tesseract-3.01.tar.gz')
@@ -583,7 +675,6 @@ def step_21():
         os.system('wget http://tesseract-ocr.googlecode.com/files/tesseract-ocr-3.01.eng.tar.gz')
     os.system('tar xvzf tesseract-ocr-3.01.eng.tar.gz')
     os.system('sudo mv tesseract-ocr /usr/share')
-    
 
 
 def step_22():
@@ -645,51 +736,49 @@ def step_27():
     print '#', url
     webbrowser.open(url)
 
-##########
-## menu ##
-##########
 
-def menu():
-    os.system('clear')
-    print """##### Jabbatron {ver} #####
-#    installer  script    #
-#   for  virgin systems   #
-###########################""".format(ver=__version__)
-    print """(00)  The Ubuntu Incident (open blog)
-(01)  prepare HOME directory (create ~/bin, ~/tmp, etc.)
-(02)  good_shape.sh (create in ~/bin or call it if exists)
-(03)  dropbox, acroread, skype
-(04)  mc, konsole (mc from official repo [old])
-(05)  vim (with .vimrc)
-(06)  aliases (in .bashrc)
-(06a) MS-DOS prompt emulation (in .bashrc)
-(07)  development (build-essential, etc.)
-(07a) D language (dmd, rdmd)
-(08)  apt-get et al. (wajig, synaptic, etc.)
-(09)  latex
-(10)  github setup
-(10a) .gitconfig (add some aliases)
-(11)  tools (xsel, kdiff3, etc.)
-(12)  python-pip (via apt-get [old], run just once)
-(12a) python stuff ([new] pip, ipython, etc.)
-(12b) pyp (The Pyed Piper)
-(13)  multimedia (mplayer2, vlc, clementine, etc.)
-(14)  LAMP (set up a LAMP environment)
-(15)  gimp (2.8.x)
-(16)  tweaks (disable knotify4, install ubuntu-tweak, etc.)
-(16a) remove global menu
-(17)  databases (sqlite3, mongodb, mysql)
-(18)  create launcher (if not available upon right click on the Desktop)
-(19)  essential Firefox add-ons
-(20)  chromium
-(21)  tesseract 3
-(22)  games (crack-attack, etc.)
-(23)  virtualbox
-(24)  Java SDK update
-(25)  Java 7 API
-(26)  blue Flash (correct it)
-(27)  oXygen XML Editor
-(q)   quit"""
+def step_28():
+    """
+    Midnight Commander from source
+    """
+    install(['libslang2-dev', 'libglib2.0-dev'])
+    #
+    mc = which('mc')
+    if mc:
+        print 'Current version: ',
+        os.system('mc -V | head -1')
+    url = 'http://www.midnight-commander.org/downloads'
+    print '#', url
+    webbrowser.open(url)
+    print 'Paste in the URL of the latest stable release:'
+    url = raw_input('mc-X.X.X.X.tar.bz2: ').strip()
+    if not re.search('http://.*/mc-\d+\.\d+\.\d+\.\d+\.tar\.bz2$', url):
+        print 'Error: not a valid URL.'
+        wait()
+        return
+    fname_tar_bz2 = url.split('/')[-1]
+    print '#', fname_tar_bz2
+    fname = re.sub('.tar.bz2', '', fname_tar_bz2)
+    print '#', fname
+    os.chdir('/tmp')
+    if not os.path.exists(fname_tar_bz2):
+        os.system('wget {url}'.format(url=url))
+    os.system('tar xvjf {0}'.format(fname_tar_bz2))
+    os.chdir('/tmp/{0}'.format(fname))
+    os.system('./configure')
+    os.system('make')
+    if os.path.isfile('src/mc'):
+        remove('mc')
+        os.system('sudo make install')
+
+
+##############
+## submenus ##
+##############
+
+def submenu(msg, text):
+    header(msg)
+    print text
     while True:
         try:
             choice = raw_input('>>> ').strip()
@@ -697,11 +786,17 @@ def menu():
             print
             print 'bye.'
             sys.exit(0)
-        if choice == 'q':
+        if choice == 'qq':
             print 'bye.'
             sys.exit(0)
+        elif choice == 'q':
+            menu()
+            return
+        elif choice in ('h', 'help'):
+            info()
+            submenu(msg, text)
         elif choice == 'c':
-            main()
+            submenu(msg, text)
             break
         elif re.search('\d+', choice):
             try:
@@ -712,6 +807,7 @@ def menu():
             if methodToCall:
                 methodToCall()
                 wait()
+                submenu(msg, text)
                 break
             else:
                 print 'Hm?'
@@ -720,10 +816,184 @@ def menu():
             print 'Wat?'
 
 
-def main():
-    menu()
+def home_100():
+    text = """(01)  create essential directories (~/bin, ~/tmp, etc.)
+(02)  good_shape.sh (create in ~/bin or call it if exists)
+(04)  mc, konsole (mc from official repo [old])
+(05)  vim (with .vimrc)
+(06)  aliases (in .bashrc)"""
+    submenu('home', text)
+
+
+def dev_110():
+    text = """(07)  development (build-essential, etc.)
+(07a) D language (dmd, rdmd)
+(27)  oXygen XML Editor"""
+    submenu('dev', text)
+
+
+def git_120():
+    text = """(10)  github setup
+(10a) .gitconfig (add some aliases)
+(10b) git help (cheat sheet, Pro Git book, manual, etc.)"""
+    submenu('git', text)
+
+
+def py_130():
+    text = """(12)  python-pip (via apt-get [old], run just once)
+(12a) python stuff ([new] pip, ipython, etc.)
+(12b) pyp (The Pyed Piper)"""
+    submenu('py', text)
+
+
+def ubuntu_140():
+    text = """(03)  dropbox, acroread, skype
+(08)  apt-get et al. (wajig, synaptic, etc.)
+(16)  tweaks (disable knotify4, install ubuntu-tweak, etc.)
+(18)  create launcher (if not available upon right click on the Desktop)
+(23)  virtualbox"""
+    submenu('ubuntu', text)
+
+
+def db_150():
+    text = """(17a)  sqlite3
+(17b)  mongodb
+(17c)  mysql"""
+    submenu('databases', text)
+
+
+def browser_160():
+    text = """(19)  essential Firefox add-ons
+(20)  chromium
+(26)  blue Flash (correct it)"""
+    submenu('browser', text)
+
+
+def source_170():
+    text = """(21)  tesseract 3
+(28)  mc"""
+    submenu('source', text)
+
+
+def games_180():
+    text = """(22)  games (crack-attack, etc.)"""
+    submenu('games', text)
+
+
+def java_190():
+    text = """(24)  Java SDK update
+(25)  Java 7 API"""
+    submenu('java', text)
+
+
+###############
+## main menu ##
+###############
+
+def header(msg):
+    os.system('clear')
+    width = 31
+    text = '# {arrow}{msg}'.format(arrow=('-> ' if msg != 'main' else ''), msg=msg)
+    print """###### Jabbatron {ver} ########
+#  Jabbatron is good for you  #
+###############################
+{text}{space}#
+###############################""".format(ver=__version__, msg=msg, text=text, space=' '*(width-len(text)-1))
+
+def menu():
+    header('main')
+    print """(00)  The Ubuntu Incident (open blog)
+(00b) Python Adventures (open blog)
+(100) prepare HOME directory + install essential softwares...
+(110) development (C/C++/D compilers, oXygen XML Editor, etc.)...
+(09)  latex
+(120) github...
+(11)  tools (xsel, kdiff3, etc.)
+(130) Python for World Domination...
+(13)  multimedia (mplayer2, vlc, clementine, etc.)
+(14)  LAMP (set up a LAMP environment)
+(15)  gimp (2.8.x)
+(140) Ubuntu (tweaks, extra softwares)...
+(150) databases (sqlite3, mongodb, mysql)...
+(160) browser(s)...
+(170) install from source (mc, tesseract3)...
+(180) games...
+(190) Java...
+(q)   quit"""
+    while True:
+        try:
+            choice = raw_input('>>> ').strip()
+        except EOFError:
+            print
+            print 'bye.'
+            sys.exit(0)
+        if choice in ('q', 'qq'):
+            print 'bye.'
+            sys.exit(0)
+        elif choice in ('h', 'help'):
+            info()
+            menu()
+        elif choice == 'c':
+            main()
+            break
+        elif re.search('\d{3}', choice):
+            found = False
+            for f in globals():
+                if re.search('[a-z]+_{choice}$'.format(choice=choice), f):
+                    found = True
+                    methodToCall = globals()[f]
+                    methodToCall()
+            if not found:
+                print 'Unknown menu item.'
+        elif re.search('\d+', choice):
+            try:
+                methodToCall = globals()['step_' + choice]
+            except:
+                methodToCall = None
+            #
+            if methodToCall:
+                methodToCall()
+                wait()
+                menu()
+                break
+            else:
+                print 'Hm?'
+        #
+        elif len(choice) > 0:
+            print 'Wat?'
+
+
+def new_item():
+    steps = []
+    for f in sorted(globals()):
+        if f.startswith('step_'):
+            steps.append(re.search('step_(.*)', f).group(1))
+    print "Steps taken:"
+    print "------------"
+    print steps
+    new_step = raw_input('Check availability: ').strip()
+    if new_step not in steps:
+        print 'Available! :)'
+    else:
+        print 'Taken :('
+
+        
+def main(args):
+    if len(args) == 0:
+        menu()
+    else:
+        arg = args[0]
+        if arg == '-new':
+            new_item()
+        else:
+            print "Error: unknown parameter."
+            sys.exit(1)
 
 #############################################################################
 
 if __name__ == "__main__":
-    main()
+    unbuffered()
+    if len(sys.argv) > 1:
+        main(sys.argv[1:])
+    else:
+        main([])
