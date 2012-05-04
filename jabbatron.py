@@ -7,6 +7,10 @@ Interactive installer script for Ubuntu.
 * Website: <http://ubuntuincident.wordpress.com/2012/02/29/jabbatron/>
 * GitHub:  <https://github.com/jabbalaci/jabbatron>
 
+Menu points that contain 3 digits lead to submenus.
+
+Menu points that contain 2 digits execute some operation(s).
+
 I take no responsibility for any possible
 loss of data on your computer.
 Use this script at your own risk.
@@ -481,8 +485,6 @@ def step_11():
     tools (xsel, kdiff3, etc.)
     """
     install(['xsel', 'kdiff3', 'pdftk', 'imagemagick', 'unrar', 'comix', 'chmsee', 'gqview', 'curl'])
-#    add_repo('alexx2000/doublecmd')
-#    install('doublecmd-gtk')
 
 
 def step_12():
@@ -585,7 +587,6 @@ def step_16():
     install('myunity')
 
 
-#
 # deprecated
 # use "unsettings" instead under the tweaks
 #
@@ -602,11 +603,13 @@ def step_17a():
     """
     install('sqlite3')
 
+
 def step_17b():
     """
     databases (mongodb)
     """
     mongodb()
+
 
 def step_17c():
     """
@@ -899,6 +902,7 @@ def header(msg):
 ###############################
 {text}{space}#
 ###############################""".format(ver=__version__, msg=msg, text=text, space=' '*(width-len(text)-1))
+
 
 def menu():
     header('main')
