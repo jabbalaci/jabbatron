@@ -479,9 +479,10 @@ def step_14():
 
 def step_15():
     """
-    gimp
+    gimp 2.8.x
     """
-    install('gimp')
+    add_repo('otto-kesselgulasch/gimp')
+    install(['gimp', 'gimp-resynthesizer'])
 
 
 def step_16():
@@ -674,7 +675,7 @@ def menu():
 (12b) pyp (The Pyed Piper)
 (13)  multimedia (mplayer2, vlc, clementine, etc.)
 (14)  LAMP (set up a LAMP environment)
-(15)  gimp
+(15)  gimp (2.8.x)
 (16)  tweaks (disable knotify4, install ubuntu-tweak, etc.)
 (16a) remove global menu
 (17)  databases (sqlite3, mongodb, mysql)
