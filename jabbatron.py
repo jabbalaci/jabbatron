@@ -923,6 +923,7 @@ def menu():
 (170) install from source (mc, tesseract3)...
 (180) games...
 (190) Java...
+(h)   help
 (q)   quit"""
     while True:
         try:
@@ -938,7 +939,7 @@ def menu():
             info()
             menu()
         elif choice == 'c':
-            main()
+            menu()
             break
         elif re.search('\d{3}', choice):
             found = False
