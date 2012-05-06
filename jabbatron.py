@@ -496,26 +496,54 @@ def step_12():
 
 def step_12a():
     """
-    python stuff ([new] pip, ipython, etc.)
+    Python, scrapers
     """
     install(['libxml2-dev', 'libxslt1-dev', 'python2.7-dev'])
-    pip(['pip', 'pep8', 'ipython', 'pymongo', 'beautifulsoup', 'pygments', 'lxml', 'scrapy', 'reddit', 'pycurl', 'untangle'])
+    pip(['lxml', 'beautifulsoup', 'beautifulsoup4', 'scrapy'])
+
+
+def step_12b():
+    """
+    Python, smaller things
+    """
+    pip(['pip', 'pep8', 'ipython', 'pymongo', 'pygments', 'reddit', 'pycurl', 'untangle'])
+    pip('sphinx')
+    pip('feedparser')
+
+
+def step_12c():
+    """
+    Python IDEs
+    """
+    pip('spyder')
+    add_repo('ninja-ide-developers/daily')
+    install('ninja-ide')
+
+
+def step_12d():
+    """
+    scientific python
+    """
+    pip('ipython')
     # numpy, scipy, matplotlib, pandas
     pip('numpy')
     install(['libatlas-base-dev', 'gfortran', 'libfreetype6-dev', 'libpng-dev'])
     pip(['scipy', 'matplotlib', 'pandas'])
     #
+    install('python-sympy')
+
+
+def step_12e():
+    """
+    Python, image processing, autopy
+    """
     pip(['pil', 'pyscreenshot'])
     #
     install('libxtst-dev')
     pip('autopy')
-    #
-    install('python-sympy')
-    #
-    pip(['sphinx', 'spyder'])
 
 
-def step_12b():
+def step_12f():
     """
     pyp from http://code.google.com/p/pyp/
     """
@@ -844,8 +872,12 @@ def git_120():
 
 def py_130():
     text = """(12)  python-pip (via apt-get [old], run just once)
-(12a) python stuff ([new] pip, ipython, etc.)
-(12b) pyp (The Pyed Piper)"""
+(12a) python scrapers (lxml, beautifulsoup, scrapy)
+(12b) python, smaller things (pip, pep8, untangle, etc.)
+(12c) python IDEs (spyder, ninja-ide)
+(12d) scientific python (ipython, numpy, scipy, matplotlib, pandas, sympy)
+(12e) python image processing (PIL, pyscreenshot); autopy
+(12f) pyp (The Pyed Piper)"""
     submenu('py', text)
 
 
