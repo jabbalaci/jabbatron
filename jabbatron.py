@@ -567,6 +567,14 @@ def step_12g():
     install('python-django')
 
 
+def step_12h():
+    """
+    python concurrency
+    """
+    install(['libevent-dev', 'python-all-dev'])
+    pip('gevent')
+
+
 def step_13():
     """
     multimedia (mplayer2, vlc, etc.)
@@ -886,7 +894,8 @@ def py_130():
 (12d) scientific python (ipython, numpy, scipy, matplotlib, pandas, sympy)
 (12e) python image processing (PIL, pyscreenshot); autopy
 (12f) pyp (The Pyed Piper)
-(12g) python + apache on localhost"""
+(12g) python + apache on localhost
+(12h) python concurrency (gevent)"""
     submenu('py', text)
 
 
