@@ -507,8 +507,8 @@ def step_12b():
     Python, smaller things
     """
     pip(['pip', 'pep8', 'ipython', 'pymongo', 'pygments', 'reddit', 'pycurl', 'untangle'])
-    pip('sphinx')
-    pip('feedparser')
+    pip(['sphinx', 'feedparser'])
+    pip(['Flask', 'virtualenv'])
 
 
 def step_12c():
@@ -569,7 +569,7 @@ def step_12g():
 
 def step_13():
     """
-    multimedia (mplayer2, vlc, clementine, etc.)
+    multimedia (mplayer2, vlc, etc.)
     """
     install('mplayer2')
     #
@@ -955,7 +955,7 @@ def menu():
 (120) github...
 (11)  tools (xsel, kdiff3, etc.)
 (130) Python for World Domination...
-(13)  multimedia (mplayer2, vlc, clementine, etc.)
+(13)  multimedia (mplayer2, vlc, etc.)
 (14)  LAMP (set up a LAMP environment)
 (15)  gimp (2.8.x)
 (140) Ubuntu (tweaks, extra softwares)...
