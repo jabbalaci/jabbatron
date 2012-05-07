@@ -559,6 +559,14 @@ def step_12f():
         print '# pyp fetched'
 
 
+def step_12g():
+    """
+    python + apache on localhost
+    """
+    install('libapache2-mod-wsgi')
+    install('python-django')
+
+
 def step_13():
     """
     multimedia (mplayer2, vlc, clementine, etc.)
@@ -877,7 +885,8 @@ def py_130():
 (12c) python IDEs (spyder, ninja-ide)
 (12d) scientific python (ipython, numpy, scipy, matplotlib, pandas, sympy)
 (12e) python image processing (PIL, pyscreenshot); autopy
-(12f) pyp (The Pyed Piper)"""
+(12f) pyp (The Pyed Piper)
+(12g) python + apache on localhost"""
     submenu('py', text)
 
 
