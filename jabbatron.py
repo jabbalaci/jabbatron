@@ -17,15 +17,17 @@ Use this script at your own risk.
 """
 
 __author__ = "Laszlo Szathmary (jabba.laci@gmail.com)"
-__version__ = "0.2.1"
-__date__ = "20120504"
+__version__ = "0.2.2"
+__date__ = "20120510"
 __copyright__ = "Copyright (c) 2012 Laszlo Szathmary"
 __license__ = "GPL"
 
 import re
 import os
 import sys
+import urllib2
 import webbrowser
+from subprocess import Popen, PIPE, STDOUT
 
 HOME_DIR = os.path.expanduser('~')
 
@@ -276,6 +278,28 @@ def unbuffered():
     if not autoflush_on:
         sys.stdout = os.fdopen(sys.stdout.fileno(), 'w', 0)
         autoflush_on = True
+
+
+def get_latest_mc_version():
+    try:
+        from BeautifulSoup import BeautifulSoup
+    except:
+        return 'Warning: for this you should install the beautifulsoup package.'
+    # if BS is available
+    text = urllib2.urlopen('http://www.midnight-commander.org/downloads').read()
+    soup = BeautifulSoup(text)
+    for tag in soup.findAll('div', {'class': 'description'}):
+        desc = tag.text
+        result = re.search('^(Midnight Commander v.*\(stable release\))', desc)
+        if result:
+            latest = result.group(1)
+    #
+    return latest
+
+
+def get_complex_cmd_output(cmd, stderr=STDOUT):
+    proc =  Popen(cmd, shell=True, stdout=PIPE, stderr=stderr)
+    return proc.stdout.readlines()
 
 
 ###########
@@ -788,12 +812,23 @@ def step_28():
     """
     Midnight Commander from source
     """
-    install(['libslang2-dev', 'libglib2.0-dev'])
-    #
+    print 'Current version: ',
     mc = which('mc')
     if mc:
-        print 'Current version: ',
-        os.system('mc -V | head -1')
+        print get_complex_cmd_output('mc -V | head -1')[0].strip()
+    else:
+        print 'not installed'
+    print 'Latest stable release: ', get_latest_mc_version()
+
+    print
+    reply = raw_input('Continue [y/n]? ')
+    if reply != 'y':
+        return
+
+    # else
+
+    install(['libslang2-dev', 'libglib2.0-dev'])
+    #
     url = 'http://www.midnight-commander.org/downloads'
     print '#', url
     webbrowser.open(url)
