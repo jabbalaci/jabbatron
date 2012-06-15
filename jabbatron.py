@@ -854,6 +854,12 @@ def step_28():
         os.system('sudo make install')
 
 
+def step_30():
+    """
+    haskell
+    """
+    install('haskell-platform')
+
 ##############
 ## submenus ##
 ##############
@@ -974,6 +980,11 @@ def java_190():
     submenu('java', text)
 
 
+def haskell_200():
+    text = """(30)  install haskell"""
+    submenu('haskell', text)
+
+
 ###############
 ## main menu ##
 ###############
@@ -1008,6 +1019,7 @@ def menu():
 (170) install from source (mc, tesseract3)...
 (180) games...
 (190) Java...
+(200) Haskell...
 (h)   help
 (q)   quit"""
     while True:
