@@ -17,8 +17,8 @@ Use this script at your own risk.
 """
 
 __author__ = "Laszlo Szathmary (jabba.laci@gmail.com)"
-__version__ = "0.2.2"
-__date__ = "20120510"
+__version__ = "0.2.3"
+__date__ = "20120620"
 __copyright__ = "Copyright (c) 2012 Laszlo Szathmary"
 __license__ = "GPL"
 
@@ -363,13 +363,19 @@ def step_02():
 
 def step_03():
     """
-    dropbox, acroread, skype
+    dropbox, acroread
     """
     print """Open Ubuntu Software Center and install these:
   * Dropbox
-  * Adobe Reader (first enable "Canonical Partners" in "Software Sources" and "sudo apt-get update")
-  * Skype"""
+  * Adobe Reader (first enable "Canonical Partners" in "Software Sources" and "sudo apt-get update")"""
 
+def step_03b():
+    """
+    skype
+    """
+    url = 'http://www.skype.com/intl/en/get-skype/on-your-computer/linux/'
+    print '#', url
+    webbrowser.open(url)
 
 def step_04():
     """
@@ -597,6 +603,50 @@ def step_12h():
     """
     install(['libevent-dev', 'python-all-dev'])
     pip('gevent')
+
+
+def step_12i():
+    """
+    OpenCV (based on http://jayrambhia.wordpress.com/tag/opencv/)
+    """
+    li = ['libopencv-dev', 'build-essential', 'checkinstall',
+          'cmake', 'pkg-config', 'yasm',
+          'libtiff4-dev', 'libjpeg-dev', 'libjasper-dev',
+          'libavcodec-dev', 'libavformat-dev', 'libswscale-dev',
+          'libdc1394-22-dev', 'libxine-dev', 'libgstreamer0.10-dev', 
+          'libgstreamer-plugins-base0.10-dev', 'libv4l-dev',
+          'python-dev',
+#          'python-numpy',    # I install it from source
+          'libtbb-dev',
+          'libqt4-dev', 'libgtk2.0-dev']
+    install(li)
+#    #
+    print
+    url = 'http://sourceforge.net/projects/opencvlibrary/files/opencv-unix/'
+    print '#', url
+    webbrowser.open(url)
+    print '# download the latest OpenCV and save it somewhere (to /opt for instance)'
+    fpath = raw_input('Full path of the downloaded archive: ')
+    (path, fname) = os.path.split(fpath)
+    os.chdir(path)
+    os.system('tar xvjf {}'.format(fname))
+    os.chdir(re.sub('.tar.bz2', '', fname))
+    os.system('mkdir build')
+    os.chdir('build')
+    os.system('cmake -D WITH_QT=ON -D WITH_XINE=ON -D WITH_OPENGL=ON -D WITH_TBB=ON -D BUILD_EXAMPLES=ON ..')
+    os.system('make')
+    os.system('sudo make install')
+    os.chdir('../samples/c')
+    os.system('chmod u+x build_all.sh')
+    os.system('./build_all.sh')
+    #
+    cmd = "sudo sh -c 'echo /usr/local/lib >> /etc/ld.so.conf'"
+    print '#', cmd
+    os.system(cmd)
+    #
+    cmd = 'sudo ldconfig'
+    print '#', cmd
+    os.system(cmd)
 
 
 def step_13():
@@ -936,12 +986,14 @@ def py_130():
 (12e) python image processing (PIL, pyscreenshot); autopy
 (12f) pyp (The Pyed Piper)
 (12g) python + apache on localhost
-(12h) python concurrency (gevent)"""
+(12h) python concurrency (gevent)
+(12i) OpenCV"""
     submenu('py', text)
 
 
 def ubuntu_140():
-    text = """(03)  dropbox, acroread, skype
+    text = """(03)  dropbox, acroread
+(03b) skype
 (08)  apt-get et al. (wajig, synaptic, etc.)
 (16)  tweaks (disable knotify4, install ubuntu-tweak, etc.)
 (18)  create launcher (if not available upon right click on the Desktop)
