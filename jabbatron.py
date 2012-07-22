@@ -884,7 +884,7 @@ def step_28():
     webbrowser.open(url)
     print 'Paste in the URL of the latest stable release:'
     url = raw_input('mc-X.X.X.X.tar.bz2: ').strip()
-    if not re.search('http://.*/mc-\d+\.\d+\.\d+\.\d+\.tar\.bz2$', url):
+    if not re.search('http://.*/mc-(\d+\.)+tar\.bz2$', url):
         print 'Error: not a valid URL.'
         wait()
         return
