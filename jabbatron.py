@@ -17,8 +17,8 @@ Use this script at your own risk.
 """
 
 __author__ = "Laszlo Szathmary (jabba.laci@gmail.com)"
-__version__ = "0.2.3"
-__date__ = "20120620"
+__version__ = "0.2.4"
+__date__ = "20120902"
 __copyright__ = "Copyright (c) 2012 Laszlo Szathmary"
 __license__ = "GPL"
 
@@ -379,9 +379,9 @@ def step_03b():
 
 def step_04():
     """
-    mc, konsole (mc from official repo [old])
+    mc, konsole, gnome-panel (mc from official repo [old])
     """
-    install(['mc', 'konsole', 'okular', 'nautilus-open-terminal', 'gconf-editor', 'htop', 'nautilus-open-terminal'])
+    install(['mc', 'konsole', 'okular', 'nautilus-open-terminal', 'gconf-editor', 'htop', 'nautilus-open-terminal', 'gnome-panel'])
     if not os.path.exists(HOME_DIR + '/.mc'):
         create_dir('.mc')
     bfile = HOME_DIR + '/.mc/bindings'
@@ -546,7 +546,7 @@ def step_12c():
     Python IDEs
     """
     pip('spyder')
-    add_repo('ninja-ide-developers/daily')
+    add_repo('ninja-ide-developers/ninja-ide')
     install('ninja-ide')
 
 
@@ -849,6 +849,13 @@ def step_26():
     os.system('sudo chmod 644 /etc/adobe/mms.cfg')
 
 
+def step_26b():
+    """
+    remove firefox-globalmenu
+    """
+    remove('firefox-globalmenu')
+
+
 def step_27():
     """
     Java
@@ -1011,7 +1018,8 @@ def db_150():
 def browser_160():
     text = """(19)  essential Firefox add-ons
 (20)  chromium
-(26)  blue Flash (correct it)"""
+(26)  blue Flash (correct it)
+(26b) remove firefox-globalmenu"""
     submenu('browser', text)
 
 
