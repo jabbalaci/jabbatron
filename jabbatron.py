@@ -381,7 +381,7 @@ def step_04():
     """
     mc, konsole, gnome-panel (mc from official repo [old])
     """
-    install(['mc', 'konsole', 'okular', 'nautilus-open-terminal', 'gconf-editor', 'htop', 'nautilus-open-terminal', 'gnome-panel', 'xsel', 'xclip'])
+    install(['mc', 'konsole', 'yakuake', 'gparted', 'okular', 'nautilus-open-terminal', 'gconf-editor', 'htop', 'nautilus-open-terminal', 'gnome-panel', 'xsel', 'xclip'])
     if not os.path.exists(HOME_DIR + '/.mc'):
         create_dir('.mc')
     bfile = HOME_DIR + '/.mc/bindings'
