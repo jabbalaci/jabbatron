@@ -653,7 +653,7 @@ def step_13():
     """
     multimedia (mplayer2, vlc, etc.)
     """
-    install('mplayer2')
+    install(['mplayer2', 'mencoder'])
     #
     add_repo('n-muench/vlc')
     install('vlc')
@@ -663,7 +663,7 @@ def step_13():
 #    add_repo('me-davidsansome/clementine')
 #    install('clementine')
     #
-    install('minitube')
+    install(['minitube', 'soundconverter'])
 
 
 def step_14():
