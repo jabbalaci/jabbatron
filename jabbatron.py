@@ -17,8 +17,8 @@ Use this script at your own risk.
 """
 
 __author__ = "Laszlo Szathmary (jabba.laci@gmail.com)"
-__version__ = "0.2.4"
-__date__ = "20120902"
+__version__ = "0.2.5"
+__date__ = "20120915"
 __copyright__ = "Copyright (c) 2012 Laszlo Szathmary"
 __license__ = "GPL"
 
@@ -369,6 +369,7 @@ def step_03():
   * Dropbox
   * Adobe Reader (first enable "Canonical Partners" in "Software Sources" and "sudo apt-get update")"""
 
+
 def step_03b():
     """
     skype
@@ -377,11 +378,21 @@ def step_03b():
     print '#', url
     webbrowser.open(url)
 
+
 def step_04():
     """
-    mc, konsole, gnome-panel (mc from official repo [old])
+    mc (from official repo [old])
     """
-    install(['mc', 'konsole', 'yakuake', 'gparted', 'okular', 'nautilus-open-terminal', 'gconf-editor', 'htop', 'nautilus-open-terminal', 'gnome-panel', 'xsel', 'xclip'])
+    if which('mc'):
+        print 'It seems mc is already installed.'
+        reply = raw_input('Do you want to reinstall mc [y/n]? ')
+        if reply != 'y':
+            print 'no'
+            return
+
+    # else install mc
+
+    install('mc')
     if not os.path.exists(HOME_DIR + '/.mc'):
         create_dir('.mc')
     bfile = HOME_DIR + '/.mc/bindings'
@@ -389,6 +400,14 @@ def step_04():
         os.system("cd; cd .mc; cp /etc/mc/mc.ext . && ln -s mc.ext bindings")
         if os.path.exists(bfile):
             print '# {} was created'.format(bfile)
+
+
+def step_04b():
+    """
+    some essential packages:
+    konsole, gnome-panel, etc.
+    """
+    install(['konsole', 'yakuake', 'gparted', 'okular', 'nautilus-open-terminal', 'gconf-editor', 'htop', 'nautilus-open-terminal', 'gnome-panel', 'xsel', 'xclip'])
 
 
 def step_05():
@@ -705,14 +724,11 @@ def step_16():
     install('myunity')
 
 
-# deprecated
-# use "unsettings" instead under the tweaks
-#
-#def step_16a():
-#    """
-#    remove global menu
-#    """
-#    remove(['appmenu-gtk3', 'appmenu-gtk', 'appmenu-qt', 'firefox-globalmenu'])
+def step_16b():
+    """
+    remove global menu (using 'unsettings' was not enough)
+    """
+    remove(['appmenu-gtk3', 'appmenu-gtk', 'appmenu-qt', 'firefox-globalmenu'])
 
 
 def step_17a():
@@ -838,7 +854,7 @@ def step_26():
     https://ubuntuincident.wordpress.com/2012/04/01/flash-videos-are-blue/
     """
     if not os.path.exists('/etc/adobe'):
-        create_dir('/etc/adobe', sudo=True)
+        create_dir('/etc/adobe', in_home_dir=False, sudo=True)
         os.system('sudo chmod 755 /etc/adobe')
     cmd = "sudo sh -c 'echo EnableLinuxHWVideoDecode=1 > /etc/adobe/mms.cfg'"
     print '#', cmd
@@ -964,7 +980,8 @@ def submenu(msg, text):
 def home_100():
     text = """(01)  create essential directories (~/bin, ~/tmp, etc.)
 (02)  good_shape.sh (create in ~/bin or call it if exists)
-(04)  mc, konsole (mc from official repo [old])
+(04)  mc (from official repo [old])
+(04b) konsole, gparted, etc. (essential packages)
 (05)  vim (with .vimrc)
 (06)  aliases (in .bashrc)"""
     submenu('home', text)
@@ -1003,6 +1020,7 @@ def ubuntu_140():
 (03b) skype
 (08)  apt-get et al. (wajig, synaptic, etc.)
 (16)  tweaks (disable knotify4, install ubuntu-tweak, etc.)
+(16b) disable global menu
 (18)  create launcher (if not available upon right click on the Desktop)
 (23)  virtualbox"""
     submenu('ubuntu', text)
