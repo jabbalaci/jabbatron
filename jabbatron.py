@@ -731,6 +731,13 @@ def step_16b():
     remove(['appmenu-gtk3', 'appmenu-gtk', 'appmenu-qt', 'firefox-globalmenu'])
 
 
+def step_16c():
+    """
+    compizconfig-settings-manager
+    """
+    install('compizconfig-settings-manager')
+
+
 def step_17a():
     """
     databases (sqlite3)
@@ -1021,6 +1028,7 @@ def ubuntu_140():
 (08)  apt-get et al. (wajig, synaptic, etc.)
 (16)  tweaks (disable knotify4, install ubuntu-tweak, etc.)
 (16b) disable global menu
+(16c) compizconfig-settings-manager (ccsm)
 (18)  create launcher (if not available upon right click on the Desktop)
 (23)  virtualbox"""
     submenu('ubuntu', text)
