@@ -463,6 +463,12 @@ def step_07a():
     """
     D language
     """
+    dmd = which('dmd')
+    if dmd:
+        print 'Installed version:',
+        print get_complex_cmd_output('dmd | head -1')[0].strip()
+    else:
+        print 'Not installed.'
     url = 'http://www.digitalmars.com/d/download.html'
     print '#', url
     webbrowser.open(url)
