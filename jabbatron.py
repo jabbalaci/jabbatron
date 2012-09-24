@@ -17,8 +17,8 @@ Use this script at your own risk.
 """
 
 __author__ = "Laszlo Szathmary (jabba.laci@gmail.com)"
-__version__ = "0.2.5"
-__date__ = "20120915"
+__version__ = "0.2.6"
+__date__ = "20120924"
 __copyright__ = "Copyright (c) 2012 Laszlo Szathmary"
 __license__ = "GPL"
 
@@ -555,7 +555,7 @@ def step_12b():
     """
     Python, smaller things
     """
-    pip(['pip', 'pep8', 'ipython', 'pymongo', 'pygments', 'reddit', 'pycurl', 'untangle'])
+    pip(['pip', 'pep8', 'ipython', 'pymongo', 'pygments', 'reddit', 'pycurl', 'untangle', 'pylint'])
     pip(['sphinx', 'feedparser'])
     pip(['Flask', 'virtualenv'])
 
@@ -940,6 +940,16 @@ def step_30():
     """
     install('haskell-platform')
 
+
+def step_40():
+    """
+    reinstall kernel module for vbox
+    (when you get an error message after installing a new kernel)
+    """
+    cmd = 'sudo /etc/init.d/vboxdrv setup'
+    print '#', cmd
+    os.system(cmd)
+
 ##############
 ## submenus ##
 ##############
@@ -1071,6 +1081,11 @@ def haskell_200():
     submenu('haskell', text)
 
 
+def admin_210():
+    text = """(40)  reinstall kernel module for vbox"""
+    submenu('admin', text)
+
+
 ###############
 ## main menu ##
 ###############
@@ -1106,6 +1121,7 @@ def menu():
 (180) games...
 (190) Java...
 (200) Haskell...
+(210) admin panel
 (h)   help
 (q)   quit"""
     while True:
@@ -1159,7 +1175,13 @@ def new_item():
     print "Steps taken:"
     print "------------"
     print steps
-    new_step = raw_input('Check availability: ').strip()
+    try:
+        new_step = raw_input('Check availability: ').strip()
+    except KeyboardInterrupt:
+        print
+        print 'quit.'
+        sys.exit(0)
+    #
     if new_step not in steps:
         print 'Available! :)'
     else:
