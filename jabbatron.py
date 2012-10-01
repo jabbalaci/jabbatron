@@ -674,7 +674,7 @@ def step_12i():
     os.system(cmd)
 
 
-def step_13():
+def step_31():
     """
     multimedia (mplayer2, vlc, etc.)
     """
@@ -689,6 +689,14 @@ def step_13():
 #    install('clementine')
     #
     install(['minitube', 'soundconverter'])
+
+
+def step_32():
+    """
+    OpenShot video editor (openshot.org)
+    """
+    add_repo('jonoomph/openshot-edge')
+    install(['openshot', 'openshot-doc'])
 
 
 def step_14():
@@ -1038,6 +1046,12 @@ def py_130():
     submenu('py', text)
 
 
+def mm_135():
+    text = """(31)  mplayer2, vlc, etc.
+(32)  OpenShot video editor"""
+    submenu('mm', text)
+
+
 def ubuntu_140():
     text = """(03)  dropbox, acroread
 (03b) skype
@@ -1117,7 +1131,7 @@ def menu():
 (120) github...
 (11)  tools (xsel, kdiff3, etc.)
 (130) Python for World Domination...
-(13)  multimedia (mplayer2, vlc, etc.)
+(135) multimedia
 (14)  LAMP (set up a LAMP environment)
 (15)  gimp (2.8.x)
 (140) Ubuntu (tweaks, extra softwares)...
