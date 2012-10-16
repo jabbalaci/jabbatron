@@ -66,6 +66,7 @@ alias cls='clear'
 alias nh='nautilus . 2>/dev/null'
 alias p='ipython'
 alias kill9='kill -9'
+alias tm='tmux'
 
 # /usr/games/fortune | /usr/games/cowthink
 """
@@ -107,6 +108,7 @@ WGETRC = """# custom .wgetrc file
 # user_agent = Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:11.0) Gecko/20100101 Firefox/11.0"""
 
 VIMRC_URL = 'https://raw.github.com/jabbalaci/jabbatron/master/vimrc.txt'
+TMUX_CONF_URL = 'https://raw.github.com/jabbalaci/jabbatron/master/tmux.conf.txt'
 
 BASHRC = HOME_DIR + '/.bashrc'
 GITCONFIGRC = HOME_DIR + '/.gitconfig'
@@ -422,6 +424,19 @@ def step_05():
     if reply == 'y':
         with open(BASHRC, 'a') as f:
             print >>f, EDITOR
+    else:
+        print 'no'
+
+
+def step_33():
+    """
+    tmux + .tmux.conf
+    """
+    install('tmux')
+    print
+    reply = raw_input('Download .tmux.conf file [y/n]? ')
+    if reply == 'y':
+        os.system("cd; wget {} -O .tmux.conf".format(TMUX_CONF_URL))
     else:
         print 'no'
 
@@ -1014,7 +1029,8 @@ def home_100():
 (04)  mc (from official repo [old])
 (04b) konsole, gparted, etc. (essential packages)
 (05)  vim (with .vimrc)
-(06)  aliases (in .bashrc)"""
+(06)  aliases (in .bashrc)
+(33)  tmux (with .tmux.conf)"""
     submenu('home', text)
 
 
