@@ -539,7 +539,7 @@ def step_11():
     """
     tools (xsel, kdiff3, etc.)
     """
-    install(['xsel', 'kdiff3', 'pdftk', 'imagemagick', 'unrar', 'comix', 'chmsee', 'gqview', 'curl'])
+    install(['xsel', 'kdiff3', 'meld', 'pdftk', 'imagemagick', 'unrar', 'comix', 'chmsee', 'gqview', 'curl'])
 
 
 def step_12():
