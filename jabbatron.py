@@ -569,7 +569,7 @@ def step_12a():
     Python, scrapers
     """
     install(['libxml2-dev', 'libxslt1-dev', 'python2.7-dev'])
-    pip(['lxml', 'beautifulsoup', 'beautifulsoup4', 'scrapy'])
+    pip(['lxml', 'beautifulsoup', 'beautifulsoup4', 'scrapy', 'cssselect'])
 
 
 def step_12b():
@@ -687,6 +687,14 @@ def step_12i():
     cmd = 'sudo ldconfig'
     print '#', cmd
     os.system(cmd)
+
+
+def step_12j():
+    """
+    pattern
+    http://www.clips.ua.ac.be/pages/pattern
+    """
+    pip('pattern')
 
 
 def step_31():
@@ -979,6 +987,15 @@ def step_40():
     print '#', cmd
     os.system(cmd)
 
+
+def step_34():
+    """
+    upgrade Ubuntu to a new release
+    """
+    cmd = 'update-manager -d'
+    print '#', cmd
+    os.system(cmd)
+
 ##############
 ## submenus ##
 ##############
@@ -1058,7 +1075,8 @@ def py_130():
 (12f) pyp (The Pyed Piper)
 (12g) python + apache on localhost
 (12h) python concurrency (gevent)
-(12i) OpenCV"""
+(12i) OpenCV
+(12j) pattern (a web mining module)"""
     submenu('py', text)
 
 
@@ -1118,7 +1136,8 @@ def haskell_200():
 
 
 def admin_210():
-    text = """(40)  reinstall kernel module for vbox"""
+    text = """(40)  reinstall kernel module for vbox
+(34)  upgrade to a new release"""
     submenu('admin', text)
 
 
