@@ -17,8 +17,8 @@ Use this script at your own risk.
 """
 
 __author__ = "Laszlo Szathmary (jabba.laci@gmail.com)"
-__version__ = "0.2.6"
-__date__ = "20120924"
+__version__ = "0.2.7"
+__date__ = "20121021"
 __copyright__ = "Copyright (c) 2012 Laszlo Szathmary"
 __license__ = "GPL"
 
@@ -253,7 +253,7 @@ def mongodb():
 def which(program):
     """
     Equivalent of the which command in Python.
-    
+
     source: http://stackoverflow.com/questions/377017/test-if-executable-exists-in-python
     """
     def is_exe(fpath):
@@ -300,7 +300,7 @@ def get_latest_mc_version():
 
 
 def get_complex_cmd_output(cmd, stderr=STDOUT):
-    proc =  Popen(cmd, shell=True, stdout=PIPE, stderr=stderr)
+    proc = Popen(cmd, shell=True, stdout=PIPE, stderr=stderr)
     return proc.stdout.readlines()
 
 
@@ -653,7 +653,7 @@ def step_12i():
           'cmake', 'pkg-config', 'yasm',
           'libtiff4-dev', 'libjpeg-dev', 'libjasper-dev',
           'libavcodec-dev', 'libavformat-dev', 'libswscale-dev',
-          'libdc1394-22-dev', 'libxine-dev', 'libgstreamer0.10-dev', 
+          'libdc1394-22-dev', 'libxine-dev', 'libgstreamer0.10-dev',
           'libgstreamer-plugins-base0.10-dev', 'libv4l-dev',
           'python-dev',
 #          'python-numpy',    # I install it from source
@@ -996,6 +996,33 @@ def step_34():
     print '#', cmd
     os.system(cmd)
 
+
+def step_35():
+    """
+    ./jq
+    """
+    url = 'http://stedolan.github.com/jq/'
+    print '#', url
+    webbrowser.open(url)
+
+
+def step_36():
+    """
+    json visualizer
+    """
+    url = 'http://chris.photobooks.com/json/default.htm'
+    print '#', url
+    webbrowser.open(url)
+
+
+def step_37():
+    """
+    json editor
+    """
+    url = 'http://jsoneditoronline.org/'
+    print '#', url
+    webbrowser.open(url)
+
 ##############
 ## submenus ##
 ##############
@@ -1141,6 +1168,13 @@ def admin_210():
     submenu('admin', text)
 
 
+def json_220():
+    text = """(35)  ./jq
+(36)  json visualizer
+(37)  json editor"""
+    submenu('json', text)
+
+
 ###############
 ## main menu ##
 ###############
@@ -1177,6 +1211,7 @@ def menu():
 (190) Java...
 (200) Haskell...
 (210) admin panel
+(220) json
 (h)   help
 (q)   quit"""
     while True:
@@ -1242,7 +1277,7 @@ def new_item():
     else:
         print 'Taken :('
 
-        
+
 def main(args):
     if len(args) == 0:
         menu()
