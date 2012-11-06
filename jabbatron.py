@@ -400,6 +400,17 @@ def step_02():
         bin_to_path_in_bashrc()
 
 
+def step_38():
+    """
+    current version of Ubuntu
+    """
+    tags(['ubuntu', 'version'])
+    #
+    with open('/etc/issue') as f:
+        version = f.read().strip()
+    print version
+
+
 def step_03():
     """
     dropbox, acroread
@@ -1273,7 +1284,8 @@ def mm_135():
 
 
 def ubuntu_140():
-    text = """(03)  dropbox, acroread
+    text = """(38)  current version of Ubuntu
+(03)  dropbox, acroread
 (03b) skype
 (08)  apt-get et al. (wajig, synaptic, etc.)
 (16)  tweaks (disable knotify4, install ubuntu-tweak, etc.)
