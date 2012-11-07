@@ -1148,6 +1148,8 @@ def step_40():
     cmd = 'sudo /etc/init.d/vboxdrv setup'
     print '#', cmd
     os.system(cmd)
+    #
+    call('/usr/bin/VirtualBox &', shell=True)
 
 
 def step_34():
@@ -1334,7 +1336,7 @@ def haskell_200():
 
 
 def admin_210():
-    text = """(40)  reinstall kernel module for vbox
+    text = """(40)  reinstall kernel module for vbox and start VirtualBox
 (34)  upgrade to a new release"""
     submenu('admin', text)
 
