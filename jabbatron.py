@@ -971,10 +971,10 @@ def step_21():
     #
     if True:
         os.chdir('/tmp')
-        if not os.path.exists('leptonica-1.68.tar.gz'):
-            os.system('wget http://www.leptonica.org/source/leptonica-1.68.tar.gz')
-        os.system('tar xvzf leptonica-1.68.tar.gz')
-        os.chdir('/tmp/leptonica-1.68')
+        if not os.path.exists('leptonica-1.69.tar.gz'):
+            os.system('wget http://www.leptonica.org/source/leptonica-1.69.tar.gz')
+        os.system('tar xvzf leptonica-1.69.tar.gz')
+        os.chdir('/tmp/leptonica-1.69')
         os.system('./autobuild')
         os.system('./configure')
         os.system('make')
@@ -983,22 +983,26 @@ def step_21():
     #
     if True:
         os.chdir('/tmp')
-        if not os.path.exists('tesseract-3.01.tar.gz'):
-            os.system('wget http://tesseract-ocr.googlecode.com/files/tesseract-3.01.tar.gz')
-        os.system('tar xvzf tesseract-3.01.tar.gz')
-        os.chdir('/tmp/tesseract-3.01')
+        if not os.path.exists('tesseract-ocr-3.02.02.tar.gz'):
+            os.system('wget http://tesseract-ocr.googlecode.com/files/tesseract-ocr-3.02.02.tar.gz')
+        os.system('tar xvzf tesseract-ocr-3.02.02.tar.gz')
+        os.chdir('/tmp/tesseract-ocr')
         os.system('./autogen.sh')
         os.system('./configure')
         os.system('make')
         os.system('sudo make install')
         os.system('sudo ldconfig')
+        os.rename('/tmp/tesseract-ocr', '/tmp/tesseract-ocr.done')
+    #
+    # language training file
     #
     os.chdir('/tmp')
-    if not os.path.exists('tesseract-ocr-3.01.eng.tar.gz'):
-        os.system('wget http://tesseract-ocr.googlecode.com/files/tesseract-ocr-3.01.eng.tar.gz')
-    os.system('tar xvzf tesseract-ocr-3.01.eng.tar.gz')
-    os.system('sudo mv tesseract-ocr /usr/share')
-
+    if not os.path.exists('tesseract-ocr-3.02.eng.tar.gz'):
+        os.system('wget http://tesseract-ocr.googlecode.com/files/tesseract-ocr-3.02.eng.tar.gz')
+    os.system('tar xvzf tesseract-ocr-3.02.eng.tar.gz')
+    if not os.path.isdir('/usr/local/share/tessdata'):
+        os.system('sudo mkdir /usr/local/share/tessdata')
+    os.system('sudo mv tesseract-ocr/tessdata/* /usr/local/share/tessdata/')
 
 def step_22():
     """
