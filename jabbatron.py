@@ -546,7 +546,7 @@ def step_07():
     """
     tags(['development', 'git', 'svn', 'subversion', 'clang', 'programming'])
     #
-    install(['build-essential', 'git', 'subversion', 'clang', 'gdc', 'codeblocks'])
+    install(['build-essential', 'git', 'subversion', 'clang', 'gdc', 'codeblocks', 'cmake', 'libqt4-dev', 'qt4-qmake'])
 
 
 def step_07a():
@@ -699,7 +699,7 @@ def step_12d():
     pip('ipython')
     # numpy, scipy, matplotlib, pandas
     pip('numpy')
-    install(['libatlas-base-dev', 'gfortran', 'libfreetype6-dev', 'libpng-dev'])
+    install(['libatlas-base-dev', 'gfortran', 'libfreetype6-dev', 'libpng12-dev'])
     pip(['scipy', 'matplotlib', 'pandas'])
     #
     install('python-sympy')
