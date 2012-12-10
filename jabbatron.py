@@ -811,6 +811,15 @@ def step_12j():
     pip('pattern')
 
 
+def step_12k():
+    """
+    Qt
+    """
+    tags(['qt', 'pyside'])
+    #
+    install(['python-pyside', 'pyside-tools'])
+
+
 def step_31():
     """
     multimedia (mplayer2, vlc, etc.)
@@ -1279,7 +1288,8 @@ def py_130():
 (12g) python + apache on localhost
 (12h) python concurrency (gevent)
 (12i) OpenCV
-(12j) pattern (a web mining module)"""
+(12j) pattern (a web mining module)
+(12k) Qt (PySide)"""
     submenu('py', text)
 
 
