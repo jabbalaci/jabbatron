@@ -464,9 +464,10 @@ def step_04b():
     konsole, gnome-panel, etc.
     """
     tags(['konsole', 'yakuake', 'gparted', 'okular', 'pdf', 'nautilus', 'gconf', 'htop', 'gnome-panel', 'gnome', 'gnome panel', 'xsel', 'xclip', 'clipboard'])
-    tags(['terminator', 'config'])
+    tags(['terminator', 'config', 'rlwrap'])
     #
     install(['konsole', 'yakuake', 'gparted', 'okular', 'nautilus-open-terminal', 'gconf-editor', 'htop', 'gnome-panel', 'xsel', 'xclip'])
+    install(['rlwrap'])
     install('terminator')
     reply = raw_input('Add terminator config file [y/n]? ')
     if reply == 'y':
@@ -815,9 +816,9 @@ def step_12k():
     """
     Qt
     """
-    tags(['qt', 'pyside'])
+    tags(['qt', 'pyside', 'designer'])
     #
-    install(['python-pyside', 'pyside-tools'])
+    install(['python-pyside', 'pyside-tools', 'qt4-designer'])
 
 
 def step_31():
@@ -1484,4 +1485,3 @@ if __name__ == "__main__":
         main(sys.argv[1:])
     else:
         main([])
-    
