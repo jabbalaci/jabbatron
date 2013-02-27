@@ -671,10 +671,10 @@ def step_12b():
     """
     Python, smaller things
     """
-    tags(['pip', 'pep8', 'ipython', 'python', 'pymongo', 'mongodb', 'pygments', 'reddit', 'curl', 'pycurl'])
+    tags(['pip', 'pep8', 'ipython', 'python', 'pymongo', 'mongodb', 'pygments', 'reddit', 'curl', 'pycurl', 'requests'])
     tags(['untangle', 'xml', 'pylint', 'sphinx', 'feed', 'feedparser', 'flask', 'virtualenv'])
     #
-    pip(['pip', 'pep8', 'ipython', 'pymongo', 'pygments', 'reddit', 'pycurl', 'untangle', 'pylint'])
+    pip(['pip', 'pep8', 'ipython', 'pymongo', 'pygments', 'reddit', 'pycurl', 'untangle', 'pylint', 'requests'])
     pip(['sphinx', 'feedparser'])
     pip(['Flask', 'virtualenv'])
 
@@ -849,6 +849,15 @@ def step_32():
     #
     add_repo('jonoomph/openshot-edge')
     install(['openshot', 'openshot-doc'])
+
+
+def step_41():
+    """
+    static ffmpeg build
+    """
+    url = 'http://ffmpeg.gusari.org/static/'
+    print '#', url
+    webbrowser.open(url)
 
 
 def step_14():
@@ -1296,7 +1305,8 @@ def py_130():
 
 def mm_135():
     text = """(31)  mplayer2, vlc, etc.
-(32)  OpenShot video editor"""
+(32)  OpenShot video editor
+(41)  static FFmpeg build"""
     submenu('mm', text)
 
 
