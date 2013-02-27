@@ -855,6 +855,8 @@ def step_41():
     """
     static ffmpeg build
     """
+    tags(['ffmpeg', 'static'])
+    #
     url = 'http://ffmpeg.gusari.org/static/'
     print '#', url
     webbrowser.open(url)
