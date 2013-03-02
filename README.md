@@ -3,7 +3,7 @@ jabbatron
 
 Interactive installer script for Ubuntu.
 
-* Author:  Laszlo Szathmary, 2012 (<jabba.laci@gmail.com>)
+* Author:  Laszlo Szathmary, 2012--2013 (<jabba.laci@gmail.com>)
 * Website: <http://ubuntuincident.wordpress.com/2012/02/29/jabbatron/>
 * GitHub:  <https://github.com/jabbalaci/jabbatron>
 
@@ -24,7 +24,7 @@ Or, simply download `jabbatron.py` and launch it.
 Screenshot
 ----------
 
-    ###### Jabbatron 0.2.8 ########
+    ###### Jabbatron 0.2.9 ########
     #  Jabbatron is good for you  #
     ###############################
     # main                        #
@@ -48,6 +48,7 @@ Screenshot
     (200) Haskell...
     (210) admin panel
     (220) json
+    (230) Google App Engine
     (h)   help
     (q)   quit
     >>>

@@ -3,7 +3,7 @@
 """
 Interactive installer script for Ubuntu.
 
-* Author:  Laszlo Szathmary, 2012 (<jabba.laci@gmail.com>)
+* Author:  Laszlo Szathmary, 2012--2013 (<jabba.laci@gmail.com>)
 * Website: <http://ubuntuincident.wordpress.com/2012/02/29/jabbatron/>
 * GitHub:  <https://github.com/jabbalaci/jabbatron>
 
@@ -11,15 +11,24 @@ Menu points that contain 3 digits lead to submenus.
 
 Menu points that contain 2 digits execute some operation(s).
 
+If you want to add a new step, you can check the availability
+of its name the following way:
+
+    jabbatron.py -new
+
+It launches an interactive name selector. If "51" is free for instance,
+then you can create a function called `step_51()`.
+
+
 I take no responsibility for any possible
 loss of data on your computer.
 Use this script at your own risk.
 """
 
 __author__ = "Laszlo Szathmary (jabba.laci@gmail.com)"
-__version__ = "0.2.8"
-__date__ = "20121030"
-__copyright__ = "Copyright (c) 2012 Laszlo Szathmary"
+__version__ = "0.2.9"
+__date__ = "20130302"
+__copyright__ = "Copyright (c) 2012--2013 Laszlo Szathmary"
 __license__ = "GPL"
 
 import re
@@ -62,9 +71,11 @@ alias ridd='chmod 755'
 alias tailf='tail -f'
 alias cls='clear'
 alias nh='nautilus . 2>/dev/null'
-alias p='ipython'
+alias p='python'
+alias bpy='bpython'
 alias kill9='kill -9'
 alias tm='tmux'
+alias k='konsole &'
 
 # /usr/games/fortune | /usr/games/cowthink
 """
@@ -103,7 +114,7 @@ echo
 
 WGETRC = """# custom .wgetrc file
 
-# user_agent = Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:16.0) Gecko/20100101 Firefox/16.0"""
+# user_agent = Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:19.0) Gecko/20100101 Firefox/19.0"""
 
 VIMRC_URL = 'https://raw.github.com/jabbalaci/jabbatron/master/vimrc.txt'
 TMUX_CONF_URL = 'https://raw.github.com/jabbalaci/jabbatron/master/tmux.conf.txt'
@@ -161,7 +172,7 @@ def create_dir(item, in_home_dir=True, sudo=False):
     if in_home_dir:
         item = HOME_DIR + '/' + item
     if os.path.exists(item):
-        print '{} exists'.format(item)
+        print '{item} exists'.format(item=item)
     else:
         if not sudo:
             os.mkdir(item)
@@ -170,7 +181,7 @@ def create_dir(item, in_home_dir=True, sudo=False):
             print '#', cmd
             os.system(cmd)
         if os.path.exists(item):
-            print '{} created'.format(item)
+            print '{item} created'.format(item=item)
 
 
 def wait():
@@ -199,12 +210,12 @@ def bin_to_path_in_bashrc():
 def add_wgetrc():
     fname = HOME_DIR + '/.wgetrc'
     if os.path.exists(fname):
-        print '{} exists'.format(fname)
+        print '{f} exists'.format(f=fname)
     else:
         with open(fname, 'w') as f:
             print >>f, WGETRC
         if os.path.exists(fname):
-            print '{} created'.format(fname)
+            print '{f} created'.format(f=fname)
             os.system('chmod 600 {f}'.format(f=fname))
 
 
@@ -382,19 +393,19 @@ def step_02():
     path = HOME_DIR + '/bin/good_shape.sh'
     path2 = HOME_DIR + '/bin/good_shape_safe.sh'
     if os.path.exists(path):
-        print '{} exists'.format(path)
+        print '{p} exists'.format(p=path)
         call_good_shape()
     else:
         create_dir('bin')
         with open(path, 'w') as f:
             print >>f, GOOD_SHAPE
         if os.path.exists(path):
-            print '{} created'.format(path)
+            print '{p} created'.format(p=path)
             os.system('chmod u+x {p}'.format(p=path))
         if not os.path.exists(path2) and os.path.exists(path):
             os.system('grep -v clean {p} >{p2}'.format(p=path, p2=path2))
             if os.path.exists(path2):
-                print '{} created'.format(path2)
+                print '{p} created'.format(p=path2)
                 os.system('chmod u+x {p2}'.format(p2=path2))
         #
         bin_to_path_in_bashrc()
@@ -455,7 +466,7 @@ def step_04():
     if not os.path.exists(bfile):
         os.system("cd; cd .mc; cp /etc/mc/mc.ext . && ln -s mc.ext bindings")
         if os.path.exists(bfile):
-            print '# {} was created'.format(bfile)
+            print '# {f} was created'.format(f=bfile)
 
 
 def step_04b():
@@ -486,7 +497,7 @@ def step_05():
     #
     install('vim-gnome')
     if not os.path.exists(HOME_DIR + '/.vimrc'):
-        os.system("cd; wget {} -O .vimrc".format(VIMRC_URL))
+        os.system("cd; wget {url} -O .vimrc".format(url=VIMRC_URL))
     create_dir('tmp/vim')
     reply = raw_input('Set vim in .bashrc as your default editor [y/n]? ')
     if reply == 'y':
@@ -506,7 +517,7 @@ def step_33():
     print
     reply = raw_input('Download .tmux.conf file [y/n]? ')
     if reply == 'y':
-        os.system("cd; wget {} -O .tmux.conf".format(TMUX_CONF_URL))
+        os.system("cd; wget {url} -O .tmux.conf".format(url=TMUX_CONF_URL))
     else:
         print 'no'
 
@@ -531,7 +542,7 @@ def step_06a():
     """
     MS-DOS prompt emulation (in .bashrc)
     """
-    tags(['msdos', 'dos', 'microsoft', 'prompt', 'emulator', 'emulation'])
+    tags(['msdos', 'dos', 'ms-dos', 'microsoft', 'prompt', 'emulator', 'emulation'])
     #
     reply = raw_input('Add MS-DOS prompt emulation to .bashrc [y/n]? ')
     if reply == 'y':
@@ -782,7 +793,7 @@ def step_12i():
     fpath = raw_input('Full path of the downloaded archive: ')
     (path, fname) = os.path.split(fpath)
     os.chdir(path)
-    os.system('tar xvjf {}'.format(fname))
+    os.system('tar xvjf {f}'.format(f=fname))
     os.chdir(re.sub('.tar.bz2', '', fname))
     os.system('mkdir build')
     os.chdir('build')
@@ -832,11 +843,6 @@ def step_31():
     #
     #add_repo('n-muench/vlc')    # not needed in Ubuntu 12.10
     install('vlc')
-    #
-# TODO
-# didn't work with Ubuntu 12.04 last time I checked
-#    add_repo('me-davidsansome/clementine')
-#    install('clementine')
     #
     install(['minitube', 'soundconverter'])
 
@@ -1499,6 +1505,19 @@ def menu():
             print 'Wat?'
 
 
+def print_hole_if_available(steps):
+    def to_number(s):
+        return int(''.join([c for c in s if c.isdigit()]))
+    #
+    size = len(steps)
+    for i in range(1, size-1):
+        a = to_number(steps[i-1])
+        b = to_number(steps[i])
+        if b - a > 1:
+            print 'There is a hole available: {n}'.format(n=a+1)
+            return
+
+
 def new_item():
     steps = []
     for f in sorted(globals()):
@@ -1507,9 +1526,10 @@ def new_item():
     print "Steps taken:"
     print "------------"
     print steps
+    print_hole_if_available(steps)
     try:
         new_step = raw_input('Check availability: ').strip()
-    except KeyboardInterrupt:
+    except (KeyboardInterrupt, EOFError):
         print
         print 'quit.'
         sys.exit(0)
@@ -1539,3 +1559,4 @@ if __name__ == "__main__":
         main(sys.argv[1:])
     else:
         main([])
+
