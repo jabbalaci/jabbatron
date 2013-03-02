@@ -7,9 +7,16 @@ Interactive installer script for Ubuntu.
 * Website: <http://ubuntuincident.wordpress.com/2012/02/29/jabbatron/>
 * GitHub:  <https://github.com/jabbalaci/jabbatron>
 
-Menu points that contain 3 digits lead to submenus.
+Some rules:
+-----------
 
-Menu points that contain 2 digits execute some operation(s).
+(1) The main menu contains submenus. Submenus must consist of 3 digits.
+    In the source they have the following form: textual prefix, underscore, 3 digits.
+    Example: `blogs_000`.
+
+(2) Modules (i.e. functions that do some operations) are under the
+    submenus. They consist of 2 digits and an optional lowercase letter.
+    In the source they are prefixed with `step_`. Examples: `step_00a` or `step_09`.
 
 If you want to add a new step, you can check the availability
 of its name the following way:
@@ -1258,7 +1265,7 @@ def submenu(msg, text):
         elif choice == 'c':
             submenu(msg, text)
             break
-        elif re.search('\d{2}[a-z]?', choice):
+        elif re.search('^\d{2}[a-z]?$', choice):
             try:
                 methodToCall = globals()['step_' + choice]
             except:
@@ -1459,16 +1466,16 @@ def menu():
         elif choice == 'c':
             menu()
             break
-        elif re.search('\d{3}', choice):
+        elif re.search('^\d{3}$', choice):
             found = False
             for f in globals():
-                if re.search('[a-z]+_{choice}$'.format(choice=choice), f):
+                if re.search('^[a-z]+_{choice}$'.format(choice=choice), f):
                     found = True
                     methodToCall = globals()[f]
                     methodToCall()
             if not found:
                 print 'Unknown menu item.'
-        elif re.search('\d{2}[a-z]?', choice):
+        elif re.search('^\d{2}[a-z]?$', choice):
             try:
                 methodToCall = globals()['step_' + choice]
             except:
@@ -1505,7 +1512,7 @@ def new_item():
     steps = []
     for f in sorted(globals()):
         if f.startswith('step_'):
-            steps.append(re.search('step_(.*)', f).group(1))
+            steps.append(re.search('^step_(.*)$', f).group(1))
     print "Steps taken:"
     print "------------"
     print steps
@@ -1517,6 +1524,10 @@ def new_item():
         print 'quit.'
         sys.exit(0)
     #
+    if not re.search(r'^\d{2}[a-z]?$', new_step):
+        print 'Invalid name. Correct form: two digits and an optional lowercase letter.'
+        return
+    # else
     if new_step not in steps:
         print 'Available! :)'
     else:
