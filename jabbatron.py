@@ -1188,6 +1188,17 @@ def step_34():
     call(cmd, shell=True)
 
 
+def step_42():
+    """
+    sudo apt-get autoremove
+    """
+    tags(['apt-get', 'autoremove'])
+    #
+    cmd = 'sudo apt-get autoremove'
+    print '#', cmd
+    os.system(cmd)
+
+
 def step_35():
     """
     ./jq
@@ -1217,6 +1228,28 @@ def step_37():
     tags(['json', 'editor'])
     #
     url = 'http://jsoneditoronline.org/'
+    print '#', url
+    webbrowser.open(url)
+
+
+def step_43():
+    """
+    Google App Engine SDK for Python
+    """
+    tags(['gae'])
+    #
+    url = 'https://developers.google.com/appengine/downloads#Google_App_Engine_SDK_for_Python'
+    print '#', url
+    webbrowser.open(url)
+
+
+def step_44():
+    """
+    webapp2 framework
+    """
+    tags(['webapp2', 'python', 'framework'])
+    #
+    url = 'http://webapp-improved.appspot.com/'
     print '#', url
     webbrowser.open(url)
 
@@ -1363,8 +1396,10 @@ def haskell_200():
 
 
 def admin_210():
-    text = """(40)  reinstall kernel module for vbox and start VirtualBox
-(34)  upgrade to a new release"""
+    text = """(02)  good_shape.sh (create in ~/bin or call it if exists)
+(40)  reinstall kernel module for vbox and start VirtualBox
+(34)  upgrade to a new release
+(42)  sudo apt-get autoremove"""
     submenu('admin', text)
 
 
@@ -1373,6 +1408,12 @@ def json_220():
 (36)  json visualizer
 (37)  json editor"""
     submenu('json', text)
+
+
+def json_230():
+    text = """(43)  Google App Engine SDK for Python
+(44)  webapp2 framework"""
+    submenu('gae', text)
 
 
 ###############
@@ -1411,6 +1452,7 @@ def menu():
 (200) Haskell...
 (210) admin panel
 (220) json
+(230) Google App Engine
 (h)   help
 (q)   quit"""
 #(15)  gimp (2.8.x)
