@@ -151,21 +151,45 @@ Example:
 TAGS = {}
 
 
-def tags(keywords):
-    def add_tag(function_name, tag):
-        global TAGS
-        if function_name in TAGS:
-            TAGS[function_name].add(tag)
-        else:
-            TAGS[function_name] = set()
-            TAGS[function_name].add(tag)
+#def tags(keywords):
+#    def add_tag(function_name, tag):
+#        global TAGS
+#        if function_name in TAGS:
+#            TAGS[function_name].add(tag)
+#        else:
+#            TAGS[function_name] = set()
+#            TAGS[function_name].add(tag)
+#    #
+#    caller_function_name = sys._getframe(1).f_code.co_name
+#    if type(keywords) == str:
+#        add_tag(caller_function_name, keywords)
+#    if type(keywords) == list:
+#        for k in keywords:
+#            add_tag(caller_function_name, k)
+
+# if you have a tag with a digit, you can add it to this exception list
+TAGS_ALLOWED_WITH_DIGITS = set(['kdiff3', 'bs4', 'pep8', 'apache2', 'mplayer2', 'mp3', 'knotify4', 'sqlite3', 'webapp2'])
+
+def tags(tags):
+    assert type(tags) == list
+    global TAGS
     #
-    caller_function_name = sys._getframe(1).f_code.co_name
-    if type(keywords) == str:
-        add_tag(caller_function_name, keywords)
-    if type(keywords) == list:
-        for k in keywords:
-            add_tag(caller_function_name, k)
+    def verify_tag(tag):
+        if re.search(r'\d', tag):
+            if tag not in TAGS_ALLOWED_WITH_DIGITS:
+                print 'Error: tags cannot contain digits. Modify the tag {0}.'.format(tag)
+                sys.exit(1)
+    #
+    for tag in tags:
+        verify_tag(tag)
+    #
+    def _decorator(fn):
+        TAGS[fn.__name__] = set(tags)
+        def step_func(*args, **kwargs):
+            return fn(*args, **kwargs)
+        step_func.tags = tags
+        return step_func
+    return _decorator
 
 
 def create_dir(item, in_home_dir=True, sudo=False):
@@ -186,7 +210,11 @@ def create_dir(item, in_home_dir=True, sudo=False):
 
 def wait():
     print
-    raw_input('Press ENTER to continue...')
+    try:
+        raw_input('Press ENTER to continue...')
+    except (KeyboardInterrupt, EOFError):
+        print
+        sys.exit(0)
 
 
 def info():
@@ -348,34 +376,31 @@ def get_complex_cmd_output(cmd, stderr=STDOUT):
 ## steps ##
 ###########
 
-def step_00():
+@tags(['blog', 'ubuntu', 'incident', 'jabba'])
+def step_00a():
     """
     open the Ubuntu Incident blog
     """
-    tags(['blog', 'ubuntu', 'incident', 'jabba'])
-    #
     url = 'https://ubuntuincident.wordpress.com/'
     print '#', url
     webbrowser.open(url)
 
 
+@tags(['python', 'blog', 'jabba'])
 def step_00b():
     """
     open the Python Adventures blog
     """
-    tags(['python', 'blog', 'jabba'])
-    #
     url = 'https://pythonadventures.wordpress.com/'
     print '#', url
     webbrowser.open(url)
 
 
+@tags(['home', 'directory', 'bin', 'tmp'])
 def step_01():
     """
     prepare HOME directory (create ~/bin, ~/tmp)
     """
-    tags(['home', 'directory', 'bin', 'tmp'])
-    #
     for d in ['bin', 'tmp']:
         create_dir(d)
     #
@@ -383,13 +408,12 @@ def step_01():
     add_wgetrc()
 
 
+@tags(['good_shape', 'good_shape.sh', 'good shape', 'installer', 'script'])
 def step_02():
     """
     good_shape.sh (create updater script in ~/bin)
     if exists: call it
     """
-    tags(['good_shape', 'good_shape.sh', 'good shape', 'installer', 'script'])
-    #
     path = HOME_DIR + '/bin/good_shape.sh'
     path2 = HOME_DIR + '/bin/good_shape_safe.sh'
     if os.path.exists(path):
@@ -411,45 +435,41 @@ def step_02():
         bin_to_path_in_bashrc()
 
 
+@tags(['ubuntu', 'version'])
 def step_38():
     """
     current version of Ubuntu
     """
-    tags(['ubuntu', 'version'])
-    #
     with open('/etc/issue') as f:
         version = f.read().strip()
     print version
 
 
+@tags(['dropbox', 'acroread', 'adobe', 'pdf'])
 def step_03():
     """
     dropbox, acroread
     """
-    tags(['dropbox', 'acroread', 'adobe', 'pdf'])
-    #
     print """Open Ubuntu Software Center and install these:
   * Dropbox
   * Adobe Reader (first enable "Canonical Partners" in "Software Sources" and "sudo apt-get update")"""
 
 
+@tags(['skype'])
 def step_03b():
     """
     skype
     """
-    tags(['skype'])
-    #
     url = 'http://www.skype.com/intl/en/get-skype/on-your-computer/linux/'
     print '#', url
     webbrowser.open(url)
 
 
+@tags(['mc', 'bindings', 'extension', 'extensions'])
 def step_04():
     """
     mc (from official repo [old])
     """
-    tags(['mc', 'bindings', 'extension', 'extensions'])
-    #
     if which('mc'):
         print 'It seems mc is already installed.'
         reply = raw_input('Do you want to reinstall mc [y/n]? ')
@@ -469,14 +489,14 @@ def step_04():
             print '# {f} was created'.format(f=bfile)
 
 
+temp = ['konsole', 'yakuake', 'gparted', 'okular', 'pdf', 'nautilus', 'gconf', 'htop', 'gnome-panel', 'gnome', 'gnome panel', 'xsel', 'xclip', 'clipboard']
+temp += ['terminator', 'config', 'rlwrap']
+@tags(temp)
 def step_04b():
     """
     some essential packages:
     konsole, gnome-panel, etc.
     """
-    tags(['konsole', 'yakuake', 'gparted', 'okular', 'pdf', 'nautilus', 'gconf', 'htop', 'gnome-panel', 'gnome', 'gnome panel', 'xsel', 'xclip', 'clipboard'])
-    tags(['terminator', 'config', 'rlwrap'])
-    #
     install(['konsole', 'yakuake', 'gparted', 'okular', 'nautilus-open-terminal', 'gconf-editor', 'htop', 'gnome-panel', 'xsel', 'xclip'])
     install(['rlwrap'])
     install('terminator')
@@ -489,12 +509,11 @@ def step_04b():
         print 'no'
 
 
+@tags(['vim', 'vimrc', '.vimrc', 'config'])
 def step_05():
     """
     vim + .vimrc
     """
-    tags(['vim', 'vimrc', '.vimrc', 'config'])
-    #
     install('vim-gnome')
     if not os.path.exists(HOME_DIR + '/.vimrc'):
         os.system("cd; wget {url} -O .vimrc".format(url=VIMRC_URL))
@@ -507,12 +526,11 @@ def step_05():
         print 'no'
 
 
+@tags(['tmux', 'config'])
 def step_33():
     """
     tmux + .tmux.conf
     """
-    tags(['tmux', 'config'])
-    #
     install('tmux')
     print
     reply = raw_input('Download .tmux.conf file [y/n]? ')
@@ -522,12 +540,11 @@ def step_33():
         print 'no'
 
 
+@tags(['alias', 'aliases', 'bashrc', '.bashrc', 'config', 'fortune', 'cowsay', 'cowthink', 'cow'])
 def step_06():
     """
     aliases (in .bashrc)
     """
-    tags(['alias', 'aliases', 'bashrc', '.bashrc', 'config', 'fortune', 'cowsay', 'cowthink', 'cow'])
-    #
     reply = raw_input('Add aliases to .bashrc [y/n]? ')
     if reply == 'y':
         with open(BASHRC, 'a') as f:
@@ -538,12 +555,11 @@ def step_06():
     install(['fortune-mod', 'cowsay'])
 
 
+@tags(['msdos', 'dos', 'ms-dos', 'microsoft', 'prompt', 'emulator', 'emulation'])
 def step_06a():
     """
     MS-DOS prompt emulation (in .bashrc)
     """
-    tags(['msdos', 'dos', 'ms-dos', 'microsoft', 'prompt', 'emulator', 'emulation'])
-    #
     reply = raw_input('Add MS-DOS prompt emulation to .bashrc [y/n]? ')
     if reply == 'y':
         with open(BASHRC, 'a') as f:
@@ -552,21 +568,19 @@ def step_06a():
         print 'no'
 
 
+@tags(['development', 'git', 'svn', 'subversion', 'clang', 'programming'])
 def step_07():
     """
     development (build-essential, git, subversion)
     """
-    tags(['development', 'git', 'svn', 'subversion', 'clang', 'programming'])
-    #
     install(['build-essential', 'git', 'subversion', 'clang', 'gdc', 'codeblocks', 'cmake', 'libqt4-dev', 'qt4-qmake'])
 
 
+@tags(['d', 'd language', 'd lang', 'dmd', 'rdmd'])
 def step_07a():
     """
     D language
     """
-    tags(['d', 'd language', 'd lang', 'dmd', 'rdmd'])
-    #
     dmd = which('dmd')
     if dmd:
         print 'Installed version:',
@@ -578,42 +592,38 @@ def step_07a():
     webbrowser.open(url)
 
 
+@tags(['wajig', 'apt-get', 'apt-file', 'packages', 'synaptic'])
 def step_08():
     """
     apt-get et al. (wajig, synaptic, etc.)
     """
-    tags(['wajig', 'apt-get', 'apt-file', 'packages', 'synaptic'])
-    #
     install(['wajig', 'apt-file', 'synaptic'])
 
 
+@tags(['latex', 'texlive', 'metapost'])
 def step_09():
     """
     latex
     """
-    tags(['latex', 'texlive', 'metapost'])
-    #
     install(['texlive-base', 'texlive', 'texlive-latex-extra',
              'texlive-metapost', 'texlive-science', 'texlive-fonts-extra', 'dvipng'])
 
 
+@tags(['git', 'github', 'ssh'])
 def step_10():
     """
     github setup (how to create ssh public key)
     """
-    tags(['git', 'github', 'ssh'])
-    #
     url = 'http://help.github.com/mac-set-up-git/'
     print '#', url
     webbrowser.open(url)
 
 
+@tags(['git', 'gitconfig', 'config', 'alias', 'aliases'])
 def step_10a():
     """
     .gitconfig (add some aliases)
     """
-    tags(['git', 'gitconfig', 'config', 'alias', 'aliases'])
-    #
     reply = raw_input('Add aliases to .gitconfig [y/n]? ')
     if reply == 'y':
         with open(GITCONFIGRC, 'a') as f:
@@ -622,12 +632,11 @@ def step_10a():
         print 'no'
 
 
+@tags(['git', 'help'])
 def step_10b():
     """
     Git help
     """
-    tags(['git', 'help'])
-    #
     url = 'http://help.github.com/git-cheat-sheets/'
     print '#', url
     webbrowser.open(url)
@@ -649,65 +658,62 @@ def step_10b():
     webbrowser.open(url)
 
 
+temp = ['tools', 'utils', 'xsel', 'xclip', 'kdiff3', 'meld', 'pdf', 'pdftk', 'imagemagick', 'rar', 'unrar', 'comix', 'comics', 'viewer']
+temp += ['chm', 'chmsee', 'gqview', 'image', 'image viewer', 'curl']
+@tags(temp)
 def step_11():
     """
     tools (xsel, kdiff3, etc.)
     """
-    tags(['tools', 'utils', 'xsel', 'xclip', 'kdiff3', 'meld', 'pdf', 'pdftk', 'imagemagick', 'rar', 'unrar', 'comix', 'comics', 'viewer'])
-    tags(['chm', 'chmsee', 'gqview', 'image', 'image viewer', 'curl'])
-    #
     install(['xsel', 'xclip', 'kdiff3', 'meld', 'pdftk', 'imagemagick', 'unrar', 'comix', 'chmsee', 'gqview', 'curl'])
 
 
+@tags(['python', 'pip'])
 def step_12():
     """
     python-pip (via apt-get [old], run just once)
     """
-    tags(['python', 'pip'])
-    #
     install('python-pip')
 
 
+@tags(['xml', 'libxml', 'python', 'scraper', 'lxml', 'beautifulsoup', 'bsoup', 'bs', 'bs4', 'scrapy', 'css', 'cssselect'])
 def step_12a():
     """
     Python, scrapers
     """
-    tags(['xml', 'libxml', 'python', 'scraper', 'lxml', 'beautifulsoup', 'bsoup', 'bs', 'bs4', 'scrapy', 'css', 'cssselect'])
-    #
     install(['libxml2-dev', 'libxslt1-dev', 'python2.7-dev'])
     pip(['lxml', 'beautifulsoup', 'beautifulsoup4', 'scrapy', 'cssselect'])
 
 
+temp = ['pip', 'pep8', 'ipython', 'python', 'pymongo', 'mongodb', 'pygments', 'reddit', 'praw', 'curl', 'pycurl', 'requests']
+temp += ['untangle', 'xml', 'pylint', 'sphinx', 'feed', 'feedparser', 'flask', 'virtualenv']
+@tags(temp)
 def step_12b():
     """
     Python, smaller things
     """
-    tags(['pip', 'pep8', 'ipython', 'python', 'pymongo', 'mongodb', 'pygments', 'reddit', 'curl', 'pycurl', 'requests'])
-    tags(['untangle', 'xml', 'pylint', 'sphinx', 'feed', 'feedparser', 'flask', 'virtualenv'])
-    #
-    pip(['pip', 'pep8', 'ipython', 'pymongo', 'pygments', 'reddit', 'pycurl', 'untangle', 'pylint', 'requests'])
+    pip(['pip', 'pep8', 'ipython', 'pymongo', 'pygments', 'praw', 'pycurl', 'untangle', 'pylint', 'requests'])
     pip(['sphinx', 'feedparser'])
     pip(['Flask', 'virtualenv'])
 
 
+@tags(['spyder', 'python', 'ide', 'ninja', 'ninja-ide'])
 def step_12c():
     """
     Python IDEs
     """
-    tags(['spyder', 'python', 'ide', 'ninja', 'ninja-ide'])
-    #
     pip('spyder')
     add_repo('ninja-ide-developers/ninja-ide')
     install('ninja-ide')
 
 
+temp = ['python', 'ipython', 'science', 'scientific', 'numpy', 'fortran', 'gfortran']
+temp += ['scipy', 'matplotlib', 'pandas', 'sympy', 'data']
+@tags(temp)
 def step_12d():
     """
     scientific python
     """
-    tags(['python', 'ipython', 'science', 'scientific', 'numpy', 'fortran', 'gfortran'])
-    tags(['scipy', 'matplotlib', 'pandas', 'sympy', 'data'])
-    #
     pip('ipython')
     # numpy, scipy, matplotlib, pandas
     pip('numpy')
@@ -717,24 +723,22 @@ def step_12d():
     install('python-sympy')
 
 
+@tags(['python', 'pil', 'image', 'screenshot', 'autopy'])
 def step_12e():
     """
     Python, image processing, autopy
     """
-    tags(['python', 'pil', 'image', 'screenshot', 'autopy'])
-    #
     pip(['pil', 'pyscreenshot'])
     #
     install('libxtst-dev')
     pip('autopy')
 
 
+@tags(['pyp', 'python'])
 def step_12f():
     """
     pyp from http://code.google.com/p/pyp/
     """
-    tags(['pyp', 'python'])
-    #
     if os.path.isdir(HOME_DIR + '/bin'):
         url = 'http://pyp.googlecode.com/files/pyp'
         out = HOME_DIR + '/bin/pyp'
@@ -747,32 +751,29 @@ def step_12f():
         print '# pyp fetched'
 
 
+@tags(['python', 'apache', 'apache2', 'wsgi', 'django', 'webserver', 'localhost'])
 def step_12g():
     """
     python + apache on localhost
     """
-    tags(['python', 'apache', 'apache2', 'wsgi', 'django', 'webserver', 'localhost'])
-    #
     install('libapache2-mod-wsgi')
     install('python-django')
 
 
+@tags(['python', 'gevent', 'concurrency'])
 def step_12h():
     """
     python concurrency
     """
-    tags(['python', 'gevent', 'concurrency'])
-    #
     install(['libevent-dev', 'python-all-dev'])
     pip('gevent')
 
 
+@tags(['opencv', 'install', 'source', 'build'])
 def step_12i():
     """
     OpenCV (based on http://jayrambhia.wordpress.com/tag/opencv/)
     """
-    tags(['opencv', 'install', 'source', 'build'])
-    #
     li = ['libopencv-dev', 'build-essential', 'checkinstall',
           'cmake', 'pkg-config', 'yasm',
           'libtiff4-dev', 'libjpeg-dev', 'libjasper-dev',
@@ -813,32 +814,30 @@ def step_12i():
     os.system(cmd)
 
 
+@tags(['python', 'pattern'])
 def step_12j():
     """
     pattern
     http://www.clips.ua.ac.be/pages/pattern
     """
-    tags(['python', 'pattern'])
-    #
     pip('pattern')
 
 
+@tags(['qt', 'pyside', 'designer'])
 def step_12k():
     """
     Qt
     """
-    tags(['qt', 'pyside', 'designer'])
-    #
     install(['python-pyside', 'pyside-tools', 'qt4-designer'])
 
 
+temp = ['multimedia', 'mplayer', 'mplayer2', 'vlc', 'mencoder']
+temp += ['minitube', 'youtube', 'soundconverter', 'sound', 'converter', 'mp3']
+@tags(temp)
 def step_31():
     """
     multimedia (mplayer2, vlc, etc.)
     """
-    tags(['multimedia', 'mplayer', 'mplayer2', 'vlc', 'mencoder'])
-    tags(['minitube', 'youtube', 'soundconverter', 'sound', 'converter', 'mp3'])
-    #
     install(['mplayer2', 'mencoder'])
     #
     #add_repo('n-muench/vlc')    # not needed in Ubuntu 12.10
@@ -847,53 +846,42 @@ def step_31():
     install(['minitube', 'soundconverter'])
 
 
+@tags(['openshot', 'video', 'editor', 'video editor'])
 def step_32():
     """
     OpenShot video editor (openshot.org)
     """
-    tags(['openshot', 'video', 'editor', 'video editor'])
-    #
     add_repo('jonoomph/openshot-edge')
     install(['openshot', 'openshot-doc'])
 
 
+@tags(['ffmpeg', 'static'])
 def step_41():
     """
     static ffmpeg build
     """
-    tags(['ffmpeg', 'static'])
-    #
     url = 'http://ffmpeg.gusari.org/static/'
     print '#', url
     webbrowser.open(url)
 
 
+@tags(['lamp', 'linux', 'apache', 'mysql', 'php'])
 def step_14():
     """
     LAMP (set up a LAMP environment)
     """
-    tags(['lamp', 'linux', 'apache', 'mysql', 'php'])
-    #
     url = 'https://ubuntuincident.wordpress.com/2010/11/18/installing-a-lamp-server/'
     print '#', url
     webbrowser.open(url)
 
 
-#def step_15():
-#    """
-#    gimp 2.8.x
-#    """
-#    add_repo('otto-kesselgulasch/gimp')
-#    install(['gimp', 'gimp-resynthesizer'])
-
-
+temp = ['tweak', 'tweaks', 'knotify4', 'disable', 'ubuntu-tweak', 'ubuntu']
+temp += ['unsettings', 'myunity']
+@tags(temp)
 def step_16():
     """
     tweaks (disable knotify4, install ubuntu-tweak, etc.)
     """
-    tags(['tweak', 'tweaks', 'knotify4', 'disable', 'ubuntu-tweak', 'ubuntu'])
-    tags(['unsettings', 'myunity'])
-    #
     oldpath = '/usr/bin/knotify4'
     newpath = '/usr/bin/knotify4.bak'
     if os.path.exists(oldpath):
@@ -912,88 +900,79 @@ def step_16():
     install('myunity')
 
 
+@tags(['global menu', 'disable'])
 def step_16b():
     """
     remove global menu (using 'unsettings' was not enough)
     """
-    tags(['global menu', 'disable'])
-    #
     remove(['appmenu-gtk3', 'appmenu-gtk', 'appmenu-qt', 'firefox-globalmenu'])
 
 
+@tags(['compiz', 'ccsm'])
 def step_16c():
     """
     compizconfig-settings-manager
     """
-    tags(['compiz', 'ccsm'])
-    #
     install('compizconfig-settings-manager')
 
 
+@tags(['database', 'databases', 'sqlite3'])
 def step_17a():
     """
     databases (sqlite3)
     """
-    tags(['database', 'databases', 'sqlite3'])
-    #
     install('sqlite3')
 
 
+@tags(['database', 'databases', 'mongodb'])
 def step_17b():
     """
     databases (mongodb)
     """
-    tags(['database', 'databases', 'mongodb'])
-    #
     mongodb()
 
 
+@tags(['database', 'databases', 'mysql', 'python'])
 def step_17c():
     """
     databases (mysql)
     """
-    tags(['database', 'databases', 'mysql', 'python'])
-    #
     install(['mysql-server', 'mysql-client', 'python-mysqldb'])
 
 
+@tags(['launcher', 'desktop'])
 def step_18():
     """
     Create Launcher is back. In newer Ubuntus, it's not available
     upon right click on the Desktop.
     """
-    tags(['launcher', 'desktop'])
-    #
     os.system('gnome-desktop-item-edit ~/Desktop/ --create-new')
 
 
+@tags(['browser', 'firefox', 'add-on', 'addon', 'plugin'])
 def step_19():
     """
     list of essential Firefox add-ons
     """
-    tags(['browser', 'firefox', 'add-on', 'addon', 'plugin'])
-    #
     url = 'https://ubuntuincident.wordpress.com/2011/03/14/essential-firefox-add-ons/'
     print '#', url
     webbrowser.open(url)
 
 
+@tags(['browser', 'google', 'chromium', 'chrome'])
 def step_20():
     """
     chromium
     """
-    tags(['browser', 'google', 'chromium', 'chrome'])
-    #
     install('chromium-browser')
 
 
+@tags(['tesseract', 'ocr'])
 def step_21():
     """
     tesseract 3
     http://code.google.com/p/tesseract-ocr/wiki/ReadMe
     """
-    tags(['tesseract', 'ocr'])
-    #
     install(['autoconf automake libtool', 'libpng12-dev', 'libjpeg62-dev', 'libtiff4-dev', 'zlib1g-dev'])
     #
     if True:
@@ -1031,55 +1010,51 @@ def step_21():
         os.system('sudo mkdir /usr/local/share/tessdata')
     os.system('sudo mv tesseract-ocr/tessdata/* /usr/local/share/tessdata/')
 
+
+@tags(['games', 'crack-attack', 'tents', 'puzzle', 'puzzles', 'tents and trees'])
 def step_22():
     """
     games (crack-attack, tents, etc.)
     """
-    tags(['games', 'crack-attack', 'tents', 'puzzle', 'puzzles', 'tents and trees'])
-    #
     install(['crack-attack', 'sgt-puzzles'])
 
 
+@tags(['virtualbox', 'vbox'])
 def step_23():
     """
     virtualbox
     """
-    tags(['virtualbox', 'vbox'])
-    #
     url = 'https://www.virtualbox.org/wiki/Linux_Downloads'
     print '#', url
     webbrowser.open(url)
 
 
+@tags(['java', 'sdk'])
 def step_24():
     """
     Java
     """
-    tags(['java', 'sdk'])
-    #
     url = 'http://www.oracle.com/technetwork/java/javase/downloads/index.html'
     print '#', url
     webbrowser.open(url)
 
 
+@tags(['java', 'api', 'doc'])
 def step_25():
     """
     Java API 7
     """
-    tags(['java', 'api', 'doc'])
-    #
     url = 'http://docs.oracle.com/javase/7/docs/api/'
     print '#', url
     webbrowser.open(url)
 
 
+@tags(['flash', 'blue', 'shit', 'adobe', 'correct', 'fix'])
 def step_26():
     """
     Flash videos are blue. Correct it.
     https://ubuntuincident.wordpress.com/2012/04/01/flash-videos-are-blue/
     """
-    tags(['flash', 'blue', 'shit', 'adobe', 'correct', 'fix'])
-    #
     if not os.path.exists('/etc/adobe'):
         create_dir('/etc/adobe', in_home_dir=False, sudo=True)
         os.system('sudo chmod 755 /etc/adobe')
@@ -1092,32 +1067,29 @@ def step_26():
     os.system('sudo chmod 644 /etc/adobe/mms.cfg')
 
 
+@tags(['firefox', 'global menu', 'disable'])
 def step_26b():
     """
     remove firefox-globalmenu
     """
-    tags(['firefox', 'global menu', 'disable'])
-    #
     remove('firefox-globalmenu')
 
 
+@tags(['java', 'xml', 'editor', 'oxygen'])
 def step_27():
     """
     Java
     """
-    tags(['java', 'xml', 'editor', 'oxygen'])
-    #
     url = 'http://www.oxygenxml.com/download_oxygenxml_editor.html'
     print '#', url
     webbrowser.open(url)
 
 
+@tags(['mc', 'source', 'build'])
 def step_28():
     """
     Midnight Commander from source
     """
-    tags(['mc', 'source', 'build'])
-    #
     print 'Current version: ',
     mc = which('mc')
     if mc:
@@ -1160,22 +1132,20 @@ def step_28():
         os.system('sudo make install')
 
 
+@tags(['haskell', 'programming', 'functional'])
 def step_30():
     """
     haskell
     """
-    tags(['haskell', 'programming', 'functional'])
-    #
     install('haskell-platform')
 
 
+@tags(['vbox', 'virtualbox', 'kernel'])
 def step_40():
     """
     reinstall kernel module for vbox
     (when you get an error message after installing a new kernel)
     """
-    tags(['vbox', 'virtualbox', 'kernel'])
-    #
     cmd = 'sudo /etc/init.d/vboxdrv setup'
     print '#', cmd
     os.system(cmd)
@@ -1183,81 +1153,82 @@ def step_40():
     call('/usr/bin/VirtualBox &', shell=True)
 
 
+@tags(['ubuntu', 'upgrade'])
 def step_34():
     """
     upgrade Ubuntu to a new release
     """
-    tags(['ubuntu', 'upgrade'])
-    #
     cmd = 'update-manager -d &'
     print '#', cmd
     call(cmd, shell=True)
 
 
+@tags(['apt-get', 'autoremove'])
 def step_42():
     """
     sudo apt-get autoremove
     """
-    tags(['apt-get', 'autoremove'])
-    #
     cmd = 'sudo apt-get autoremove'
     print '#', cmd
     os.system(cmd)
 
 
+@tags(['json', 'query', 'jq'])
 def step_35():
     """
     ./jq
     """
-    tags(['json', 'query', 'jq'])
-    #
     url = 'http://stedolan.github.com/jq/'
     print '#', url
     webbrowser.open(url)
 
 
+@tags(['json', 'visualize', 'html'])
 def step_36():
     """
     json visualizer
     """
-    tags(['json', 'visualize', 'html'])
-    #
     url = 'http://chris.photobooks.com/json/default.htm'
     print '#', url
     webbrowser.open(url)
 
 
+@tags(['json', 'editor'])
 def step_37():
     """
     json editor
     """
-    tags(['json', 'editor'])
-    #
     url = 'http://jsoneditoronline.org/'
     print '#', url
     webbrowser.open(url)
 
 
+@tags(['google', 'gae'])
 def step_43():
     """
     Google App Engine SDK for Python
     """
-    tags(['gae'])
-    #
     url = 'https://developers.google.com/appengine/downloads#Google_App_Engine_SDK_for_Python'
     print '#', url
     webbrowser.open(url)
 
 
+@tags(['webapp2', 'python', 'framework'])
 def step_44():
     """
     webapp2 framework
     """
-    tags(['webapp2', 'python', 'framework'])
-    #
     url = 'http://webapp-improved.appspot.com/'
     print '#', url
     webbrowser.open(url)
+
+##########
+## tags ##
+##########
+
+def process_tag(tag):
+    print 'TODO...'
+
 
 ##############
 ## submenus ##
@@ -1269,11 +1240,13 @@ def submenu(msg, text):
     while True:
         try:
             choice = raw_input('>>> ').strip()
-        except EOFError:
+        except (KeyboardInterrupt, EOFError):
             print
             print 'bye.'
             sys.exit(0)
-        if choice == 'qq':
+        if len(choice) == 0:
+            pass
+        elif choice == 'qq':
             print 'bye.'
             sys.exit(0)
         elif choice == 'q':
@@ -1285,7 +1258,7 @@ def submenu(msg, text):
         elif choice == 'c':
             submenu(msg, text)
             break
-        elif re.search('\d+', choice):
+        elif re.search('\d{2}[a-z]?', choice):
             try:
                 methodToCall = globals()['step_' + choice]
             except:
@@ -1298,9 +1271,17 @@ def submenu(msg, text):
                 break
             else:
                 print 'Hm?'
-        #
         elif len(choice) > 0:
+            process_tag(choice)
+        #
+        else:
             print 'Wat?'
+
+
+def blogs_000():
+    text = """(00a) The Ubuntu Incident (open blog)
+(00b) Python Adventures (open blog)"""
+    submenu('blogs', text)
 
 
 def home_100():
@@ -1353,8 +1334,11 @@ def mm_135():
 
 def ubuntu_140():
     text = """(38)  current version of Ubuntu
+(09)  latex
+(11)  tools (xsel, kdiff3, etc.)
 (03)  dropbox, acroread
 (03b) skype
+(14)  LAMP (set up a LAMP environment)
 (08)  apt-get et al. (wajig, synaptic, etc.)
 (16)  tweaks (disable knotify4, install ubuntu-tweak, etc.)
 (16b) disable global menu
@@ -1439,16 +1423,12 @@ def header(msg):
 
 def menu():
     header('main')
-    print """(00)  The Ubuntu Incident (open blog)
-(00b) Python Adventures (open blog)
+    print """(000) blogs...
 (100) prepare HOME directory + install essential softwares...
 (110) development (C/C++/D compilers, oXygen XML Editor, etc.)...
-(09)  latex
 (120) github...
-(11)  tools (xsel, kdiff3, etc.)
 (130) Python for World Domination...
-(135) multimedia
-(14)  LAMP (set up a LAMP environment)
+(135) multimedia...
 (140) Ubuntu (tweaks, extra softwares)...
 (150) databases (sqlite3, mongodb, mysql)...
 (160) browser(s)...
@@ -1456,12 +1436,11 @@ def menu():
 (180) games...
 (190) Java...
 (200) Haskell...
-(210) admin panel
-(220) json
-(230) Google App Engine
+(210) admin panel...
+(220) json...
+(230) Google App Engine...
 (h)   help
 (q)   quit"""
-#(15)  gimp (2.8.x)
     while True:
         try:
             choice = raw_input('>>> ').strip()
@@ -1469,7 +1448,9 @@ def menu():
             print
             print 'bye.'
             sys.exit(0)
-        if choice in ('q', 'qq'):
+        if len(choice) == 0:
+            pass
+        elif choice in ('q', 'qq'):
             print 'bye.'
             sys.exit(0)
         elif choice in ('h', 'help'):
@@ -1487,7 +1468,7 @@ def menu():
                     methodToCall()
             if not found:
                 print 'Unknown menu item.'
-        elif re.search('\d+', choice):
+        elif re.search('\d{2}[a-z]?', choice):
             try:
                 methodToCall = globals()['step_' + choice]
             except:
@@ -1500,8 +1481,10 @@ def menu():
                 break
             else:
                 print 'Hm?'
-        #
         elif len(choice) > 0:
+            process_tag(choice)
+        #
+        else:
             print 'Wat?'
 
 
