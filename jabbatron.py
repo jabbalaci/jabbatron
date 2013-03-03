@@ -27,8 +27,7 @@ It launches an interactive name selector. If "51" is free for instance,
 then you can create a function called `step_51()`.
 
 
-I take no responsibility for any possible
-loss of data on your computer.
+I take no responsibility for any possible loss of data on your computer.
 Use this script at your own risk.
 """
 
