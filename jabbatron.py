@@ -264,11 +264,11 @@ def call_good_shape():
     os.system(HOME_DIR + '/bin/good_shape.sh')
 
 
-def install_remove(packages, what=INSTALL):
+def install_remove(packages, what, options=""):
     if type(packages) == str:
-        cmd = 'sudo apt-get {what} '.format(what=what) + packages
+        cmd = 'sudo apt-get {options} {what} '.format(what=what, options=options) + packages
     elif type(packages) == list:
-        cmd = 'sudo apt-get {what} '.format(what=what) + ' '.join(packages)
+        cmd = 'sudo apt-get {options} {what} '.format(what=what, options=options) + ' '.join(packages)
     else:
         print >>sys.stderr, \
             'Error: strange argument for {what}().'.format(what=what)
@@ -278,12 +278,12 @@ def install_remove(packages, what=INSTALL):
     os.system(cmd)
 
 
-def install(packages):
-    install_remove(packages, INSTALL)
+def install(packages, options=""):
+    install_remove(packages, INSTALL, options)
 
 
-def remove(packages):
-    install_remove(packages, REMOVE)
+def remove(packages, options=""):
+    install_remove(packages, REMOVE, options)
 
 
 def pip(packages):
@@ -299,13 +299,18 @@ def pip(packages):
     os.system(cmd)
 
 
+def update(verbose=True):
+    cmd = 'sudo apt-get update'
+    if verbose:
+        print '#', cmd
+    os.system(cmd)
+
+
 def add_repo(repo):
     cmd = 'sudo add-apt-repository ppa:{repo}'.format(repo=repo)
     print '#', cmd
     os.system(cmd)
-    cmd = 'sudo apt-get update'
-    print '#', cmd
-    os.system(cmd)
+    update()
 
 
 def mongodb():
@@ -324,7 +329,7 @@ def mongodb():
         print '#', cmd
         os.system(cmd)
         #
-        os.system('sudo apt-get update')
+        update(verbose=False)
         install('mongodb-10gen')
         #
         pip('pymongo')
@@ -1144,6 +1149,196 @@ def step_28():
         os.system('sudo make install')
 
 
+def configure_make_checkinstall(what):
+    if what == 'x264':
+        os.system("./configure --enable-static")
+        os.system("make")
+        os.system("""sudo checkinstall --pkgname=x264 --pkgversion="3:$(./version.sh | awk -F'[" ]' '/POINT/{print $4"+git"$5}')" --backup=no --deldoc=yes --fstrans=no --default""")
+    elif what == 'fdk-aac':
+        os.system("./configure --disable-shared")
+        os.system("make")
+        os.system('sudo checkinstall --pkgname=fdk-aac --pkgversion="$(date +%Y%m%d%H%M)-git" --backup=no --deldoc=yes --fstrans=no --default')
+    elif what == 'libvpx':
+        os.system("./configure --disable-examples --disable-unit-tests")
+        os.system("make")
+        os.system('sudo checkinstall --pkgname=libvpx --pkgversion="1:$(date +%Y%m%d%H%M)-git" --backup=no --deldoc=yes --fstrans=no --default')
+    elif what == 'opus':
+        os.system('./configure --disable-shared')
+        os.system('make')
+        os.system('sudo checkinstall --pkgname=libopus --pkgversion="$(date +%Y%m%d%H%M)-git" --backup=no --deldoc=yes --fstrans=no --default')
+    elif what == 'ffmpeg':
+        os.system("""./configure --enable-gpl --enable-libass --enable-libfaac --enable-libfdk-aac --enable-libmp3lame \
+                  --enable-libopencore-amrnb --enable-libopencore-amrwb --enable-libspeex --enable-librtmp --enable-libtheora \
+                  --enable-libvorbis --enable-libvpx --enable-x11grab --enable-libx264 --enable-libvo-aacenc --enable-nonfree --enable-version3""")
+        os.system("make")
+        os.system('sudo checkinstall --pkgname=ffmpeg --pkgversion="7:$(date +%Y%m%d%H%M)-git" --backup=no --deldoc=yes --fstrans=no --default')
+    else:
+        func_name = sys._getframe().f_code.co_name
+        print 'Warning! Invalid parameter in function {0}!'.format(func_name)
+
+
+@tags(['ffmpeg', 'source'])
+def step_15():
+    """
+    (15)  FFmpeg from source (run this for the first time)
+    """
+    url = 'https://ffmpeg.org/trac/ffmpeg/wiki/UbuntuCompilationGuide'
+    print '# install guide:', url
+#    webbrowser.open(url)
+    print """
+FFmpeg will be compiled and installed from source
+* make sure that the multiverse repository is enabled
+* some packages will be removed and installed from source"""
+    print
+    reply = raw_input('Continue [y/n]? ')
+    if reply != 'y':
+        return
+    # else
+    BASE = '/opt'
+    reply = raw_input('Where do you want to install FFmpeg and its codecs [default: {0}]? '.format(BASE)).strip()
+    if reply:
+        BASE = reply
+    if not os.path.isdir(BASE):
+        print '{0} is not a directory!'.format(BASE)
+        return
+    if not os.access(BASE, os.W_OK):
+        print 'You have no write access to {0}!'.format(BASE)
+        return
+    # else
+    print 'Base directory:', BASE
+    if True:
+        remove(['ffmpeg', 'x264', 'libav-tools', 'libvpx-dev', 'libx264-dev', 'yasm'])
+        update()
+        install(['autoconf', 'automake', 'build-essential', 'checkinstall', 'git', 'libass-dev', 'libfaac-dev', 'libvo-aacenc-dev',
+                'libgpac-dev', 'libjack-jackd2-dev', 'libmp3lame-dev', 'libopencore-amrnb-dev', 'libopencore-amrwb-dev',
+                'librtmp-dev', 'libsdl1.2-dev', 'libspeex-dev', 'libtheora-dev', 'libtool', 'libva-dev', 'libvdpau-dev',
+                'libvorbis-dev', 'libx11-dev', 'libxext-dev', 'libxfixes-dev', 'pkg-config', 'texi2html', 'zlib1g-dev'], "-y")
+    if True:
+        print '# install Yasm'
+        os.chdir(BASE)
+        os.system("wget http://www.tortall.net/projects/yasm/releases/yasm-1.2.0.tar.gz")
+        os.system("tar xzvf yasm-1.2.0.tar.gz")
+        os.chdir("yasm-1.2.0")
+        os.system("./configure")
+        os.system("make")
+        os.system('sudo checkinstall --pkgname=yasm --pkgversion="1.2.0" --backup=no --deldoc=yes --fstrans=no --default')
+
+    if True:
+        print '# install x264'
+        os.chdir(BASE)
+        os.system("git clone --depth 1 git://git.videolan.org/x264.git")
+        os.chdir('x264')
+        configure_make_checkinstall('x264')
+
+    if True:
+        print '# install fdk-aac'
+        os.chdir(BASE)
+        os.system("git clone --depth 1 git://github.com/mstorsjo/fdk-aac.git")
+        os.chdir('fdk-aac')
+        os.system("autoreconf -fiv")
+        configure_make_checkinstall('fdk-aac')
+
+    if True:
+        print '# install libvpx'
+        os.chdir(BASE)
+        os.system("git clone --depth 1 http://git.chromium.org/webm/libvpx.git")
+        os.chdir('libvpx')
+        configure_make_checkinstall('libvpx')
+
+    if True:
+        print '# install opus'
+        os.chdir(BASE)
+        os.system("git clone --depth 1 git://git.xiph.org/opus.git")
+        os.chdir('opus')
+        os.system('./autogen.sh')
+        configure_make_checkinstall('opus')
+
+    if True:
+        print '# install FFmpeg'
+        os.chdir(BASE)
+        os.system("git clone --depth 1 git://source.ffmpeg.org/ffmpeg")
+        os.chdir('ffmpeg')
+        configure_make_checkinstall('ffmpeg')
+        os.system("hash -r")
+
+
+@tags(['ffmpeg', 'source', 'update'])
+def step_29():
+    """
+    (29)  update FFmpeg (if you installed FFmpeg from source before)
+    """
+    url = 'https://ffmpeg.org/trac/ffmpeg/wiki/UbuntuCompilationGuide'
+    print '# install and update guide:', url
+#    webbrowser.open(url)
+    print """
+Run this if you've already installed FFmpeg on your
+machine from source. It will update your FFmpeg and
+recompile it."""
+    print
+    reply = raw_input('Continue [y/n]? ')
+    if reply != 'y':
+        return
+    # else
+    BASE = '/opt'
+    reply = raw_input('Where is your existing FFmpeg and its codecs [default: {0}]? '.format(BASE)).strip()
+    if reply:
+        BASE = reply
+    if not os.path.isdir(BASE):
+        print '{0} is not a directory!'.format(BASE)
+        return
+    if not os.access(BASE, os.W_OK):
+        print 'You have no write access to {0}!'.format(BASE)
+        return
+    # else
+    print 'Base directory:', BASE
+    if True:
+        remove(['ffmpeg', 'x264', 'libx264-dev', 'libvpx-dev'], "-y")
+        update()
+        install(['autoconf', 'automake', 'build-essential', 'checkinstall', 'git', 'libass-dev', 'libfaac-dev', 'libvo-aacenc-dev',
+                 'libgpac-dev', 'libjack-jackd2-dev', 'libmp3lame-dev', 'libopencore-amrnb-dev', 'libopencore-amrwb-dev',
+                 'librtmp-dev', 'libsdl1.2-dev', 'libspeex-dev', 'libtheora-dev', 'libva-dev', 'libvdpau-dev', 'libvorbis-dev',
+                 'libx11-dev', 'libxext-dev', 'libxfixes-dev', 'texi2html', 'yasm', 'zlib1g-dev'], "-y")
+    if True:
+        print '# update x264'
+        os.chdir(BASE)
+        os.chdir('x264')
+        os.system("make distclean")
+        os.system("git pull")
+        configure_make_checkinstall('x264')
+
+    if True:
+        print '# update fdk-aac'
+        os.chdir(BASE)
+        os.chdir('fdk-aac')
+        os.system("make distclean")
+        os.system("git pull")
+        configure_make_checkinstall('fdk-aac')
+
+    if True:
+        print '# update libvpx'
+        os.chdir(BASE)
+        os.chdir('libvpx')
+        os.system("make clean")
+        os.system("git pull")
+        configure_make_checkinstall('libvpx')
+
+    if True:
+        print '# update opus'
+        os.chdir(BASE)
+        os.chdir('opus')
+        os.system("make distclean")
+        os.system("git pull")
+        configure_make_checkinstall('opus')
+
+    if True:
+        print '# update FFmpeg'
+        os.chdir(BASE)
+        os.chdir('ffmpeg')
+        os.system("make distclean")
+        os.system("git pull")
+        configure_make_checkinstall('ffmpeg')
+
+
 @tags(['haskell', 'programming', 'functional'])
 def step_30():
     """
@@ -1232,6 +1427,13 @@ def step_44():
     url = 'http://webapp-improved.appspot.com/'
     print '#', url
     webbrowser.open(url)
+
+
+def step_13():
+    """
+    (13)  placeholder
+    """
+    pass
 
 ##########
 ## tags ##
@@ -1400,6 +1602,8 @@ def source_170():
     text = [
         '21',     # tesseract 3
         '28',     # Midnight Commander from source
+        '15',     # FFmpeg from source (run this for the first time)
+        '29',     # update FFmpeg (if you installed FFmpeg from source before)
     ]
     submenu(sys._getframe().f_code.co_name.split('_')[0], text)
 
