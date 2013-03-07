@@ -701,13 +701,13 @@ def step_12a():
 
 
 temp = ['pip', 'pep8', 'ipython', 'python', 'pymongo', 'mongodb', 'pygments', 'reddit', 'praw', 'curl', 'pycurl', 'requests']
-temp += ['untangle', 'xml', 'pylint', 'sphinx', 'feed', 'feedparser', 'flask', 'virtualenv']
+temp += ['untangle', 'xml', 'pylint', 'sphinx', 'feed', 'feedparser', 'flask', 'virtualenv', 'pudb', 'debug', 'debugger', 'docopt']
 @tags(temp)
 def step_12b():
     """
     (12b) python, smaller things (pip, pep8, untangle, etc.)
     """
-    pip(['pip', 'pep8', 'ipython', 'pymongo', 'pygments', 'praw', 'pycurl', 'untangle', 'pylint', 'requests'])
+    pip(['pip', 'pep8', 'ipython', 'pymongo', 'pygments', 'praw', 'pycurl', 'untangle', 'pylint', 'requests', 'pudb', 'docopt'])
     pip(['sphinx', 'feedparser'])
     pip(['Flask', 'virtualenv'])
 
