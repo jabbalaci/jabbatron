@@ -461,13 +461,22 @@ def step_38():
     print version
 
 
-@tags(['dropbox', 'acroread', 'adobe', 'pdf'])
+@tags(['dropbox'])
 def step_03():
     """
-    (03)  dropbox, acroread
+    (03)  dropbox
     """
-    print """Open Ubuntu Software Center and install these:
-  * Dropbox
+    url = 'https://ubuntuincident.wordpress.com/2010/10/15/dropbox-installation/'
+    print '#', url
+    webbrowser.open(url)
+
+
+@tags(['acroread', 'adobe', 'pdf'])
+def step_45():
+    """
+    (45)  acroread
+    """
+    print """Open Ubuntu Software Center and install:
   * Adobe Reader (first enable "Canonical Partners" in "Software Sources" and "sudo apt-get update")"""
 
 
@@ -1369,6 +1378,14 @@ def step_34():
     call(cmd, shell=True)
 
 
+@tags(['apt-get', 'update'])
+def step_39():
+    """
+    (39)  sudo apt-get update
+    """
+    update()
+
+
 @tags(['apt-get', 'autoremove'])
 def step_42():
     """
@@ -1566,7 +1583,8 @@ def ubuntu_140():
         '38',     # current version of Ubuntu
         '09',     # latex
         '11',     # tools (xsel, kdiff3, etc.)
-        '03',     # dropbox, acroread
+        '03',     # dropbox
+        '45',     # acroread
         '03b',    # skype
         '14',     # LAMP (set up a LAMP environment)
         '08',     # apt-get et al. (wajig, synaptic, etc.)
@@ -1635,6 +1653,7 @@ def admin_210():
         '02',     # good_shape.sh (create in ~/bin or call it if exists)
         '40',     # reinstall kernel module for vbox and start VirtualBox
         '34',     # upgrade to a new release
+        '39',     # sudo apt-get update
         '42',     # sudo apt-get autoremove
     ]
     submenu(sys._getframe().f_code.co_name.split('_')[0], text)
