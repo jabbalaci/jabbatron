@@ -32,8 +32,8 @@ Use this script at your own risk.
 """
 
 __author__ = "Laszlo Szathmary (jabba.laci@gmail.com)"
-__version__ = "0.3.0"
-__date__ = "20130303"
+__version__ = "0.3.1"
+__date__ = "20130331"
 __copyright__ = "Copyright (c) 2012--2013 Laszlo Szathmary"
 __license__ = "GPL"
 
@@ -1813,7 +1813,11 @@ def verify_docstrings():
                 sys.exit(1)
 
 
-def main(args):
+def main():
+    verify_docstrings()
+    unbuffered()
+    args = sys.argv[1:]
+
     if len(args) == 0:
         menu()
     else:
@@ -1827,10 +1831,5 @@ def main(args):
 #############################################################################
 
 if __name__ == "__main__":
-    verify_docstrings()
-    unbuffered()
-    if len(sys.argv) > 1:
-        main(sys.argv[1:])
-    else:
-        main([])
+    main()
 
