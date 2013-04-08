@@ -32,8 +32,8 @@ Use this script at your own risk.
 """
 
 __author__ = "Laszlo Szathmary (jabba.laci@gmail.com)"
-__version__ = "0.3.1"
-__date__ = "20130331"
+__version__ = "0.3.2"
+__date__ = "20130408"
 __copyright__ = "Copyright (c) 2012--2013 Laszlo Szathmary"
 __license__ = "GPL"
 
@@ -1378,6 +1378,29 @@ def step_34():
     call(cmd, shell=True)
 
 
+@tags(['ubuntu', 'kernel', 'old kernel'])
+def step_46():
+    """
+    (46)  remove old kernels
+    """
+    print "current kernel:"
+    print get_complex_cmd_output("uname -a")[0].strip()
+    print
+    available = which("ubuntu-tweak")
+    print "The easiest way to remove old kernels is to use ubuntu-tweak.",
+    if not available:
+        print "However, it's NOT installed on your system."
+        print "Tip: install ubuntu-tweak with this script :)"
+    else:
+        print "In Ubuntu Tweak, go to Janitor -> Old Kernel."
+        reply = raw_input('Shall I start Ubuntu Tweak for you [y/n]? ').strip()
+        if reply in ('', 'y'):
+            print 'yes'
+            os.system("ubuntu-tweak &")
+        else:
+            print 'no'
+
+
 @tags(['apt-get', 'update'])
 def step_39():
     """
@@ -1653,6 +1676,7 @@ def admin_210():
         '02',     # good_shape.sh (create in ~/bin or call it if exists)
         '40',     # reinstall kernel module for vbox and start VirtualBox
         '34',     # upgrade to a new release
+        '46',     # remove old kernels
         '39',     # sudo apt-get update
         '42',     # sudo apt-get autoremove
     ]
