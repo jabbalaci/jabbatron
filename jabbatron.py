@@ -1469,11 +1469,36 @@ def step_44():
     webbrowser.open(url)
 
 
+@tags(['nothing'])
 def step_13():
     """
     (13)  placeholder
     """
     pass
+
+
+@tags(['ffmpeg', 'mp3', 'extract'])
+def step_47():
+    """
+    (47)  movie to mp3 (extract music from videos)
+    """
+    print "# ffmpeg -i in.avi -f mp3 out.mp3"
+    ffmpeg = which('ffmpeg')
+    if not ffmpeg:
+        print "Error: you need ffmpeg for this."
+        return
+    # else
+    print
+    try:
+        inp = raw_input("Input file: ")
+        outp = raw_input("Output file: ")
+        cmd = 'ffmpeg -i "{inp}" -f mp3 "{outp}"'.format(inp=inp, outp=outp)
+        print cmd
+        os.system(cmd)
+    except KeyboardInterrupt:
+        print
+        print 'interrupted.'
+
 
 ##########
 ## tags ##
@@ -1700,6 +1725,13 @@ def gae_230():
     submenu(sys._getframe().f_code.co_name.split('_')[0], text)
 
 
+def convert_240():
+    text = [
+        '47',     # video to mp3
+    ]
+    submenu(sys._getframe().f_code.co_name.split('_')[0], text)
+
+
 ###############
 ## main menu ##
 ###############
@@ -1733,6 +1765,7 @@ def menu():
 (210) admin panel...
 (220) json...
 (230) Google App Engine...
+(240) convert...
 (h)   help
 (q)   quit"""
     while True:
