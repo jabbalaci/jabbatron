@@ -32,8 +32,8 @@ Use this script at your own risk.
 """
 
 __author__ = "Laszlo Szathmary (jabba.laci@gmail.com)"
-__version__ = "0.3.2"
-__date__ = "20130408"
+__version__ = "0.3.3"
+__date__ = "20130424"
 __copyright__ = "Copyright (c) 2012--2013 Laszlo Szathmary"
 __license__ = "GPL"
 
@@ -459,6 +459,18 @@ def step_38():
     with open('/etc/issue') as f:
         version = f.read().strip()
     print version
+    #
+    distro_num = version.split()[1]
+    os.system("ubuntu-distro-info -af | grep {0}".format(distro_num))
+
+
+@tags(['ubuntu', 'distro', 'support', 'until'])
+def step_48():
+    """
+    (48)  support status of the current distro version
+    """
+    print "It may take some seconds..."
+    os.system("ubuntu-support-status | grep -v 'Run with'")
 
 
 @tags(['dropbox'])
@@ -1629,6 +1641,7 @@ def mm_135():
 def ubuntu_140():
     text = [
         '38',     # current version of Ubuntu
+        '48',     # support status of the current distro version
         '09',     # latex
         '11',     # tools (xsel, kdiff3, etc.)
         '03',     # dropbox
