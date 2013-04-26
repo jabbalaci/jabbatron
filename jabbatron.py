@@ -451,17 +451,12 @@ def step_02():
         bin_to_path_in_bashrc()
 
 
-@tags(['ubuntu', 'version'])
+@tags(['ubuntu', 'version', 'distro', 'distribution'])
 def step_38():
     """
     (38)  current version of Ubuntu
     """
-    with open('/etc/issue') as f:
-        version = f.read().strip()
-    print version
-    #
-    distro_num = version.split()[1]
-    os.system("ubuntu-distro-info -af | grep {0}".format(distro_num))
+    os.system("lsb_release -a")
 
 
 @tags(['ubuntu', 'distro', 'support', 'until'])
