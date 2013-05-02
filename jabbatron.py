@@ -729,6 +729,7 @@ def step_12a():
 
 temp = ['pip', 'pep8', 'ipython', 'python', 'pymongo', 'mongodb', 'pygments', 'reddit', 'praw', 'curl', 'pycurl', 'requests']
 temp += ['untangle', 'xml', 'pylint', 'sphinx', 'feed', 'feedparser', 'flask', 'virtualenv', 'pudb', 'debug', 'debugger', 'docopt']
+temp += ['redis', 'redis-py']
 @tags(temp)
 def step_12b():
     """
@@ -737,6 +738,7 @@ def step_12b():
     pip(['pip', 'pep8', 'ipython', 'pymongo', 'pygments', 'praw', 'pycurl', 'untangle', 'pylint', 'requests', 'pudb', 'docopt'])
     pip(['sphinx', 'feedparser'])
     pip(['Flask', 'virtualenv'])
+    pip(['redis'])
 
 
 @tags(['spyder', 'python', 'ide', 'ninja', 'ninja-ide'])
@@ -837,8 +839,8 @@ def step_12i():
     fpath = raw_input('Full path of the downloaded archive: ')
     (path, fname) = os.path.split(fpath)
     os.chdir(path)
-    os.system('tar xvjf {f}'.format(f=fname))
-    os.chdir(re.sub('.tar.bz2', '', fname))
+    os.system('tar xvzf {f}'.format(f=fname))
+    os.chdir(re.sub('.tar.gz', '', fname))
     os.system('mkdir build')
     os.chdir('build')
     os.system('cmake -D WITH_QT=ON -D WITH_XINE=ON -D WITH_OPENGL=ON -D WITH_TBB=ON -D BUILD_EXAMPLES=ON ..')
@@ -1181,7 +1183,7 @@ def step_28():
         os.system('sudo make install')
 
 
-@tags(['redis'])
+@tags(['redis', 'python', 'redis-py'])
 def step_49():
     """
     (49)  Redis
@@ -1247,6 +1249,7 @@ def step_49():
             cmd = "sudo make install"
             print '#', cmd
             os.system(cmd)
+            pip('redis')
         else:
             print 'no'
 
