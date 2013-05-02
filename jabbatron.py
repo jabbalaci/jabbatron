@@ -32,8 +32,8 @@ Use this script at your own risk.
 """
 
 __author__ = "Laszlo Szathmary (jabba.laci@gmail.com)"
-__version__ = "0.3.3"
-__date__ = "20130424"
+__version__ = "0.3.4"
+__date__ = "20130502"
 __copyright__ = "Copyright (c) 2012--2013 Laszlo Szathmary"
 __license__ = "GPL"
 
@@ -42,6 +42,7 @@ import os
 import sys
 import urllib2
 import webbrowser
+import shlex
 from subprocess import call, Popen, PIPE, STDOUT
 
 HOME_DIR = os.path.expanduser('~')
@@ -382,6 +383,16 @@ def get_latest_mc_version():
             latest = result.group(1)
     #
     return latest
+
+
+def get_simple_cmd_output(cmd, stderr=STDOUT):
+    """Execute a simple external command and get its output.
+
+    The command contains no pipes. Error messages are
+    redirected to the standard output by default.
+    """
+    args = shlex.split(cmd)
+    return Popen(args, stdout=PIPE, stderr=stderr).communicate()[0]
 
 
 def get_complex_cmd_output(cmd, stderr=STDOUT):
@@ -1129,9 +1140,17 @@ def step_28():
         print get_complex_cmd_output('mc -V | head -1')[0].strip()
     else:
         print 'not installed'
-    print 'Latest stable release: ', get_latest_mc_version()
+    #print 'Latest stable release: ', get_latest_mc_version()
 
     print
+    print "There are some problems with the MC homepage."
+    print "Until the issue is resolved, this module is disabled."
+    return
+
+    url = 'http://www.midnight-commander.org/downloads'
+    print '#', url
+    webbrowser.open(url)
+
     reply = raw_input('Continue [y/n]? ')
     if reply != 'y':
         return
@@ -1140,9 +1159,6 @@ def step_28():
 
     install(['libslang2-dev', 'libglib2.0-dev'])
     #
-    url = 'http://www.midnight-commander.org/downloads'
-    print '#', url
-    webbrowser.open(url)
     print 'Paste in the URL of the latest stable release:'
     url = raw_input('mc-X.X.X.X.tar.bz2: ').strip()
     if not re.search('http://.*/mc-(\d+\.)+tar\.bz2$', url):
@@ -1163,6 +1179,76 @@ def step_28():
     if os.path.isfile('src/mc'):
         remove('mc')
         os.system('sudo make install')
+
+
+@tags(['redis'])
+def step_49():
+    """
+    (49)  Redis
+    """
+    print 'Current version: '
+    redis = which('redis-server')
+    if redis:
+        print get_simple_cmd_output('redis-server --version').strip()
+    else:
+        print 'not installed'
+
+    reply = raw_input('Continue [y/n]? ')
+    if reply != 'y':
+        return
+
+    # else
+
+    url = 'http://redis.io/download'
+    print '#', url
+    webbrowser.open(url)
+
+    msg = 'Paste in the URL of the latest stable release: '
+    url = raw_input(msg).strip()
+    fname_tar_gz = url.split('/')[-1]
+    print '#', fname_tar_gz
+    fname = re.sub('.tar.gz', '', fname_tar_gz)
+    print '#', fname
+
+
+    BASE = '/opt'
+    reply = raw_input('Where do you want to install Redis [default: {0}]? '.format(BASE)).strip()
+    if reply:
+        BASE = reply
+    if not os.path.isdir(BASE):
+        print '{0} is not a directory!'.format(BASE)
+        return
+    if not os.access(BASE, os.W_OK):
+        print 'You have no write access to {0}!'.format(BASE)
+        return
+    # else
+    print 'Base directory:', BASE
+
+    os.chdir(BASE)
+    if True:
+        if not os.path.exists(fname_tar_gz):
+            os.system('wget {url}'.format(url=url))
+        os.system('tar xvzf {0}'.format(fname_tar_gz))
+        os.chdir('{base}/{fname}'.format(base=BASE, fname=fname))
+        os.system('make')
+
+    if True:
+        reply = raw_input('run tests [y/n] (default: yes)? ').strip()
+        if len(reply) == 0 or reply == "y":
+            install("tcl")
+            os.chdir('{base}/{fname}'.format(base=BASE, fname=fname))
+            os.system("make test")
+        else:
+            print 'no'
+
+    if True:
+        reply = raw_input('Install [y/n] (default: yes)? ').strip()
+        if len(reply) == 0 or reply == "y":
+            cmd = "sudo make install"
+            print '#', cmd
+            os.system(cmd)
+        else:
+            print 'no'
 
 
 def configure_make_checkinstall(what):
@@ -1678,6 +1764,7 @@ def source_170():
         '28',     # Midnight Commander from source
         '15',     # FFmpeg from source (run this for the first time)
         '29',     # update FFmpeg (if you installed FFmpeg from source before)
+        '49',     # Redis
     ]
     submenu(sys._getframe().f_code.co_name.split('_')[0], text)
 
@@ -1834,6 +1921,8 @@ def print_hole_if_available(steps):
         if b - a > 1:
             print 'There is a hole available: {n}'.format(n=a+1)
             return
+    # else
+    print 'Next available step: {0}'.format(to_number(steps[-1]) + 1)
 
 
 def new_item():
