@@ -32,8 +32,8 @@ Use this script at your own risk.
 """
 
 __author__ = "Laszlo Szathmary (jabba.laci@gmail.com)"
-__version__ = "0.3.4"
-__date__ = "20130502"
+__version__ = "0.3.5"
+__date__ = "20130517"
 __copyright__ = "Copyright (c) 2012--2013 Laszlo Szathmary"
 __license__ = "GPL"
 
@@ -533,14 +533,14 @@ def step_04():
 
 
 temp = ['konsole', 'yakuake', 'gparted', 'okular', 'pdf', 'nautilus', 'gconf', 'htop', 'gnome-panel', 'gnome', 'gnome panel', 'xsel', 'xclip', 'clipboard']
-temp += ['terminator', 'config', 'rlwrap']
+temp += ['terminator', 'config', 'rlwrap', 'fping', 'ping']
 @tags(temp)
 def step_04b():
     """
     (04b) konsole, gparted, etc. (essential packages)
     """
-    install(['konsole', 'yakuake', 'gparted', 'okular', 'nautilus-open-terminal', 'gconf-editor', 'htop', 'gnome-panel', 'xsel', 'xclip'])
-    install(['rlwrap'])
+    install(['konsole', 'yakuake', 'gparted', 'okular', 'nautilus-open-terminal', 'gconf-editor', 'htop', 'gnome-panel', 'xsel', 'xclip', 'fping'])
+    install(['rlwrap', 'keepassx'])
     install('terminator')
     reply = raw_input('Add terminator config file [y/n]? ')
     if reply == 'y':
@@ -610,12 +610,13 @@ def step_06a():
         print 'no'
 
 
-@tags(['development', 'git', 'svn', 'subversion', 'clang', 'programming'])
+@tags(['development', 'git', 'svn', 'subversion', 'clang', 'programming', 'autoconf', 'cvs', 'kdevelop', 'codeblocks'])
 def step_07():
     """
     (07)  development (build-essential, etc.)
     """
-    install(['build-essential', 'git', 'subversion', 'clang', 'gdc', 'codeblocks', 'cmake', 'libqt4-dev', 'qt4-qmake'])
+    install(['build-essential', 'git', 'subversion', 'clang', 'gdc', 'codeblocks', 'cmake', 'libqt4-dev', 'qt4-qmake', 'autoconf', 'cvs'])
+    install(['kdevelop'])
 
 
 @tags(['d', 'd language', 'd lang', 'dmd', 'rdmd'])
@@ -701,13 +702,13 @@ def step_10b():
 
 
 temp = ['tools', 'utils', 'xsel', 'xclip', 'kdiff3', 'meld', 'pdf', 'pdftk', 'imagemagick', 'rar', 'unrar', 'comix', 'comics', 'viewer']
-temp += ['chm', 'chmsee', 'gqview', 'image', 'image viewer', 'curl']
+temp += ['chm', 'chmsee', 'gqview', 'image', 'image viewer', 'curl', 'xdotool']
 @tags(temp)
 def step_11():
     """
     (11)  tools (xsel, kdiff3, etc.)
     """
-    install(['xsel', 'xclip', 'kdiff3', 'meld', 'pdftk', 'imagemagick', 'unrar', 'comix', 'chmsee', 'gqview', 'curl'])
+    install(['xsel', 'xclip', 'kdiff3', 'meld', 'pdftk', 'imagemagick', 'unrar', 'comix', 'chmsee', 'gqview', 'curl', 'xdotool'])
 
 
 @tags(['python', 'pip'])
@@ -718,24 +719,25 @@ def step_12():
     install('python-pip')
 
 
-@tags(['xml', 'libxml', 'python', 'scraper', 'lxml', 'beautifulsoup', 'bsoup', 'bs', 'bs4', 'scrapy', 'css', 'cssselect'])
+@tags(['xml', 'libxml', 'python', 'scraper', 'lxml', 'beautifulsoup', 'bsoup', 'bs', 'bs4', 'scrapy', 'css', 'cssselect', 'html'])
 def step_12a():
     """
     (12a) python scrapers (lxml, beautifulsoup, scrapy)
     """
     install(['libxml2-dev', 'libxslt1-dev', 'python2.7-dev'])
-    pip(['lxml', 'beautifulsoup', 'beautifulsoup4', 'scrapy', 'cssselect'])
+    pip(['lxml', 'beautifulsoup', 'beautifulsoup4', 'scrapy', 'cssselect', 'html5lib'])
 
 
-temp = ['pip', 'pep8', 'ipython', 'python', 'pymongo', 'mongodb', 'pygments', 'reddit', 'praw', 'curl', 'pycurl', 'requests']
+temp = ['pip', 'pep8', 'bpython', 'ipython', 'python', 'pymongo', 'mongodb', 'pygments', 'praw', 'praw', 'curl', 'pycurl', 'requests']
 temp += ['untangle', 'xml', 'pylint', 'sphinx', 'feed', 'feedparser', 'flask', 'virtualenv', 'pudb', 'debug', 'debugger', 'docopt']
-temp += ['redis', 'redis-py']
+temp += ['redis', 'redis-py', 'psutil']
 @tags(temp)
 def step_12b():
     """
     (12b) python, smaller things (pip, pep8, untangle, etc.)
     """
-    pip(['pip', 'pep8', 'ipython', 'pymongo', 'pygments', 'praw', 'pycurl', 'untangle', 'pylint', 'requests', 'pudb', 'docopt'])
+    install('bpython')
+    pip(['pip', 'pep8', 'ipython', 'pymongo', 'pygments', 'praw', 'pycurl', 'untangle', 'pylint', 'requests', 'pudb', 'docopt', 'psutil'])
     pip(['sphinx', 'feedparser'])
     pip(['Flask', 'virtualenv'])
     pip(['redis'])
@@ -921,9 +923,7 @@ def step_14():
     webbrowser.open(url)
 
 
-temp = ['tweak', 'tweaks', 'knotify4', 'disable', 'ubuntu-tweak', 'ubuntu']
-temp += ['unsettings', 'myunity']
-@tags(temp)
+@tags(['tweak', 'tweaks', 'knotify4', 'disable', 'ubuntu-tweak', 'ubuntu', 'unsettings', 'unity-tweak-tool', 'unity'])
 def step_16():
     """
     (16)  tweaks (disable knotify4, install ubuntu-tweak, etc.)
@@ -943,7 +943,7 @@ def step_16():
     add_repo('diesch/testing')
     install('unsettings')
     #
-    install('myunity')
+    install('unity-tweak-tool')
 
 
 @tags(['global menu', 'disable'])
@@ -1063,6 +1063,16 @@ def step_22():
     (22)  games (crack-attack, tents, etc.)
     """
     install(['crack-attack', 'sgt-puzzles'])
+
+
+@tags(['games', 'steam', 'valve'])
+def step_50():
+    """
+    (50)  steam client
+    """
+    url = 'http://store.steampowered.com/'
+    print '#', url
+    webbrowser.open(url)
 
 
 @tags(['virtualbox', 'vbox'])
@@ -1697,7 +1707,7 @@ def git_120():
 
 def py_130():
     text = [
-        '12',     #  python-pip (via apt-get [old], run just once)
+        '12',     # python-pip (via apt-get [old], run just once)
         '12a',    # python scrapers (lxml, beautifulsoup, scrapy)
         '12b',    # python, smaller things (pip, pep8, untangle, etc.)
         '12c',    # python IDEs (spyder, ninja-ide)
@@ -1775,6 +1785,7 @@ def source_170():
 def games_180():
     text = [
         '22',     # games (crack-attack, etc.)
+        '50',     # steam client
     ]
     submenu(sys._getframe().f_code.co_name.split('_')[0], text)
 
