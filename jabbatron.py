@@ -32,8 +32,8 @@ Use this script at your own risk.
 """
 
 __author__ = "Laszlo Szathmary (jabba.laci@gmail.com)"
-__version__ = "0.3.5"
-__date__ = "20130517"
+__version__ = "0.3.6"
+__date__ = "20130523"
 __copyright__ = "Copyright (c) 2012--2013 Laszlo Szathmary"
 __license__ = "GPL"
 
@@ -63,6 +63,20 @@ sudo dpkg --configure -a\\
 && sudo apt-get dist-upgrade\\
 && sudo apt-get clean\\
 && sudo apt-get autoremove'''
+
+UPDATE_PIP = '''#!/usr/bin/env python
+
+import os
+import pip
+
+dists = []
+for dist in pip.get_installed_distributions():
+    dists.append(dist.project_name)
+
+for dist_name in sorted(dists, key=lambda s: s.lower()):
+    cmd = "sudo pip install {0} -U".format(dist_name)
+    print '#', cmd
+    os.system(cmd)'''
 
 ALIASES = """# jabbatron
 alias md='mkdir'
@@ -460,6 +474,28 @@ def step_02():
                 os.system('chmod u+x {p2}'.format(p2=path2))
         #
         bin_to_path_in_bashrc()
+
+
+@tags(['pip', 'update', 'update pip'])
+def step_12m():
+    """
+    (12m) update-pip.py (update all pip packages)
+    """
+    path = HOME_DIR + '/bin/update-pip.py'
+    if os.path.exists(path):
+        print '{p} exists'.format(p=path)
+        reply = raw_input("Do you want to execute it [y/n]? ")
+        if reply == 'y':
+            os.system(HOME_DIR + '/bin/update-pip.py')
+        else:
+            print 'no'
+    else:
+        create_dir('bin')
+        with open(path, 'w') as f:
+            print >>f, UPDATE_PIP
+        if os.path.exists(path):
+            print '{p} created'.format(p=path)
+            os.system('chmod u+x {p}'.format(p=path))
 
 
 @tags(['ubuntu', 'version', 'distro', 'distribution'])
@@ -1606,6 +1642,13 @@ def step_47():
         print 'interrupted.'
 
 
+@tags(['sep', 'separator'])
+def step_sep():
+    """
+    (--)  ----------
+    """
+    pass
+
 ##########
 ## tags ##
 ##########
@@ -1707,6 +1750,8 @@ def git_120():
 
 def py_130():
     text = [
+        '12m',    # update-pip.py (update all pip packages)
+        'sep',    # ----------
         '12',     # python-pip (via apt-get [old], run just once)
         '12a',    # python scrapers (lxml, beautifulsoup, scrapy)
         '12b',    # python, smaller things (pip, pep8, untangle, etc.)
@@ -1967,6 +2012,9 @@ def new_item():
 
 def verify_docstrings():
     for f in sorted(globals()):
+        if f == 'step_sep':    # special case, used as a separator
+            return True
+
         if f.startswith('step_'):
             func_id = re.search(r'^step_(.*)$', f).group(1)
             m = re.search(r'^\((\d{2}[a-z]?)\)(\s+).*$', globals()[f].__doc__.strip())
