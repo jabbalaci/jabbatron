@@ -32,8 +32,8 @@ Use this script at your own risk.
 """
 
 __author__ = "Laszlo Szathmary (jabba.laci@gmail.com)"
-__version__ = "0.3.6"
-__date__ = "20130523"
+__version__ = "0.3.7"
+__date__ = "20130527"
 __copyright__ = "Copyright (c) 2012--2013 Laszlo Szathmary"
 __license__ = "GPL"
 
@@ -44,6 +44,7 @@ import urllib2
 import webbrowser
 import shlex
 from subprocess import call, Popen, PIPE, STDOUT
+import urlparse
 
 HOME_DIR = os.path.expanduser('~')
 
@@ -382,21 +383,41 @@ def unbuffered():
         autoflush_on = True
 
 
+#def get_latest_mc_version():
+#    try:
+#        from BeautifulSoup import BeautifulSoup
+#    except:
+#        return 'Warning: for this you should install the beautifulsoup package.'
+#    # if BS is available
+#    text = urllib2.urlopen('http://www.midnight-commander.org/downloads').read()
+#    soup = BeautifulSoup(text)
+#    for tag in soup.findAll('div', {'class': 'description'}):
+#        desc = tag.text
+#        result = re.search('^(Midnight Commander v.*\(stable release\))', desc)
+#        if result:
+#            latest = result.group(1)
+#    #
+#    return latest
+
+
 def get_latest_mc_version():
     try:
         from BeautifulSoup import BeautifulSoup
     except:
-        return 'Warning: for this you should install the beautifulsoup package.'
+        print 'Warning: for this you should install the beautifulsoup package.'
+        return None
     # if BS is available
-    text = urllib2.urlopen('http://www.midnight-commander.org/downloads').read()
+    url = 'http://ftp.osuosl.org/pub/midnightcommander/'    # trailing slash!
+    text = urllib2.urlopen(url).read()
     soup = BeautifulSoup(text)
-    for tag in soup.findAll('div', {'class': 'description'}):
-        desc = tag.text
-        result = re.search('^(Midnight Commander v.*\(stable release\))', desc)
-        if result:
-            latest = result.group(1)
+
+    links = []
+    for tag in soup.findAll('a', href=True):
+        tag['href'] = urlparse.urljoin(url, tag['href'])
+        links.append(tag['href'])
     #
-    return latest
+    links = sorted([l for l in links if re.search(r'/mc-(\d\.)+tar(\.gz|\.bz2)', l)])
+    return links[-1]
 
 
 def get_simple_cmd_output(cmd, stderr=STDOUT):
@@ -1188,31 +1209,18 @@ def step_28():
         print get_complex_cmd_output('mc -V | head -1')[0].strip()
     else:
         print 'not installed'
-    #print 'Latest stable release: ', get_latest_mc_version()
+    latest = get_latest_mc_version()
+    print 'Latest stable release: ', latest
 
-    print
-    print "There are some problems with the MC homepage."
-    print "Until the issue is resolved, this module is disabled."
-    return
-
-    url = 'http://www.midnight-commander.org/downloads'
-    print '#', url
-    webbrowser.open(url)
-
+    print '# the latest version (above) will be downloaded, compiled, and installed'
     reply = raw_input('Continue [y/n]? ')
     if reply != 'y':
         return
 
     # else
-
     install(['libslang2-dev', 'libglib2.0-dev'])
     #
-    print 'Paste in the URL of the latest stable release:'
-    url = raw_input('mc-X.X.X.X.tar.bz2: ').strip()
-    if not re.search('http://.*/mc-(\d+\.)+tar\.bz2$', url):
-        print 'Error: not a valid URL.'
-        wait()
-        return
+    url = latest
     fname_tar_bz2 = url.split('/')[-1]
     print '#', fname_tar_bz2
     fname = re.sub('.tar.bz2', '', fname_tar_bz2)
