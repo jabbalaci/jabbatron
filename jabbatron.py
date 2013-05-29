@@ -98,6 +98,8 @@ alias bpy='bpython'
 alias kill9='kill -9'
 alias tm='tmux'
 alias k='konsole &'
+alias pudb='python -m pudb'
+alias pcat='pygmentize -f terminal256 -O style=native -g'
 
 # /usr/games/fortune | /usr/games/cowthink
 """
