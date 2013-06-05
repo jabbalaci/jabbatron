@@ -1,3 +1,3 @@
 #!/bin/sh
 
-rlwrap ./jabbatron.py "$@"
+./jabbatron.py "$@"

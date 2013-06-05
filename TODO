@@ -1,5 +1,2 @@
-* Add support for looking up menu items by keyword.
-  For instance, if the user specifies "mc", every
-  menu that is related to "mc" are listed and thus
-  the user doesn't have to go through several menus
-  until (s)he finds it.
+TODO
+====

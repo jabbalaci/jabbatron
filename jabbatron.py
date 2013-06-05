@@ -32,8 +32,8 @@ Use this script at your own risk.
 """
 
 __author__ = "Laszlo Szathmary (jabba.laci@gmail.com)"
-__version__ = "0.3.7"
-__date__ = "20130527"
+__version__ = "0.3.8"
+__date__ = "20130605"
 __copyright__ = "Copyright (c) 2012--2013 Laszlo Szathmary"
 __license__ = "GPL"
 
@@ -45,6 +45,7 @@ import webbrowser
 import shlex
 from subprocess import call, Popen, PIPE, STDOUT
 import urlparse
+import readline
 
 HOME_DIR = os.path.expanduser('~')
 
@@ -95,13 +96,25 @@ alias cls='clear'
 alias nh='nautilus . 2>/dev/null'
 alias p='python'
 alias bpy='bpython'
+alias ipy='ipython'
 alias kill9='kill -9'
+alias sshow_r='feh -zsZFD 5 .'
+alias sshow_n='feh -FD 5 .'
 alias tm='tmux'
-alias k='konsole &'
+alias killvlc='kill -9 `ps ux | grep vlc | grep -v grep | tr -s " " | cut -d" " -f2`'
+alias killmplayer='ps ux | grep mplayer | grep -v grep | tr -s " " | cut -d" " -f2 | xargs kill -9'
+alias k='konsole 2>/dev/null &'
 alias pudb='python -m pudb'
+alias sagi='sudo apt-get install'
 alias pcat='pygmentize -f terminal256 -O style=native -g'
+alias cat='pcat'
 
 # /usr/games/fortune | /usr/games/cowthink
+"""
+
+LESS = """# jabbatron
+# colored less using pygmentize
+export LESS='-R'
 """
 
 GITCONFIG = """# jabbatron
@@ -142,6 +155,7 @@ WGETRC = """# custom .wgetrc file
 
 VIMRC_URL = 'https://raw.github.com/jabbalaci/jabbatron/master/vimrc.txt'
 TMUX_CONF_URL = 'https://raw.github.com/jabbalaci/jabbatron/master/tmux.conf.txt'
+LESSFILTER_URL = 'https://raw.github.com/jabbalaci/jabbatron/master/lessfilter.txt'
 
 BASHRC = HOME_DIR + '/.bashrc'
 GITCONFIGRC = HOME_DIR + '/.gitconfig'
@@ -625,6 +639,20 @@ def step_05():
             print >>f, EDITOR
     else:
         print 'no'
+
+
+@tags(['less', 'pygments', 'pygmentize'])
+def step_51():
+    """
+    (51)  less with colors using pygmentize
+    """
+    install('python-pygments')
+    if not os.path.exists(HOME_DIR + '/.lessfilter'):
+        os.chdir(HOME_DIR)
+        os.system("wget {url} -O .lessfilter".format(url=LESSFILTER_URL))
+        os.system('chmod 700 .lessfilter')
+    with open(BASHRC, 'a') as f:
+        print >>f, LESS
 
 
 @tags(['tmux', 'config'])
@@ -1734,6 +1762,7 @@ def home_100():
         '04b',    # konsole, gparted, etc. (essential packages)
         '05',     # vim (with .vimrc)
         '06',     # aliases (in .bashrc)
+        '51',     # less with colors using pygmentize
         '06a',    # MS-DOS prompt emulation (in .bashrc)
         '33',     # tmux (with .tmux.conf)
     ]
@@ -1999,6 +2028,7 @@ def new_item():
     for f in sorted(globals()):
         if f.startswith('step_'):
             steps.append(re.search('^step_(.*)$', f).group(1))
+    steps.remove('sep')    # patch, 'sep' is a special step for separator
     print "Steps taken:"
     print "------------"
     print steps
