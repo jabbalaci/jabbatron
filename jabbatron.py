@@ -32,8 +32,8 @@ Use this script at your own risk.
 """
 
 __author__ = "Laszlo Szathmary (jabba.laci@gmail.com)"
-__version__ = "0.3.8"
-__date__ = "20130605"
+__version__ = "0.3.9"
+__date__ = "20130606"
 __copyright__ = "Copyright (c) 2012--2013 Laszlo Szathmary"
 __license__ = "GPL"
 
@@ -107,7 +107,6 @@ alias k='konsole 2>/dev/null &'
 alias pudb='python -m pudb'
 alias sagi='sudo apt-get install'
 alias pcat='pygmentize -f terminal256 -O style=native -g'
-alias cat='pcat'
 
 # /usr/games/fortune | /usr/games/cowthink
 """
