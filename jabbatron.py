@@ -1070,7 +1070,7 @@ def step_17c():
     """
     (17c) mysql
     """
-    install(['mysql-server', 'mysql-client', 'python-mysqldb'])
+    install(['mysql-server', 'mysql-client', 'python-mysqldb', 'libmysqlclient-dev'])
 
 
 @tags(['launcher', 'desktop'])
