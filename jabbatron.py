@@ -450,6 +450,10 @@ def get_complex_cmd_output(cmd, stderr=STDOUT):
     return proc.stdout.readlines()
 
 
+def open_url(url):
+    #webbrowser.open_new_tab(url)
+    os.system('firefox -url "{url}" 2>/dev/null'.format(url=url))
+
 ###########
 ## steps ##
 ###########
@@ -461,7 +465,7 @@ def step_00a():
     """
     url = 'https://ubuntuincident.wordpress.com/'
     print '#', url
-    webbrowser.open(url)
+    open_url(url)
 
 
 @tags(['python', 'blog', 'jabba'])
@@ -471,7 +475,7 @@ def step_00b():
     """
     url = 'https://pythonadventures.wordpress.com/'
     print '#', url
-    webbrowser.open(url)
+    open_url(url)
 
 
 @tags(['home', 'directory', 'bin', 'tmp'])
@@ -558,7 +562,7 @@ def step_03():
     """
     url = 'https://ubuntuincident.wordpress.com/2010/10/15/dropbox-installation/'
     print '#', url
-    webbrowser.open(url)
+    open_url(url)
 
 
 @tags(['acroread', 'adobe', 'pdf'])
@@ -577,7 +581,7 @@ def step_03b():
     """
     url = 'http://www.skype.com/intl/en/get-skype/on-your-computer/linux/'
     print '#', url
-    webbrowser.open(url)
+    open_url(url)
 
 
 @tags(['mc', 'bindings', 'extension', 'extensions'])
@@ -718,7 +722,7 @@ def step_07a():
         print 'Not installed.'
     url = 'http://www.digitalmars.com/d/download.html'
     print '#', url
-    webbrowser.open(url)
+    open_url(url)
 
 
 @tags(['wajig', 'apt-get', 'apt-file', 'packages', 'synaptic'])
@@ -745,7 +749,7 @@ def step_10():
     """
     url = 'http://help.github.com/mac-set-up-git/'
     print '#', url
-    webbrowser.open(url)
+    open_url(url)
 
 
 @tags(['git', 'gitconfig', 'config', 'alias', 'aliases'])
@@ -768,23 +772,23 @@ def step_10b():
     """
     url = 'http://help.github.com/git-cheat-sheets/'
     print '#', url
-    webbrowser.open(url)
+    open_url(url)
     #
     url = 'http://progit.org/'
     print '#', url
-    webbrowser.open(url)
+    open_url(url)
     #
     url = 'http://git-scm.com/'
     print '#', url
-    webbrowser.open(url)
+    open_url(url)
     #
     url = 'http://schacon.github.com/git/user-manual.html'
     print '#', url
-    webbrowser.open(url)
+    open_url(url)
     #
     url = 'http://gitready.com/'
     print '#', url
-    webbrowser.open(url)
+    open_url(url)
 
 
 temp = ['tools', 'utils', 'xsel', 'xclip', 'kdiff3', 'meld', 'pdf', 'pdftk', 'imagemagick', 'rar', 'unrar', 'comix', 'comics', 'viewer']
@@ -922,7 +926,7 @@ def step_12i():
     print
     url = 'http://sourceforge.net/projects/opencvlibrary/files/opencv-unix/'
     print '#', url
-    webbrowser.open(url)
+    open_url(url)
     print '# download the latest OpenCV and save it somewhere (to /opt for instance)'
     fpath = raw_input('Full path of the downloaded archive: ')
     (path, fname) = os.path.split(fpath)
@@ -996,7 +1000,7 @@ def step_41():
     """
     url = 'http://ffmpeg.gusari.org/static/'
     print '#', url
-    webbrowser.open(url)
+    open_url(url)
 
 
 @tags(['lamp', 'linux', 'apache', 'mysql', 'php'])
@@ -1006,7 +1010,7 @@ def step_14():
     """
     url = 'https://ubuntuincident.wordpress.com/2010/11/18/installing-a-lamp-server/'
     print '#', url
-    webbrowser.open(url)
+    open_url(url)
 
 
 @tags(['tweak', 'tweaks', 'knotify4', 'disable', 'ubuntu-tweak', 'ubuntu', 'unsettings', 'unity-tweak-tool', 'unity'])
@@ -1088,7 +1092,7 @@ def step_19():
     """
     url = 'https://ubuntuincident.wordpress.com/2011/03/14/essential-firefox-add-ons/'
     print '#', url
-    webbrowser.open(url)
+    open_url(url)
 
 
 @tags(['browser', 'google', 'chromium', 'chrome'])
@@ -1158,7 +1162,7 @@ def step_50():
     """
     url = 'http://store.steampowered.com/'
     print '#', url
-    webbrowser.open(url)
+    open_url(url)
 
 
 @tags(['virtualbox', 'vbox'])
@@ -1168,7 +1172,7 @@ def step_23():
     """
     url = 'https://www.virtualbox.org/wiki/Linux_Downloads'
     print '#', url
-    webbrowser.open(url)
+    open_url(url)
 
 
 @tags(['java', 'sdk'])
@@ -1178,7 +1182,7 @@ def step_24():
     """
     url = 'http://www.oracle.com/technetwork/java/javase/downloads/index.html'
     print '#', url
-    webbrowser.open(url)
+    open_url(url)
 
 
 @tags(['java', 'api', 'doc'])
@@ -1188,7 +1192,7 @@ def step_25():
     """
     url = 'http://docs.oracle.com/javase/7/docs/api/'
     print '#', url
-    webbrowser.open(url)
+    open_url(url)
 
 
 @tags(['flash', 'blue', 'shit', 'adobe', 'correct', 'fix'])
@@ -1224,7 +1228,7 @@ def step_27():
     """
     url = 'http://www.oxygenxml.com/download_oxygenxml_editor.html'
     print '#', url
-    webbrowser.open(url)
+    open_url(url)
 
 
 @tags(['mc', 'source', 'build'])
@@ -1286,7 +1290,7 @@ def step_49():
 
     url = 'http://redis.io/download'
     print '#', url
-    webbrowser.open(url)
+    open_url(url)
 
     msg = 'Paste in the URL of the latest stable release: '
     url = raw_input(msg).strip()
@@ -1372,7 +1376,7 @@ def step_15():
     """
     url = 'https://ffmpeg.org/trac/ffmpeg/wiki/UbuntuCompilationGuide'
     print '# install guide:', url
-#    webbrowser.open(url)
+#    open_url(url)
     print """
 FFmpeg will be compiled and installed from source
 * make sure that the multiverse repository is enabled
@@ -1457,7 +1461,7 @@ def step_29():
     """
     url = 'https://ffmpeg.org/trac/ffmpeg/wiki/UbuntuCompilationGuide'
     print '# install and update guide:', url
-#    webbrowser.open(url)
+#    open_url(url)
     print """
 Run this if you've already installed FFmpeg on your
 machine from source. It will update your FFmpeg and
@@ -1605,7 +1609,7 @@ def step_35():
     """
     url = 'http://stedolan.github.com/jq/'
     print '#', url
-    webbrowser.open(url)
+    open_url(url)
 
 
 @tags(['json', 'visualize', 'html'])
@@ -1615,7 +1619,7 @@ def step_36():
     """
     url = 'http://chris.photobooks.com/json/default.htm'
     print '#', url
-    webbrowser.open(url)
+    open_url(url)
 
 
 @tags(['json', 'editor'])
@@ -1625,7 +1629,7 @@ def step_37():
     """
     url = 'http://jsoneditoronline.org/'
     print '#', url
-    webbrowser.open(url)
+    open_url(url)
 
 
 @tags(['google', 'gae'])
@@ -1635,7 +1639,7 @@ def step_43():
     """
     url = 'https://developers.google.com/appengine/downloads#Google_App_Engine_SDK_for_Python'
     print '#', url
-    webbrowser.open(url)
+    open_url(url)
 
 
 @tags(['webapp2', 'python', 'framework'])
@@ -1645,7 +1649,7 @@ def step_44():
     """
     url = 'http://webapp-improved.appspot.com/'
     print '#', url
-    webbrowser.open(url)
+    open_url(url)
 
 
 @tags(['nothing'])
