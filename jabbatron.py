@@ -46,6 +46,7 @@ import shlex
 from subprocess import call, Popen, PIPE, STDOUT
 import urlparse
 import readline
+from pprint import pprint
 
 HOME_DIR = os.path.expanduser('~')
 
@@ -155,6 +156,7 @@ WGETRC = """# custom .wgetrc file
 VIMRC_URL = 'https://raw.github.com/jabbalaci/jabbatron/master/vimrc.txt'
 TMUX_CONF_URL = 'https://raw.github.com/jabbalaci/jabbatron/master/tmux.conf.txt'
 LESSFILTER_URL = 'https://raw.github.com/jabbalaci/jabbatron/master/lessfilter.txt'
+BASH_PROMPT_URL = 'https://gist.github.com/jabbalaci/6651278/raw/5b7b4c584aabc0b8014adbe1c987e425a064bd38/bash_prompt.sh'
 
 BASHRC = HOME_DIR + '/.bashrc'
 GITCONFIGRC = HOME_DIR + '/.gitconfig'
@@ -162,6 +164,10 @@ GITCONFIGRC = HOME_DIR + '/.gitconfig'
 EDITOR = """# jabbatron
 EDITOR=/usr/bin/vim
 export EDITOR
+"""
+
+BASH_PROMPT = """# jabbatron
+source ~/.bash_prompt
 """
 
 PATH_BIN = """# jabbatron
@@ -642,6 +648,18 @@ def step_05():
             print >>f, EDITOR
     else:
         print 'no'
+
+
+@tags(['bash', 'prompt', 'colored'])
+def step_52():
+    """
+    (52)  .bash_prompt (with colors)
+    """
+    if not os.path.exists(HOME_DIR + '/.bash_prompt'):
+        os.system("cd; wget {url} -O .bash_prompt".format(url=BASH_PROMPT_URL))
+    with open(BASHRC, 'a') as f:
+        print >>f, BASH_PROMPT
+        print "# .bash_prompt is sourced at the end of .bashrc"
 
 
 @tags(['less', 'pygments', 'pygmentize'])
@@ -1695,9 +1713,11 @@ def step_sep():
 ##########
 
 def process_tag(tag):
-    if tag in tag2func:
-        for f in sorted(tag2func[tag]):
-            print globals()[f].__doc__.strip()
+    #pprint(tag2func)    # debug
+    for key in tag2func.iterkeys():
+        if tag.lower() in key.lower():
+            for f in sorted(tag2func[key]):
+                print globals()[f].__doc__.strip()
 
 
 ##############
@@ -1768,6 +1788,7 @@ def home_100():
         '51',     # less with colors using pygmentize
         '06a',    # MS-DOS prompt emulation (in .bashrc)
         '33',     # tmux (with .tmux.conf)
+        '52',     # .bash_prompt
     ]
     submenu(sys._getframe().f_code.co_name.split('_')[0], text)
 
