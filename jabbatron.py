@@ -1361,9 +1361,10 @@ def step_49():
 
 def configure_make_checkinstall(what):
     if what == 'x264':
-        os.system("./configure --enable-static")
+        os.system("./configure --enable-static --enable-shared")
         os.system("make")
-        os.system("""sudo checkinstall --pkgname=x264 --pkgversion="3:$(./version.sh | awk -F'[" ]' '/POINT/{print $4"+git"$5}')" --backup=no --deldoc=yes --fstrans=no --default""")
+        os.system("sudo make install")
+        os.system("sudo ldconfig")
     elif what == 'fdk-aac':
         os.system("./configure --disable-shared")
         os.system("make")
@@ -1472,6 +1473,12 @@ FFmpeg will be compiled and installed from source
         os.system("hash -r")
 
 
+def go_on(msg):
+    msg = msg + " [y/n]: "
+    reply = raw_input(msg)
+    return reply == 'y'
+
+
 @tags(['ffmpeg', 'source', 'update'])
 def step_29():
     """
@@ -1501,14 +1508,19 @@ recompile it."""
         return
     # else
     print 'Base directory:', BASE
-    if True:
+    if not go_on("Remove ffmpeg and install dependencies?"):
+        print "no."
+    else:
         remove(['ffmpeg', 'x264', 'libx264-dev', 'libvpx-dev'], "-y")
         update()
         install(['autoconf', 'automake', 'build-essential', 'checkinstall', 'git', 'libass-dev', 'libfaac-dev', 'libvo-aacenc-dev',
                  'libgpac-dev', 'libjack-jackd2-dev', 'libmp3lame-dev', 'libopencore-amrnb-dev', 'libopencore-amrwb-dev',
                  'librtmp-dev', 'libsdl1.2-dev', 'libspeex-dev', 'libtheora-dev', 'libva-dev', 'libvdpau-dev', 'libvorbis-dev',
-                 'libx11-dev', 'libxext-dev', 'libxfixes-dev', 'texi2html', 'yasm', 'zlib1g-dev'], "-y")
-    if True:
+                 'libx11-dev', 'libxext-dev', 'libxfixes-dev', 'texi2html', 'yasm', 'zlib1g-dev', 'libopus-dev'], "-y")
+    
+    if not go_on("Update x264?"):
+        print "no."
+    else:
         print '# update x264'
         os.chdir(BASE)
         os.chdir('x264')
@@ -1516,7 +1528,9 @@ recompile it."""
         os.system("git pull")
         configure_make_checkinstall('x264')
 
-    if True:
+    if not go_on("Update fdk-aac?"):
+        print "no."
+    else:
         print '# update fdk-aac'
         os.chdir(BASE)
         os.chdir('fdk-aac')
@@ -1524,7 +1538,9 @@ recompile it."""
         os.system("git pull")
         configure_make_checkinstall('fdk-aac')
 
-    if True:
+    if not go_on("Update libvpx?"):
+        print "no."
+    else:
         print '# update libvpx'
         os.chdir(BASE)
         os.chdir('libvpx')
@@ -1532,15 +1548,19 @@ recompile it."""
         os.system("git pull")
         configure_make_checkinstall('libvpx')
 
-    if True:
-        print '# update opus'
-        os.chdir(BASE)
-        os.chdir('opus')
-        os.system("make distclean")
-        os.system("git pull")
-        configure_make_checkinstall('opus')
+#    if not go_on("Update opus?"):
+#        print "no."
+#    else:
+#        print '# update opus'
+#        os.chdir(BASE)
+#        os.chdir('opus')
+#        os.system("make distclean")
+#        os.system("git pull")
+#        configure_make_checkinstall('opus')
 
-    if True:
+    if not go_on("Update FFmpeg?"):
+        print "no."
+    else:
         print '# update FFmpeg'
         os.chdir(BASE)
         os.chdir('ffmpeg')
