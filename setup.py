@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+# encoding: utf-8
 
 """
 jabbatron
@@ -11,6 +12,9 @@ Links
 
 * `website <https://github.com/jabbalaci/jabbatron>`_
 """
+
+from __future__ import (absolute_import, division,
+                        print_function, unicode_literals)
 
 from setuptools import setup
 
@@ -28,7 +32,7 @@ setup(
     author='Laszlo Szathmary',
     author_email='jabba.laci@gmail.com',
     url='https://github.com/jabbalaci/jabbatron',
-    keywords = ['jabba', 'installer', 'ubuntu'],
+    keywords=['jabba', 'installer', 'ubuntu'],
     license='GPLv3',
     platforms='Linux',
     entry_points={
@@ -42,9 +46,8 @@ setup(
         'License :: OSI Approved :: GNU General Public License (GPL)',
         'Programming Language :: Python',
         'Programming Language :: Python :: 2',
-		'Programming Language :: Python :: 2.7',
-		'Operating System :: POSIX :: Linux',
-		'Topic :: Utilities',
+        'Programming Language :: Python :: 2.7',
+        'Operating System :: POSIX :: Linux',
+        'Topic :: Utilities',
     ],
 )
-
