@@ -1781,6 +1781,8 @@ def step_53():
         os.system("mkdir -p {folder}".format(folder=folder))
     with ChDir(folder):
         download('https://github.com/Lokaltog/powerline/raw/develop/font/10-powerline-symbols.conf')
+    print("You may have to LOG OUT and log back in to see the changes.")
+    wait()
 
 
 @tags(['sep', 'separator'])
