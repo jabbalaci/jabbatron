@@ -37,8 +37,8 @@ from __future__ import (absolute_import, division,
                         print_function, unicode_literals)
 
 __author__ = "Laszlo Szathmary (jabba.laci@gmail.com)"
-__version__ = "0.4.1"
-__date__ = "20140105"
+__version__ = "0.4.2"
+__date__ = "20140109"
 __copyright__ = "Copyright (c) 2012--2014 Laszlo Szathmary"
 __license__ = "GPL"
 
@@ -309,7 +309,7 @@ def call_good_shape():
 
 
 def install_remove(packages, what, options=""):
-    if type(packages) == str:
+    if type(packages) in (str, unicode):
         cmd = 'sudo apt-get {options} {what} '.format(what=what, options=options) + packages
     elif type(packages) == list:
         cmd = 'sudo apt-get {options} {what} '.format(what=what, options=options) + ' '.join(packages)
@@ -331,7 +331,7 @@ def remove(packages, options=""):
 
 
 def pip(packages):
-    if type(packages) == str:
+    if type(packages) in (str, unicode):
         cmd = 'sudo pip install ' + packages + ' -U'
     elif type(packages) == list:
         cmd = 'sudo pip install ' + ' '.join(packages) + ' -U'
