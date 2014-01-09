@@ -3,7 +3,7 @@ jabbatron
 
 Interactive installer script for Ubuntu.
 
-* Author:  Laszlo Szathmary, 2012--2013 (<jabba.laci@gmail.com>)
+* Author:  Laszlo Szathmary, 2012--2014 (<jabba.laci@gmail.com>)
 * Website: <http://ubuntuincident.wordpress.com/2012/02/29/jabbatron/>
 * GitHub:  <https://github.com/jabbalaci/jabbatron>
 
@@ -83,10 +83,10 @@ in any keyword and the script will show related modules. Example:
     (04)  mc (from official repo [old])
     (28)  Midnight Commander from source
     >>> h
-    
+
     h  - this help
     q  - quit from submenu (back)
     qq - quit from program
     c  - clear screen
-    
+
     Press ENTER to continue...
