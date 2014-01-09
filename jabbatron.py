@@ -1770,6 +1770,8 @@ def step_53():
     """
     (53)  get special font for Powerline
     """
+    # manual instructions:
+    # https://powerline.readthedocs.org/en/latest/installation/linux.html#font-installation
     folder = os.path.join(HOME_DIR, '.fonts')
     create_dir(folder, in_home_dir=False)
     with ChDir(folder):
@@ -1781,6 +1783,7 @@ def step_53():
         os.system("mkdir -p {folder}".format(folder=folder))
     with ChDir(folder):
         download('https://github.com/Lokaltog/powerline/raw/develop/font/10-powerline-symbols.conf')
+    print()
     print("You may have to LOG OUT and log back in to see the changes.")
     wait()
 
