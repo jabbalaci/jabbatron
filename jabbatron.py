@@ -787,7 +787,7 @@ def step_09():
     """
     install(['texlive-base', 'texlive', 'texlive-latex-extra',
              'texlive-metapost', 'texlive-science', 'texlive-fonts-extra',
-             'dvipng', 'texlive-lang-french'])
+             'dvipng', 'texlive-lang-french', 'texlive-lang-european'])
 
 
 @tags(['git', 'github', 'ssh'])
