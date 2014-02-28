@@ -1788,6 +1788,16 @@ def step_53():
     wait()
 
 
+@tags(['unity', 'panel', 'reload'])
+def step_54():
+    """
+    (54)  restart unity panel in the top (missing clock problem)
+    """
+    cmd = 'killall unity-panel-service'
+    print('#', cmd)
+    os.system(cmd)
+
+
 @tags(['sep', 'separator'])
 def step_sep():
     """
@@ -1944,6 +1954,7 @@ def ubuntu_140():
         '16c',    # compizconfig-settings-manager (ccsm)
         '18',     # create launcher (if not available upon right click on the Desktop)
         '23',     # virtualbox
+        '54',     # killall unity-panel-service
     ]
     submenu(sys._getframe().f_code.co_name.split('_')[0], text)
 
