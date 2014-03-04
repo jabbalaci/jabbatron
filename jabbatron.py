@@ -37,8 +37,8 @@ from __future__ import (absolute_import, division,
                         print_function, unicode_literals)
 
 __author__ = "Laszlo Szathmary (jabba.laci@gmail.com)"
-__version__ = "0.4.2"
-__date__ = "20140109"
+__version__ = "0.4.3"
+__date__ = "20140304"
 __copyright__ = "Copyright (c) 2012--2014 Laszlo Szathmary"
 __license__ = "GPL"
 
