@@ -1,3 +1,3 @@
 #!/bin/sh
 
-vi jabbatron.py
+$EDITOR jabbatron.py

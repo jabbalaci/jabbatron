@@ -983,8 +983,8 @@ def step_12i():
     fpath = raw_input('Full path of the downloaded archive: ')
     (path, fname) = os.path.split(fpath)
     os.chdir(path)
-    os.system('tar xvzf {f}'.format(f=fname))
-    os.chdir(re.sub('.tar.gz', '', fname))
+    os.system('unzip {f}'.format(f=fname))
+    os.chdir(re.sub('.zip', '', fname))
     os.system('mkdir build')
     os.chdir('build')
     os.system('cmake -D WITH_QT=ON -D WITH_XINE=ON -D WITH_OPENGL=ON -D WITH_TBB=ON -D BUILD_EXAMPLES=ON ..')
@@ -1001,6 +1001,7 @@ def step_12i():
     cmd = 'sudo ldconfig'
     print('#', cmd)
     os.system(cmd)
+    print('# python bindings are also installed (e.g. import cv2 should work)')
 
 
 @tags(['python', 'pattern'])
