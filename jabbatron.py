@@ -1799,6 +1799,23 @@ def step_54():
     os.system(cmd)
 
 
+@tags(['ppa'])
+def step_55():
+    """
+    (55)  add PPA
+    """
+    ppa = raw_input("PPA identifier (e.g. ppa:linuxgndu/sqlitebrowser): ")
+    cmd = "sudo add-apt-repository {ppa}".format(ppa=ppa)
+    print('#', cmd)
+    reply = raw_input('Execute the command above [y/n]? ').strip()
+    if reply in ('', 'y'):
+        print('yes')
+        os.system(cmd)
+        update()
+    else:
+        print('no')
+
+
 @tags(['sep', 'separator'])
 def step_sep():
     """
@@ -1956,6 +1973,7 @@ def ubuntu_140():
         '18',     # create launcher (if not available upon right click on the Desktop)
         '23',     # virtualbox
         '54',     # killall unity-panel-service
+        '55',     # add PPA
     ]
     submenu(sys._getframe().f_code.co_name.split('_')[0], text)
 
