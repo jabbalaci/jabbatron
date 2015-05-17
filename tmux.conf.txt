@@ -1,0 +1,17 @@
+# Config file of Jabba Laci (jabba.laci@gmail.com)
+# Last change: 2012.10.16. (yyyy.mm.dd.)
+# Location of this file: $HOME/.tmux.conf
+
+unbind %
+bind | split-window -h
+bind - split-window -v
+
+# instead of C-b
+set-option -g prefix C-a
+
+# vi style window selection
+set-window-option -g mode-keys vi
+bind h select-pane -L
+bind j select-pane -D
+bind k select-pane -U
+bind l select-pane -R

@@ -1,0 +1,675 @@
+" Config file of Jabba Laci (jabba.laci@gmail.com)
+" Last change: 2012.01.29. (yyyy.mm.dd.)
+"
+" To use it, copy it to
+"     for Unix and OS/2:      ~/.vimrc
+"     for MS-DOS and Win32:   $VIM\_gvimrc (where $VIM is usually "C:\Program Files\vim")
+"
+" Use Vim settings, rather then Vi settings (much better!).
+" This must be first, because it changes other options as a side effect.
+"
+" VimTips: http://vim.sf.net/tip_index.php
+" Turning Vim into a modern Python IDE: http://sontek.net/turning-vim-into-a-modern-python-ide
+
+set nocompatible
+set autoindent
+set backspace=2		" (bs) allow backspacing over everything in insert mode
+set backup
+set backupext=~
+set viminfo='20,\"50	" (vi) read/write a .viminfo file, don't store more
+			            " than 50 lines of registers
+set history=50		   " (hi) keep 50 lines of command line history
+set ruler		      " (ru) show the cursor position all the time
+set complete=.,b,u,i " (cpt) complete mode insertion search for pattern i                        
+                     " the current buffer, then in other loaded buffer,
+                     " then unloaded buffer, then included files
+set nowrap           " do not wrap lines
+"set textwidth=78    " width of text
+set incsearch        " (is)  Highlight match while typing search pattern
+set hls					" highlight search
+set noinfercase      " (inf) Adjust case of match for keyword completion
+set noinsertmode     " (im)  Start the edit of a file in Insert mode
+set joinspaces       " (js)  Two spaces after a period with a join commanset more
+set secure
+set smartindent
+set showcmd
+set showmode
+set expandtab
+set tabstop=4
+set shiftwidth=4
+set softtabstop=4
+set warn
+set laststatus=2
+set fileformat=unix
+set fileformats=unix
+set mousemodel=popup
+set spellfile=~/.vim/spellfile.{encoding}.add
+set filetype=on
+colorscheme elflord
+
+"To define a mapping which uses the 'mapleader' variable, the special string
+"'<Leader>' can be used.  It is replaced with the string value of 'mapleader'.
+"If 'mapleader' is not set or empty, a backslash is used instead.
+let mapleader = ","
+
+" by http://sontek.net/turning-vim-into-a-modern-python-ide
+"filetype off
+"call pathogen#runtime_append_all_bundles()
+"call pathogen#helptags()
+
+" http://vim.wikia.com/wiki/Omni_completion
+filetype plugin on
+set ofu=syntaxcomplete#Complete
+
+" buffers
+set showtabline=2
+" previous, next, close
+map <C-p> :bp<cr>       
+map <C-n> :bn<cr>
+map <leader>q :bd<CR>
+
+" For Win32 GUI: remove 't' flag from 'guioptions': no tearoff menu entries
+" let &guioptions = substitute(&guioptions, "t", "", "g")
+
+" Don't use Ex mode, use Q for formatting
+map Q gq
+
+" work around a bug in some key-maping
+" if your 'End' key doesn't work, uncomment these next two lines
+" imap [4~ A
+" nmap [4~ $
+
+" Make p in Visual mode replace the selected text with the "" register.
+vnoremap p <Esc>:let current_reg = @"<CR>gvdi<C-R>=current_reg<CR><Esc>
+
+" Switch syntax highlighting on, when the terminal has colors
+" Also switch off highlighting the last used search pattern.
+if has("syntax") && &t_Co > 2 || has("gui_running")
+  syntax on
+  set nohlsearch
+endif
+
+" Only do this part when compiled with support for autocommands.
+if has("autocmd")
+
+ " In text files, always limit the width of text to 78 characters
+ autocmd BufRead *.txt set tw=78
+
+ " automatically delete trailing DOS-returns
+ autocmd BufRead * silent! %s/\r//
+
+ augroup pythonprog
+  " Remove all pythonprog autocommands
+  au!
+
+  " Tip taken from http://www.vex.net/~x/python_and_vim.html .
+  autocmd FileType python set tabstop=4 shiftwidth=4 smarttab expandtab softtabstop=4 autoindent
+  autocmd BufRead *.py set smartindent cinwords=if,elif,else,for,while,try,except,finally,def,class
+ augroup END
+
+ augroup cprog
+  " Remove all cprog autocommands
+  au!
+
+  " When starting to edit a file:
+  "   For C and C++ files set formatting of comments and set C-indenting on.
+  "   For other files switch it off.
+  "   Don't change the order, it's important that the line with * comes first.
+  autocmd FileType *      set formatoptions=tcql nocindent comments&
+  autocmd FileType c,cpp  set formatoptions=croql nocindent comments=sr:/*,mb:*,el:*/,://
+ augroup END
+
+ augroup gzip
+  " Remove all gzip autocommands
+  au!
+
+  " Enable editing of gzipped files
+  "   read: set binary mode before reading the file
+  "   uncompress text in buffer after reading
+  "  write: compress file after writing
+  " append: uncompress file, append, compress file
+  autocmd BufReadPre,FileReadPre  *.gz set bin
+  autocmd BufReadPost,FileReadPost  *.gz let ch_save = &ch|set ch=2
+  autocmd BufReadPost,FileReadPost  *.gz '[,']!gunzip
+  autocmd BufReadPost,FileReadPost  *.gz set nobin
+  autocmd BufReadPost,FileReadPost  *.gz let &ch = ch_save|unlet ch_save
+  autocmd BufReadPost,FileReadPost  *.gz execute ":doautocmd BufReadPost " . expand("%:r")
+
+  autocmd BufWritePost,FileWritePost  *.gz !mv <afile> <afile>:r
+  autocmd BufWritePost,FileWritePost  *.gz !gzip <afile>:r
+
+  autocmd FileAppendPre     *.gz !gunzip <afile>
+  autocmd FileAppendPre     *.gz !mv <afile>:r <afile>
+  autocmd FileAppendPost    *.gz !mv <afile> <afile>:r
+  autocmd FileAppendPost    *.gz !gzip <afile>:r
+ augroup END
+ augroup bz2
+  " Remove all bz2 autocommands
+  au!
+
+  " Enable editing of bzipped files
+  "   read: set binary mode before reading the file
+  "   uncompress text in buffer after reading
+  "  write: compress file after writing
+  " append: uncompress file, append, compress file
+  autocmd BufReadPre,FileReadPre  *.bz2 set bin
+  autocmd BufReadPost,FileReadPost  *.bz2 let ch_save = &ch|set ch=2
+  autocmd BufReadPost,FileReadPost  *.bz2 '[,']!bunzip2
+  autocmd BufReadPost,FileReadPost  *.bz2 set nobin
+  autocmd BufReadPost,FileReadPost  *.bz2 let &ch = ch_save|unlet ch_save
+  autocmd BufReadPost,FileReadPost  *.bz2 execute ":doautocmd BufReadPost " . expand("%:r")
+
+  autocmd BufWritePost,FileWritePost  *.bz2 !mv <afile> <afile>:r
+  autocmd BufWritePost,FileWritePost  *.bz2 !bzip2 <afile>:r
+
+  autocmd FileAppendPre     *.bz2 !bunzip2 <afile>
+  autocmd FileAppendPre     *.bz2 !mv <afile>:r <afile>
+  autocmd FileAppendPost    *.bz2 !mv <afile> <afile>:r
+  autocmd FileAppendPost    *.bz2 !bzip2 <afile>:r
+ augroup END
+
+ " This is disabled, because it changes the jumplist.  Can't use CTRL-O to go
+ " back to positions in previous files more than once.
+ "if 0
+  " When editing a file, always jump to the last known cursor position.
+  " Don't do it when the position is invalid or when inside an event handler
+  " (happens when dropping a file on gvim).
+  autocmd BufReadPost *
+    \ if line("'\"") > 0 && line("'\"") <= line("$") |
+    \   exe "normal g`\"" |
+    \ endif
+	 
+endif " has("autocmd")
+
+" Ignore these files when completing
+set wildignore+=*.o,*.obj,.git,*.pyc
+
+"############################################################################
+"#  START: Jabba's own config :)
+"############################################################################
+
+"this way Y is more logical
+map Y y$
+"delete everything till the beginning of the line
+map ds d
+
+"VimTip 89: Get more screen real estate by hiding toolbar and/or menus
+"set guioptions-=T "get rid of toolbar
+"set guioptions-=m "get rid of menu
+"If you decide that you don't really like being without your the toolbar or menus, issue the following:
+"set guioptions+=T "bring back toolbar
+"set guioptions+=m "bring back menu
+
+"VimTip 224: Shifting blocks visually
+:vnoremap < <gv
+:vnoremap > >gv
+
+"VimTip 468: display date-and-time on status line
+"20110913: %{fugitive#statusline()} added
+set ruler
+set rulerformat=%55(%{strftime('%Y\ %b\ %d\ \ \ \ %H:%M')}\ %8l,%-6(%c%V%)\ %P%)
+"set rulerformat=%55(%{strftime('%Y\ %b\ %d\ \ \ \ %H:%M')}\ %8l,%-6(%c%V%)\ %P%)%{fugitive#statusline()}
+
+"############################################################################
+"#  Function keys
+"############################################################################
+
+"switch spell check on/off (grammar check)
+setlocal spell spelllang=en_us      "let's use English by default
+set nospell                         "by default spell is off
+map <F2> :set spell!<CR>            
+
+"show/hide invisible characters
+map <F3> :set list!<CR>
+
+"To launch the explorer in the directory of the file currently edited.
+"always split the window
+map   <F4>  :Sexplore<CR>
+
+" taglist
+" http://vim.sourceforge.net/scripts/script.php?script_id=273
+"map <F5> :TlistToggle<CR>
+
+"change wrap
+map <F6> :set wrap!<CR>
+
+"change number
+map <F7> :set number!<CR>
+
+"remove file from buffer list (SUPER)
+"map   <F8> :bd<CR>
+"map!  <F8> <esc> :bd<CR>
+
+" taglist
+" http://vim.sourceforge.net/scripts/script.php?script_id=273
+map <F8> :TlistToggle<CR>
+
+:set pastetoggle=<F10>
+
+"quit
+map   <F11> :q<CR>
+
+"synchronisation from start
+map <F9> :syntax sync fromstart<CR>
+
+
+"############################################################################
+"#  Navigation / Windows
+"############################################################################
+
+"toggle between virtual screens
+"write file and move to next / previous
+map   <A-Right> :w<CR>:bn<CR>
+map   <A-Left> :w<CR>:bp<CR>
+
+"scroll half page left (CTRL-B) / right (CTRL-J)
+map   zH
+map!  zH
+map  <C-J> zL
+map! <C-J> zL
+
+"VimTip 38: Cursor one line at a time when :set wrap
+nnoremap j gj
+nnoremap k gk
+vnoremap j gj
+vnoremap k gk
+nnoremap <Down> gj
+nnoremap <Up> gk
+vnoremap <Down> gj
+vnoremap <Up> gk
+inoremap <Down> <C-o>gj
+
+"VimTip 195: Switching between windows (splitted windows)
+"You can set up vim in windows and gvim to switch between windows with the commonly used Ctrl-Tab and Ctrl-Shift-Tab
+nmap <C-Tab> <C-w>w
+nmap <C-S-Tab> <C-w>W
+inoremap <Up> <C-o>gk
+
+"VimTip 239: Scroll using arrow keys like browser: map shift-up and shift-down
+map <s-Down> <C-E>
+map <s-Up> <C-Y>
+
+"VimTip 235: Toggle highlight word under cursor, to find cursor.
+function! VIMRCWhere()
+    if !exists("s:highlightcursor")
+        match Todo /\k*\%#\k*/
+        let s:highlightcursor=1
+    else
+        match None
+        unlet s:highlightcursor
+    endif
+endfunction
+map <C-h> :call VIMRCWhere()<CR>
+
+"VimTip 163: Toggle Search Highlighting
+" Map H to toggle search highlighting
+map H :let &hlsearch = !&hlsearch<CR>
+
+"VimTip 427: Fast window resizing with +/- keys (horizontal); and / and * keys (vertical)
+if bufwinnr(1)
+  map <kPlus>  <C-W>+
+  map <kMinus> <C-W>-
+  map <kDivide> <c-w><
+  map <kMultiply> <c-w>>
+endif
+
+
+"############################################################################
+"#  Clipboard
+"############################################################################
+
+"VimTip 21: easy pasting to windows apps
+"pasting to windows apps doesn't require prefixing "* :
+set clipboard=unnamed
+
+"VimTip 66: Transfer text between two Vim 'sessions'
+" transfer/read and write one block of text between vim sessions
+" Usage:
+" `from' session:
+"     ma
+"     move to end-of-block
+"     xw
+"
+" `to' session:
+"     move to where I want block inserted
+"     xr
+"
+if has("unix")
+  nmap xr   :r $HOME/.vimxfer<CR>
+  nmap xR   :-r $HOME/.vimxfer<CR>
+  nmap xw   :'a,.w! $HOME/.vimxfer<CR>
+  vmap xr   c<esc>:r $HOME/.vimxfer<CR>
+  vmap xR   c<esc>:-r $HOME/.vimxfer<CR>
+  vmap xw   :w! $HOME/.vimxfer<CR>
+else
+  nmap xr   :r c:/.vimxfer<CR>
+  nmap xR   :-r c:/.vimxfer<CR>
+  nmap xw   :'a,.w! c:/.vimxfer<CR>
+  vmap xr   c<esc>:r c:/.vimxfer<cr>
+  vmap xR   c<esc>:-r c:/.vimxfer<cr>
+  vmap xw   :w! c:/.vimxfer<CR>
+endif
+
+"VimTip 296: copy current file's full path to the clipboard
+"path
+nnoremap <Leader>cp :let @*=expand("%:p")<cr>
+"path in DOS-mode, that is: change / to \
+nnoremap <Leader>cpd :let @*=substitute(expand("%:p"), "/", "\\", "g")<cr>
+"path in UNIX-mode, that is: change \ to /
+nnoremap <Leader>cpu :let @*=substitute(expand("%:p"), "\\", "/", "g")<cr>
+
+
+"############################################################################
+"#  System / Browser
+"############################################################################
+
+"switching off error messages (beeping/blinking)
+set noerrorbells
+set visualbell
+set t_vb=
+
+"VimTip 88: How to maximize vim on entry (win32)
+if has("win32") 
+	au GUIEnter * simalt ~x
+endif
+
+"VimTip 305: Best of VIM Tips (VIM's best Features)
+"MAKE IT EASY TO UPDATE/RELOAD_vimrc 
+if has("unix")
+"src: source rc file
+"erc: edit rc file
+	nmap <Leader>src :source $HOME/.vimrc<CR>
+	nmap <Leader>erc :e $HOME/.vimrc<CR>
+else
+	nmap <Leader>src :source $VIM/_gvimrc<CR>
+	nmap <Leader>erc :e $VIM/_gvimrc<CR>
+endif
+
+"VimTip 20: Are *.swp and *~ files littering your working directory?
+if has("unix")
+   set backupdir=~/tmp/vim,./.backup,.,/tmp
+   set directory=~/tmp/vim,./.backup,.,/tmp
+else
+   set backupdir=e:/tmp/vim,./.backup,.
+   set directory=e:/tmp/vim,./.backup,.
+endif
+
+"VimTip 256: Opening current Vim file in your Windows browser
+"open current file in browser
+if has("unix")
+	"bf: browse file
+	map <Leader>bf   :update<CR>:silent !start mozilla file://%:p<CR>
+else
+	map <Leader>bf   :update<CR>:silent !start "E:/Program Files/Internet Explorer/iexplore.exe " file://%:p<CR>
+" I don't know why it does not work with Mozilla
+" map <Leader>f   :update<CR>:silent !start "D:/Program Files/mozilla.org/Mozilla/mozilla.exe " file://%:p<CRset mouseshape=n:pencil>
+" execute "map <Leader>f   :update<CR>:silent !start \"D:/Program Files/mozilla.org/Mozilla/mozilla.exe\" " . expand("%:p") . "<CR>"
+endif
+"open http link under cursor in your browser
+if has("unix")
+	map <Leader>ol   :update<CR>:silent !start mozilla <cWORD><CR>
+else
+	map <Leader>ol   :update<CR>:silent !start "E:/Program Files/mozilla.org/Mozilla/mozilla.exe " <cWORD><CR>
+endif
+
+"VimTip 394: pop up menu for checking the meaning of the word from internet
+if has("unix")
+	nme <silent> PopUp.&Dic :sil! !start mozilla -nosplash "http://www.m-w.com/cgi-bin/dictionary?book=Dictionary&va=<cword>"<CR>
+	"vd: view dictionary
+	map <Leader>vd          :sil! !start mozilla -nosplash "http://www.m-w.com/cgi-bin/dictionary?book=Dictionary&va=<cword>"<CR>
+else
+	nme <silent> PopUp.&Dic :sil! !start "E:/Program Files/Internet Explorer/iexplore.exe " -nohome "http://www.m-w.com/cgi-bin/dictionary?book=Dictionary&va=<cword>"<CR>
+	map <Leader>vd          :sil! !start "E:/Program Files/Internet Explorer/iexplore.exe " -nohome "http://www.m-w.com/cgi-bin/dictionary?book=Dictionary&va=<cword>"<CR>
+endif
+
+
+"############################################################################
+"#  Languages / Programming
+"############################################################################
+
+"syntax files, for an extension use ... syntax file
+autocmd BufRead,BufNewFile *.tpl  sou $VIMRUNTIME/syntax/smarty.vim
+autocmd BufRead,BufNewFile *.rdf  sou $VIMRUNTIME/syntax/xml.vim
+autocmd BufRead,BufNewFile *.rdfs  sou $VIMRUNTIME/syntax/xml.vim
+autocmd BufRead,BufNewFile *.phps sou $VIMRUNTIME/syntax/php.vim
+autocmd BufRead,BufNewFile *.jws sou $VIMRUNTIME/syntax/java.vim
+autocmd BufRead,BufNewFile *.d sou $VIMRUNTIME/syntax/d.vim
+
+"pretty-print JSON files
+autocmd BufRead,BufNewFile *.json set filetype=json
+" json.vim is here: http://www.vim.org/scripts/script.php?script_id=1945
+autocmd Syntax json sou ~/.vim/syntax/json.vim
+" json_reformat is part of yajl: http://lloyd.github.com/yajl/
+autocmd FileType json set equalprg=json_reformat
+
+"******
+"Ruby
+"******
+"use a different indenting for Ruby files (2 spaces)
+autocmd FileType ruby setlocal sts=2 et
+
+"LaTeX things
+"this ends a begin tag
+map Te ^f{"tyf}o\end<Esc>"tpO
+"this adds a newline (\\) to the end of the line
+map Tn A\\<Esc>
+
+"VimTip 138: Getting name of the function in command mode
+map <Leader>F ma[[k"xyy`a:echo @x<CR>
+
+"VimTip 142: Automatic function end commenting for C++ and Java
+"iab }// } // END: <esc>10h%$?\w\+\s*(<cr>"xy/\s*(<cr>/{<cr>:nohl<cr>%$"xpa
+"If you now end the function with '}//', the follwoing string will be automatically generated: '} //END: functionname'
+
+" " VimTip 346: Wrap text in HTML/XML tags after prompting for the tag name
+" " Tag Select/Wrapper
+" " These mappings and TagSelection function will allow you to place 
+" " an XML tag around either the current word, or the current selected text 
+" nmap <Leader>t viw<Leader>t 
+" vnoremap <Leader>t <Esc>:call TagSelection()<CR>
+" "
+" function! TagSelection()
+"   let l:tag = input("Tag name: ")
+"   " exec "normal `>a</" . l:tag . ">\e"
+"   " Strip off all but the first work in the tag for the end tag
+"   exec "normal `>a</" . 
+"               \ substitute( l:tag, '[ \t"]*\(\<\w*\>\).*', '\1>\e', "" )
+"   exec "normal `<i" 
+"               \ substitute( l:tag, '[ \t"]*\(\<.*\)', '<\1>\e', "" )
+" endfunction
+
+"VimTip 384: Easily switch between source and header file
+nmap <Leader>s :find %:t:r.c<cr>
+nmap <Leader>S :sf %:t:r.c<cr>
+nmap <Leader>h :find %:t:r.h<cr>
+nmap <Leader>H :sf %:t:r.h<cr>
+
+
+"############################################################################
+"#  Abbreviations
+"############################################################################
+
+"remarks
+abbr #m <space>*
+abbr #e <space>****************************************************************************/
+abbr #b /*****************************************************************************
+
+"############################################################################
+"#  Insertion
+"############################################################################
+
+"VimTip 466: Insert one character only
+noremap <Leader>c  i<Space><Esc>r
+
+"VimTip 348: Quickly insert a single word
+nmap <buffer> <silent> <Leader>w :exec ":imap \<space\> \<space\>\<esc\>,BB"<cr>i
+nmap <buffer> <silent> ,BB :exec ":iunmap \<space\>"<cr>
+
+"VimTip 193: Insert the current filename at cursor position in insert mode
+"filename with extension
+imap <Leader>fn    <C-R>=expand("%")<CR>
+"filename without extension
+imap <Leader>fne   <C-R>=expand("%:t:r")<CR>
+
+
+"############################################################################
+"#  other
+"############################################################################
+
+"how to inverse a string in visual mode
+vmap <Leader>rs :<C-U>set lz<CR>:let ai=&ai<CR>:set noai<CR>`>maa<CR><Esc>`<i<CR><Esc>jmz:'a+1,'z-1s/./&\r/g<CR>:'a+1,'z-1g/^/m'a<CR>:'a,'zj!<CR>:let &ai=ai<CR>:set nolz<CR>
+
+
+" "############################################################################
+" "#  coutures specific stuff
+" "############################################################################
+" 
+" syntax on
+" set  nohlsearch
+" "fixdel
+" "fix PgUp, PgDn, Home, End, Del, Insert, function keys (F1-F12)
+" set t_kP=[5~
+" set t_kN=[6~
+" set t_kh=[1~
+" set t_@7=[4~
+" set t_kD=[3~
+" set t_kI=[2~
+" set t_k1=[[A
+" set t_k2=[[B
+" set t_k3=[[C
+" set t_k4=[[D
+" set t_k5=[[E
+" set t_k6=[17~
+" set t_k7=[18~
+" set t_k8=[19~
+" set t_k9=[20~
+" set t_k;=[21~
+" set t_F1=[23~
+" set t_F2=[24~
+" 
+" "to have normal colors under AIX with putty
+" if has("terminfo")
+" set t_Co=8
+"   set t_Sf=[3%p1%dm
+"   set t_Sb=[4%p1%dm
+" else
+"   set t_Co=8
+"   set t_Sf=[3%dm
+"   set t_Sb=[4%dm
+" endif
+" 
+" "############################################################################
+" "#  printing without header (for coutures)
+" "############################################################################
+" 
+" set printoptions+=header:0
+" 
+" set printexpr=PrintFile(v:fname_in)
+" function! PrintFile(fname)
+"   call system("lpr -h " . a:fname)
+"   call delete(a:fname)
+"   return v:shell_error
+" endfunc
+
+" Code Folding, type 'za' to open and close a fold
+" ------------
+set foldmethod=indent
+set foldlevel=99
+
+set matchpairs+=<:>         " show matching <> (html mainly) as well
+
+" don't outdent hashes
+inoremap # #
+
+" Window Splits
+" -------------
+" Vertical Split : Ctrl+w + v
+" Horizontal Split: Ctrl+w + s
+" Close current windows: Ctrl+w + q
+" Ctrl+<movement> keys to move around the windows:
+map <c-j> <c-w>j
+map <c-k> <c-w>k
+map <c-l> <c-w>l
+map <c-h> <c-w>h
+
+ " Configure CTRL-arrow keys to move between windows (miniBufExplorer plugin)
+let g:miniBufExplMapWindowNavArrows = 1
+
+" Snippets
+" --------
+" open a python file and type 'def<tab>' 
+" It should stub out a method definition for you and allow you to tab through and fill out the arguments.
+
+" Task lists
+" ----------
+" Now you can hit <leader>td to open your task list and hit 'q' to close it.
+" You can also hit enter on the task to jump to the buffer and line that it is placed on.
+"map <leader>td <Plug>TaskList
+
+" Revision History
+" ----------------
+"map <leader>g :GundoToggle<CR>
+
+" Syntax Highlighting and Validation
+" ----------------------------------
+syntax on                   " syntax highlighing
+filetype on                 " try to detect filetypes
+"filetype plugin indent on   " enable loading indent file for filetype
+"let g:pyflakes_use_quickfix = 0
+
+" Pep8
+" ----
+" jump to each of the pep8 violations in the quickfix window
+"let g:pep8_map='<leader>8'
+
+" Tab Completion and Documentation
+" --------------------------------
+" We also enabled the pydoc plugin at the beginning with all the submodules;
+" that gives us the ability to hit <leader>pw when our cursor is on a module and
+" have a new window open with the whole documentation page for it.
+" au FileType python set omnifunc=pythoncomplete#Complete
+" let g:SuperTabDefaultCompletionType = "context"
+" "set completeopt=menuone,longest
+" set completeopt=menuone,longest,preview
+" " close preview window automatically when we move around
+" autocmd CursorMovedI * if pumvisible() == 0|pclose|endif
+" autocmd InsertLeave * if pumvisible() == 0|pclose|endif
+" 
+" " File Browser
+" " ------------
+" map <leader>n :NERDTreeToggle<CR>
+" 
+" " switch between buffers
+" " Configure (SHIFT)-CTRL-TAB to switch through open windows (miniBufExplorer plugin)
+" "let g:miniBufExplMapCTabSwitchBufs = 1
+" 
+" " Refactoring and Go to definition
+" " --------------------------------
+" map <leader>j :RopeGotoDefinition<CR>
+" map <leader>r :RopeRename<CR>
+" 
+" " Searching
+" " ---------
+" let g:ackprg="ack-grep -H --nocolor --nogroup --column"
+" nmap <leader>a <Esc>:Ack!
+" 
+" " Integration with Git
+" " --------------------
+" 
+" " Virtualenv
+" " ----------
+" " Add the virtualenv's site-packages to vim path
+" " py << EOF
+" " import os.path
+" " import sys
+" " import vim
+" " if 'VIRTUAL_ENV' in os.environ:
+" "     project_base_dir = os.environ['VIRTUAL_ENV']
+" "     sys.path.insert(0, project_base_dir)
+" "     activate_this = os.path.join(project_base_dir, 'bin/activate_this.py')
+" "     execfile(activate_this, dict(__file__=activate_this))
+" " EOF
+
+" Paste from clipboard
+map <leader>p "+gP
+
