@@ -1627,7 +1627,8 @@ def step_40():
     """
     (40)  reinstall kernel module for vbox and start VirtualBox
     """
-    cmd = 'sudo /etc/init.d/vboxdrv setup'
+    # cmd = 'sudo /etc/init.d/vboxdrv setup'
+    cmd = 'sudo /sbin/rcvboxdrv setup'
     print('#', cmd)
     os.system(cmd)
     #
